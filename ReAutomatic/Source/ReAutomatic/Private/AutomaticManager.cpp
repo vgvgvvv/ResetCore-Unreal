@@ -23,8 +23,17 @@ FAutomaticManager& FAutomaticManager::Get()
 void FAutomaticManager::StartThread(int32 port)
 {
 	UE_LOG(LogAutomatic, Log, TEXT("Start Automatic Thread"));
+
 	Automatic = MakeShared<FAutomaticRunnable>();
 	AutomaticThread = FRunnableThread::Create(Automatic.Get(), TEXT("Automatic Thread"));
+	CommandConsumer.SetEnable(true);
+
+}
+
+
+void FAutomaticManager::PushCommand(FString ReceivedString)
+{
+	CommandConsumer.PushCommand(ReceivedString);
 }
 
 void FAutomaticManager::StopThread()
@@ -36,4 +45,6 @@ void FAutomaticManager::StopThread()
 		Automatic->RequestStop();
 		AutomaticThread->WaitForCompletion();
 	}
+
+	CommandConsumer.SetEnable(false);
 }

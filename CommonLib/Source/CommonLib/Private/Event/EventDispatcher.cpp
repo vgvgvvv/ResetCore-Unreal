@@ -1,10 +1,10 @@
 #include "Event/EventDispatcher.h"
-
+#include "UnrealTemplate.h"
 
 namespace CommonLib
 {
 	TMap<FName, IListener> FEventDispatcher::GlobalListener;
-	
+
 	void FEventDispatcher::RegisterListener(IListener& Listener)
 	{
 		GlobalListener.Add(Listener.GetEventName(), Listener);
@@ -15,7 +15,12 @@ namespace CommonLib
 		GlobalListener.Remove(EventName);
 	}
 
-	void FEventDispatcher::TriggerEvent(FName& EventName, IArg& arg)
+	void FEventDispatcher::TriggerEvent(const FName& EventName, IArg& arg)
+	{
+		TriggerEvent(MoveTemp(EventName), arg);
+	}
+
+	void FEventDispatcher::TriggerEvent(FName&& EventName, IArg& arg)
 	{
 		auto Listener = GlobalListener.Find(EventName);
 		if(Listener)
@@ -23,5 +28,6 @@ namespace CommonLib
 			Listener->OnTrigger(arg);
 		}
 	}
+
 
 }
