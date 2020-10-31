@@ -40,7 +40,8 @@ public class ReAutomatic : ModuleRules
 				"Engine",
 				"Slate",
 				"SlateCore",
-				"Networking"
+				"Networking",
+				"Sockets"
 				// ... add private dependencies that you statically link with here ...	
 			}
 			);
