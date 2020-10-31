@@ -1,4 +1,5 @@
 #pragma once
+#include "JsonObject.h"
 #include "Listener.h"
 #include "Queue.h"
 #include "Tickable.h"
@@ -18,9 +19,17 @@ struct FCommand : CommonLib::IArg
 	FString CmdStr;
 };
 
+struct FJsonArg : CommonLib::IArg
+{
+	TSharedRef<FJsonObject> JsonObject;
+};
+
 class FCommandConsumer : public FTickableGameObject
 {
 public:
+
+	FCommandConsumer();
+	~FCommandConsumer();
 
 	void SetEnable(bool Enable);
 	void PushCommand(FString ReceivedStr);
@@ -31,8 +40,9 @@ public:
 	virtual TStatId GetStatId() const override;
 
 private:
-	bool ParseCommandString(FString CommandStr, FCommand& Command ) const;
-
+	bool ParseCommandString(const FString& CommandStr, FCommand& Command ) const;
+	void SendCommandToClient(const FJsonArg& Command) const;
+	FString GetSendString(const FJsonArg& Arg) const;
 private:
 
 	bool IsEnable = false;

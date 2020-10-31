@@ -7,15 +7,15 @@ namespace CommonLib
 {
 	class IArg
 	{
-		
+
 	};
-	
+
 	class IListener
 	{
 	public:
-		
+
 		virtual ~IListener() = default;
-	
+
 		virtual IListener& GetParent() = 0;
 
 		virtual const FName& GetEventName() const = 0;
@@ -30,9 +30,9 @@ namespace CommonLib
 
 		IListener& AddHandler(TFunction<void(IArg&)> Handler);
 
-	
+
 	};
-	
+
 	class BaseListener : public IListener
 	{
 		TArray<TFunction<void(IArg)>> OnTriggerActionList;
@@ -40,19 +40,21 @@ namespace CommonLib
 	public:
 
 		friend IListener;
-		
+
 		BaseListener(FName& eventName);
+
+		BaseListener(FName&& eventName);
 
 		IListener& GetParent() override;
 
 		const FName& GetEventName() const override;
-		
+
 		void OnTrigger(IArg& arg) override;
 	private:
 
 		FName EventName;
 	};
-	
+
 	class Where : public IListener
 	{
 	public:

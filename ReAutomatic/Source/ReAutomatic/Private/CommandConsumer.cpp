@@ -5,6 +5,19 @@
 
 using namespace CommonLib;
 
+
+FCommandConsumer::FCommandConsumer()
+{
+	FEventDispatcher::CreateListener(FName("SendMessage"))
+		.AddHandler(SendCommandToClient)
+		.RegisterListener();
+}
+
+FCommandConsumer::~FCommandConsumer()
+{
+	FEventDispatcher::RemoveListener(FName("SendMessage"));
+}
+
 void FCommandConsumer::SetEnable(bool Enable)
 {
 	IsEnable = Enable;
@@ -19,6 +32,12 @@ void FCommandConsumer::PushCommand(FString ReceivedStr)
 		CommandQueue.Enqueue(Result);
 	}
 }
+
+void FCommandConsumer::SendCommandToClient(const FJsonArg& Command) const
+{
+	FAutomaticManager::Get().SendCommandToClient(GetSendString(Command));
+}
+
 
 void FCommandConsumer::Tick(float DeltaTime)
 {
@@ -40,7 +59,7 @@ TStatId FCommandConsumer::GetStatId() const
 	return TStatId();
 }
 
-bool FCommandConsumer::ParseCommandString(FString CommandStr, FCommand& Command) const
+bool FCommandConsumer::ParseCommandString(const FString& CommandStr, FCommand& Command) const
 {
 	TSharedPtr<FJsonObject> JsonObject;
 	TSharedRef< TJsonReader<TCHAR> > Reader = TJsonReaderFactory<TCHAR>::Create(CommandStr);
@@ -66,4 +85,16 @@ bool FCommandConsumer::ParseCommandString(FString CommandStr, FCommand& Command)
 	Command = FCommand(CmdId, CmdStr);
 
 	return true;
+}
+
+FString FCommandConsumer::GetSendString(const FJsonArg& Arg) const
+{
+	typedef TJsonWriter<TCHAR, TPrettyJsonPrintPolicy<TCHAR>> FStringWriter;
+	typedef TJsonWriterFactory<TCHAR, TPrettyJsonPrintPolicy<TCHAR>> FStringWriterFactory;
+
+	FString CopyStr;
+	TSharedRef<FStringWriter> Writer = FStringWriterFactory::Create(&CopyStr);
+	FJsonSerializer::Serialize(Arg.JsonObject, Writer);
+
+	return CopyStr;
 }

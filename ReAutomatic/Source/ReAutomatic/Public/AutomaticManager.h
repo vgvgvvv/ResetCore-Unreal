@@ -14,7 +14,9 @@ public:
 	static FAutomaticManager& Get();
 
 	void StartThread(int32 port);
-	void PushCommand(FString ReceivedString);
+	void PushCommandFromClient(const FString& ReceivedString);
+	void SendCommandToClient(const FString& SendContent) const;
+	void SendCommandToClient(FString&& SendContent) const;
 	void StopThread();
 
 private:

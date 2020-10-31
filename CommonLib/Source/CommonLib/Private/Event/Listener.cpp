@@ -4,7 +4,7 @@
 
 namespace CommonLib
 {
-	
+
 	void IListener::RegisterListener()
 	{
 		FEventDispatcher::RegisterListener(*this);
@@ -24,13 +24,19 @@ namespace CommonLib
 		}
 
 		static_cast<BaseListener*>(Root)->OnTriggerActionList.Add(Handler);
-		
+
 		return *this;
 	}
 
 	BaseListener::BaseListener(FName& eventName)
+		: EventName(eventName)
 	{
 	}
+
+	BaseListener::BaseListener(FName&& eventName)
+		: EventName(eventName)
+    {
+    }
 
 	IListener& BaseListener::GetParent()
 	{
@@ -55,7 +61,7 @@ namespace CommonLib
 		: Parent(Parent)
 		, Condition(Condition)
 	{
-		
+
 	}
 
 	IListener& Where::GetParent()

@@ -23,7 +23,7 @@ uint32 FAutomaticRunnable::Run()
 	while(ShouldStop || !Server.IsValid())
 	{
 		Server->WaitForConnect();
-		Server->Update();
+		Server->TryReceiveMessage();
 		FPlatformProcess::Sleep(0.1f);
 
 		if(Server->GetCurrentStatus() == FAutomaticServer::EStatus::Stop)
@@ -36,7 +36,7 @@ uint32 FAutomaticRunnable::Run()
 
 void FAutomaticRunnable::Stop()
 {
-	
+
 }
 
 void FAutomaticRunnable::Exit()
@@ -48,4 +48,9 @@ void FAutomaticRunnable::Exit()
 void FAutomaticRunnable::RequestStop()
 {
 	ShouldStop = true;
+}
+
+TSharedPtr<FAutomaticServer> FAutomaticRunnable::GetServer() const
+{
+	return Server;
 }

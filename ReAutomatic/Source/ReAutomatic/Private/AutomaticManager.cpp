@@ -31,16 +31,32 @@ void FAutomaticManager::StartThread(int32 port)
 }
 
 
-void FAutomaticManager::PushCommand(FString ReceivedString)
+void FAutomaticManager::PushCommandFromClient(const FString& ReceivedString)
 {
 	CommandConsumer.PushCommand(ReceivedString);
+}
+
+void FAutomaticManager::SendCommandToClient(const FString& SendContent) const
+{
+	if(Automatic.IsValid() && Automatic->GetServer().IsValid())
+	{
+		Automatic->GetServer()->SendMessage(SendContent);
+	}
+}
+
+void FAutomaticManager::SendCommandToClient(FString&& SendContent) const
+{
+	if(Automatic.IsValid() && Automatic->GetServer().IsValid())
+	{
+		Automatic->GetServer()->SendMessage(MoveTemp(SendContent));
+	}
 }
 
 void FAutomaticManager::StopThread()
 {
 	UE_LOG(LogAutomatic, Log, TEXT("Stop Automatic Thread"));
 
-	if (AutomaticThread)
+	if (Automatic.IsValid() && AutomaticThread)
 	{
 		Automatic->RequestStop();
 		AutomaticThread->WaitForCompletion();

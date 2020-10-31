@@ -98,7 +98,7 @@ void FAutomaticServer::WaitForConnect()
 }
 
 
-void FAutomaticServer::Update()
+void FAutomaticServer::TryReceiveMessage() const
 {
 	if(!ConnectSocket)
 	{
@@ -136,11 +136,27 @@ void FAutomaticServer::Update()
 			// }
 
 			// Get Message String
-			FAutomaticManager::Get().PushCommand(ReceivedUE4String);
+			FAutomaticManager::Get().PushCommandFromClient(ReceivedUE4String);
 		}
 
 	}
 
+}
+
+
+void FAutomaticServer::SendMessage(const FString& SendContent) const
+{
+	if (!ConnectSocket)
+	{
+		return;
+	}
+	if (!SendContent.IsEmpty())
+	{
+		TArray<TCHAR> contentList = SendContent.GetCharArray();
+		int32 bytesSend = 0;
+		ConnectSocket->Send((uint8*)TCHAR_TO_ANSI(*SendContent), sizeof(ANSICHAR)*contentList.Num(), bytesSend);
+		UE_LOG(LogAutomatic, Log, TEXT("SendData %s"), *SendContent);
+	}
 }
 
 void FAutomaticServer::Stop()

@@ -2,6 +2,7 @@
 
 #include "HAL/Runnable.h"
 #include "AutomaticServer.h"
+#include "CommandConsumer.h"
 
 
 class FAutomaticRunnable : public FRunnable
@@ -18,10 +19,11 @@ public:
 public:
 
 	void RequestStop();
-	
+	TSharedPtr<FAutomaticServer> GetServer() const;
+
 private:
 
 	TSharedPtr<FAutomaticServer> Server;
 	bool ShouldStop;
-	
+
 };

@@ -1,4 +1,5 @@
 #pragma once
+#include "CommandConsumer.h"
 #include "IPv4/IPv4Endpoint.h"
 #include "Sockets.h"
 
@@ -18,13 +19,14 @@ public:
 
 public:
 	EStatus GetCurrentStatus();
-	
+
 	FSocket* TCPSocket;
 	FSocket* ConnectSocket;
 
 	void Init(FString host, int port, FString Name);
 	void WaitForConnect();
-	void Update();
+	void TryReceiveMessage() const;
+	void SendMessage(const FString& SendContent) const;
 	void Stop();
 
 private:

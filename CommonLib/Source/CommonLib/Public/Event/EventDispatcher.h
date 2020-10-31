@@ -10,9 +10,15 @@ namespace CommonLib
 
 	public:
 
+		static BaseListener CreateListener(FName& eventName);
+
+		static BaseListener CreateListener(FName&& eventName);
+
 		static void RegisterListener(IListener& Listener);
 
 		static void RemoveListener(FName& EventName);
+
+		static void RemoveListener(FName&& EventName);
 
 		static void TriggerEvent(const FName& EventName, IArg& arg);
 
