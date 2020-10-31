@@ -6,7 +6,7 @@ namespace CommonLib
 	TMap<FName, IListener> FEventDispatcher::GlobalListener;
 
 
-	BaseListener FEventDispatcher::CreateListener(FName& eventName)
+	BaseListener FEventDispatcher::CreateListener(const FName& eventName)
 	{
 		return BaseListener(eventName);
 	}
@@ -22,7 +22,7 @@ namespace CommonLib
 		GlobalListener.Add(Listener.GetEventName(), Listener);
 	}
 
-	void FEventDispatcher::RemoveListener(FName& EventName)
+	void FEventDispatcher::RemoveListener(const FName& EventName)
 	{
 		GlobalListener.Remove(EventName);
 	}
@@ -31,6 +31,7 @@ namespace CommonLib
 	{
 		GlobalListener.Remove(MoveTemp(EventName));
 	}
+
 
 	void FEventDispatcher::TriggerEvent(const FName& EventName, IArg& arg)
 	{
@@ -43,7 +44,11 @@ namespace CommonLib
 
 	void FEventDispatcher::TriggerEvent(FName&& EventName, IArg& arg)
 	{
-		TriggerEvent(MoveTemp(EventName), arg);
+		auto Listener = GlobalListener.Find(MoveTemp(EventName));
+		if (Listener)
+		{
+			Listener->OnTrigger(arg);
+		}
 	}
 
 

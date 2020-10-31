@@ -10,12 +10,12 @@ namespace CommonLib
 		FEventDispatcher::RegisterListener(*this);
 	}
 
-	Where IListener::Where(TFunction<bool(IArg&)> Condition)
+	WhereListener IListener::Where(TFunction<bool(IArg*)> Condition)
 	{
-		return Where(Condition);
+		return WhereListener(*this, Condition);
 	}
 
-	IListener& IListener::AddHandler(TFunction<void(IArg&)> Handler)
+	IListener& IListener::AddHandler(TFunction<void(IArg*)> Handler)
 	{
 		IListener* Root = this;
 		while(&GetParent() != this)
@@ -28,13 +28,13 @@ namespace CommonLib
 		return *this;
 	}
 
-	BaseListener::BaseListener(FName& eventName)
+	BaseListener::BaseListener(const FName& eventName)
 		: EventName(eventName)
 	{
 	}
 
 	BaseListener::BaseListener(FName&& eventName)
-		: EventName(eventName)
+		: EventName(MoveTemp(eventName))
     {
     }
 
@@ -52,31 +52,31 @@ namespace CommonLib
 	{
 		for(auto& act : OnTriggerActionList)
 		{
-			act(arg);
+			act(&arg);
 		}
 	}
 
 
-	Where::Where(IListener& Parent, TFunction<bool(IArg&)> Condition)
+	WhereListener::WhereListener(IListener& Parent, TFunction<bool(IArg*)> Condition)
 		: Parent(Parent)
 		, Condition(Condition)
 	{
 
 	}
 
-	IListener& Where::GetParent()
+	IListener& WhereListener::GetParent()
 	{
 		return Parent;
 	}
 
-	const FName& Where::GetEventName() const
+	const FName& WhereListener::GetEventName() const
 	{
 		return Parent.GetEventName();
 	}
 
-	void Where::OnTrigger(IArg& arg)
+	void WhereListener::OnTrigger(IArg& arg)
 	{
-		if(Condition(arg))
+		if(Condition(&arg))
 		{
 			Parent.OnTrigger(arg);
 		}

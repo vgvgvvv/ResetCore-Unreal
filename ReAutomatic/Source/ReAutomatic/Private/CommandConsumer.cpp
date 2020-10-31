@@ -33,15 +33,16 @@ void FCommandConsumer::PushCommand(FString ReceivedStr)
 	}
 }
 
-void FCommandConsumer::SendCommandToClient(const FJsonArg& Command) const
+void FCommandConsumer::SendCommandToClient(IArg* Arg)
 {
-	FAutomaticManager::Get().SendCommandToClient(GetSendString(Command));
+
+	FAutomaticManager::Get().SendCommandToClient(GetSendString(*(FJsonArg*)Arg));
 }
 
 
 void FCommandConsumer::Tick(float DeltaTime)
 {
-	while(!CommandQueue.Empty())
+	while(!CommandQueue.IsEmpty())
 	{
 		FCommand Command;
 		CommandQueue.Dequeue(Command);
@@ -87,7 +88,7 @@ bool FCommandConsumer::ParseCommandString(const FString& CommandStr, FCommand& C
 	return true;
 }
 
-FString FCommandConsumer::GetSendString(const FJsonArg& Arg) const
+FString FCommandConsumer::GetSendString(const FJsonArg& Arg)
 {
 	typedef TJsonWriter<TCHAR, TPrettyJsonPrintPolicy<TCHAR>> FStringWriter;
 	typedef TJsonWriterFactory<TCHAR, TPrettyJsonPrintPolicy<TCHAR>> FStringWriterFactory;

@@ -1,10 +1,10 @@
 #pragma once
 #include "JsonObject.h"
-#include "Listener.h"
+#include "Event/Listener.h"
 #include "Queue.h"
 #include "Tickable.h"
 
-struct FCommand : CommonLib::IArg
+struct REAUTOMATIC_API FCommand : CommonLib::IArg
 {
 	FCommand()
 		: FCommand(0, "")
@@ -19,12 +19,12 @@ struct FCommand : CommonLib::IArg
 	FString CmdStr;
 };
 
-struct FJsonArg : CommonLib::IArg
+struct REAUTOMATIC_API FJsonArg : CommonLib::IArg
 {
 	TSharedRef<FJsonObject> JsonObject;
 };
 
-class FCommandConsumer : public FTickableGameObject
+class REAUTOMATIC_API FCommandConsumer : public FTickableGameObject
 {
 public:
 
@@ -41,8 +41,8 @@ public:
 
 private:
 	bool ParseCommandString(const FString& CommandStr, FCommand& Command ) const;
-	void SendCommandToClient(const FJsonArg& Command) const;
-	FString GetSendString(const FJsonArg& Arg) const;
+	static void SendCommandToClient(CommonLib::IArg* Command);
+	static FString GetSendString(const FJsonArg& Arg);
 private:
 
 	bool IsEnable = false;

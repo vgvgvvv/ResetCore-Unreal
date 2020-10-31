@@ -5,43 +5,43 @@
 
 namespace CommonLib
 {
-	class IArg
+	class COMMONLIB_API IArg
 	{
 
 	};
 
-	class IListener
+	class COMMONLIB_API IListener
 	{
 	public:
 
 		virtual ~IListener() = default;
 
-		virtual IListener& GetParent() = 0;
+		virtual IListener& GetParent() { IListener* listener = nullptr; return *listener; };
 
-		virtual const FName& GetEventName() const = 0;
+		virtual const FName& GetEventName() const { FName* name = nullptr; return *name; };
 
-		virtual void OnTrigger(IArg& arg) = 0;
+		virtual void OnTrigger(IArg& arg) {};
 
 	public:
 		// Operators
 		void RegisterListener();
 
-		class Where Where(TFunction<bool(IArg&)> Condition);
+		class WhereListener Where(TFunction<bool(IArg*)> Condition);
 
-		IListener& AddHandler(TFunction<void(IArg&)> Handler);
+		IListener& AddHandler(TFunction<void(IArg*)> Handler);
 
 
 	};
 
-	class BaseListener : public IListener
+	class COMMONLIB_API BaseListener : public IListener
 	{
-		TArray<TFunction<void(IArg)>> OnTriggerActionList;
+		TArray<TFunction<void(IArg*)>> OnTriggerActionList;
 
 	public:
 
 		friend IListener;
 
-		BaseListener(FName& eventName);
+		BaseListener(const FName& eventName);
 
 		BaseListener(FName&& eventName);
 
@@ -55,16 +55,16 @@ namespace CommonLib
 		FName EventName;
 	};
 
-	class Where : public IListener
+	class COMMONLIB_API WhereListener : public IListener
 	{
 	public:
-		Where(IListener& Parent, TFunction<bool(IArg&)> Condition);
+		WhereListener(IListener& Parent, TFunction<bool(IArg*)> Condition);
 
 		IListener& GetParent() override;
 		const FName& GetEventName() const override;
 		void OnTrigger(IArg& arg) override;
 	private:
 		IListener& Parent;
-		TFunction<bool(IArg&)> Condition;
+		TFunction<bool(IArg*)> Condition;
 	};
 }
