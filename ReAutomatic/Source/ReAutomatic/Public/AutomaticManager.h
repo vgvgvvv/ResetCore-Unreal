@@ -5,7 +5,7 @@
 #include "AutomaticRunnable.h"
 #include "CommandConsumer.h"
 
-class FAutomaticManager
+class REAUTOMATIC_API FAutomaticManager
 {
 public:
 
