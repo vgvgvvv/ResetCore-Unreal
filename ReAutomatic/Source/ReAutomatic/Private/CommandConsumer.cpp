@@ -26,10 +26,10 @@ void FCommandConsumer::SetEnable(bool Enable)
 
 void FCommandConsumer::PushCommand(FString ReceivedStr)
 {
-	FCommand Result;
+	FJsonArg Result;
 	if(ParseCommandString(ReceivedStr, Result))
 	{
-		CommandQueue.Enqueue(Result);
+		JsonQueue.Enqueue(Result);
 	}
 }
 
@@ -42,11 +42,11 @@ void FCommandConsumer::SendCommandToClient(IArg* Arg)
 
 void FCommandConsumer::Tick(float DeltaTime)
 {
-	while(!CommandQueue.IsEmpty())
+	while(!JsonQueue.IsEmpty())
 	{
-		FCommand Command;
-		CommandQueue.Dequeue(Command);
-		FEventDispatcher::TriggerEvent(FName("AutomaticEvent"), Command);
+		FJsonArg JsonArg;
+		JsonQueue.Dequeue(JsonArg);
+		FEventDispatcher::TriggerEvent(FName("AutomaticEvent"), JsonArg);
 	}
 }
 
@@ -60,13 +60,12 @@ TStatId FCommandConsumer::GetStatId() const
 	return TStatId();
 }
 
-bool FCommandConsumer::ParseCommandString(const FString& CommandStr, FCommand& Command) const
+bool FCommandConsumer::ParseCommandString(const FString& CommandStr, FJsonArg& JsonArg) const
 {
 	TSharedPtr<FJsonObject> JsonObject;
 	TSharedRef< TJsonReader<TCHAR> > Reader = TJsonReaderFactory<TCHAR>::Create(CommandStr);
 
 	int CmdId;
-	FString CmdStr;
 
 	if (FJsonSerializer::Deserialize(Reader, JsonObject) == false)
 	{
@@ -78,12 +77,7 @@ bool FCommandConsumer::ParseCommandString(const FString& CommandStr, FCommand& C
 		return false;
 	}
 
-	if (JsonObject->TryGetStringField(TEXT("value"), CmdStr) == false)
-	{
-		return false;
-	}
-
-	Command = FCommand(CmdId, CmdStr);
+	JsonArg = FJsonArg(CmdId, JsonObject);
 
 	return true;
 }
@@ -95,7 +89,9 @@ FString FCommandConsumer::GetSendString(const FJsonArg& Arg)
 
 	FString CopyStr;
 	TSharedRef<FStringWriter> Writer = FStringWriterFactory::Create(&CopyStr);
-	FJsonSerializer::Serialize(Arg.JsonObject, Writer);
+	Writer->WriteValue("cmd", Arg.CmdId);
+
+	FJsonSerializer::Serialize(Arg.JsonObject.ToSharedRef(), Writer);
 
 	return CopyStr;
 }
