@@ -124,7 +124,7 @@ void FAutomaticServer::TryReceiveMessage() const
 		this->ConnectSocket->Recv(ReceivedData.GetData(), ReceivedData.Num(), Read);
 
 		ReceivedDataEn.Add(0);
-		FString ReceivedUE4String = FString(ANSI_TO_TCHAR(reinterpret_cast<const char*>(ReceivedDataEn.GetData())));
+		FString ReceivedUE4String = FString(UTF8_TO_TCHAR(reinterpret_cast<const char*>(ReceivedDataEn.GetData())));
 		UE_LOG(LogAutomatic, Log, TEXT("GetRecData %s"), *ReceivedUE4String);
 		{
 			// if (ReceivedUE4String.Contains("NewSocket="))
@@ -154,7 +154,7 @@ void FAutomaticServer::SendMessage(const FString& SendContent) const
 	{
 		TArray<TCHAR> contentList = SendContent.GetCharArray();
 		int32 bytesSend = 0;
-		ConnectSocket->Send((uint8*)TCHAR_TO_ANSI(*SendContent), sizeof(ANSICHAR)*contentList.Num(), bytesSend);
+		ConnectSocket->Send((uint8*)UTF8_TO_TCHAR(*SendContent), sizeof(ANSICHAR)*contentList.Num(), bytesSend);
 		UE_LOG(LogAutomatic, Log, TEXT("SendData %s"), *SendContent);
 	}
 }
