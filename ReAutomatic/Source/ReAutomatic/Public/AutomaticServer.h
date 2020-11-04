@@ -25,7 +25,7 @@ public:
 
 	void Init(FString host, int port, FString Name);
 	void WaitForConnect();
-	void TryReceiveMessage() const;
+	void TryReceiveMessage();
 	void SendMessage(const FString& SendContent) const;
 	void Stop();
 

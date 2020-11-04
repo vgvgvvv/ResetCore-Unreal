@@ -20,7 +20,7 @@ FAutomaticManager& FAutomaticManager::Get()
 	return *Instance;
 }
 
-void FAutomaticManager::StartThread(int32 port)
+void FAutomaticManager::StartThread()
 {
 	UE_LOG(LogAutomatic, Log, TEXT("Start Automatic Thread"));
 

@@ -13,7 +13,7 @@ public:
 
 	static FAutomaticManager& Get();
 
-	void StartThread(int32 port);
+	void StartThread();
 	void PushCommandFromClient(const FString& ReceivedString);
 	void SendCommandToClient(const FString& SendContent) const;
 	void SendCommandToClient(FString&& SendContent) const;

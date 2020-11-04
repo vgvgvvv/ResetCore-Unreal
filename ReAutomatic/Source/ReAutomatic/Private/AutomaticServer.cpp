@@ -98,7 +98,7 @@ void FAutomaticServer::WaitForConnect()
 }
 
 
-void FAutomaticServer::TryReceiveMessage() const
+void FAutomaticServer::TryReceiveMessage()
 {
 	if(!ConnectSocket)
 	{
@@ -111,20 +111,40 @@ void FAutomaticServer::TryReceiveMessage() const
 	//Binary Array!
 	TArray<uint8> ReceivedData;
 
-	TArray<uint8> ReceivedDataEn;
-
 	uint32 Size;
 	while (this->ConnectSocket->HasPendingData(Size))
 	{
 		UE_LOG(LogAutomatic, Log, TEXT("ReciveData"));
-		ReceivedData.Init(0, FMath::Min(Size, 65507u));
-		ReceivedDataEn.Init(0, FMath::Min(Size, 65507u));
 
 		int32 Read = 0;
-		this->ConnectSocket->Recv(ReceivedData.GetData(), ReceivedData.Num(), Read);
+		uint8 datalength[4] = { 0 };
+		FString ReceivedUE4String = "";
 
-		ReceivedDataEn.Add(0);
-		FString ReceivedUE4String = FString(UTF8_TO_TCHAR(reinterpret_cast<const char*>(ReceivedDataEn.GetData())));
+		this->ConnectSocket->Recv((uint8*)datalength, 4, Read);
+		int Len = *((uint32*)(datalength));
+		UE_LOG(LogAutomatic, Log, TEXT("GetRecData Len = %d"), Len);
+
+		Read = 0;
+		ReceivedData.Empty();
+		ReceivedData.Init(0, FMath::Max(Size, 3000u));
+
+		bool result = ConnectSocket->Wait(ESocketWaitConditions::WaitForRead, FTimespan(0, 0, 120));
+
+		//超时没收到包，关闭socket，走重连逻辑
+		if (!result) 
+		{
+			this->ConnectSocket->Close();
+			this->ConnectSocket = nullptr;
+			ISocketSubsystem::Get(PLATFORM_SOCKETSUBSYSTEM)->DestroySocket(ConnectSocket);
+			UE_LOG(LogAutomatic, Error, TEXT("Recv timeout"));
+			return;
+		}
+		
+		this->ConnectSocket->Recv(ReceivedData.GetData(), Len, Read);
+
+		ReceivedData.Add(0);
+		ReceivedUE4String = FString(ANSI_TO_TCHAR(reinterpret_cast<const char*>(ReceivedData.GetData())));
+		
 		UE_LOG(LogAutomatic, Log, TEXT("GetRecData %s"), *ReceivedUE4String);
 		{
 			// if (ReceivedUE4String.Contains("NewSocket="))
