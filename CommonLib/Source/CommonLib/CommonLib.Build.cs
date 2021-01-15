@@ -40,6 +40,8 @@ public class CommonLib : ModuleRules
 				"Engine",
 				"Slate",
 				"SlateCore",
+				"Networking",
+				"Sockets"
 				// ... add private dependencies that you statically link with here ...	
 			}
 			);

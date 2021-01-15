@@ -59,6 +59,11 @@ void FRouteClient::Run()
 			UE_LOG(LogTemp, Warning, TEXT("Connect To %s Error..."), *InternetAddress->ToString(true))
 		}else
 		{
+			if(OnRegist.IsBound())
+			{
+				OnRegist.Broadcast();
+			}
+			
 			UE_LOG(LogTemp, Warning, TEXT("Connect To %s Error Success!!"), *InternetAddress->ToString(true))
 			while(ClientSocket != nullptr && ClientSocket->GetConnectionState() == SCS_Connected)
 			{
@@ -68,6 +73,11 @@ void FRouteClient::Run()
 				DoHeartBeat();
 			
 				FPlatformProcess::Sleep(0.3);
+			}
+
+			if(OnClose.IsBound())
+			{
+				OnClose.Broadcast();
 			}
 		}
 		FPlatformProcess::Sleep(1);
@@ -94,7 +104,7 @@ bool FRouteClient::Connect()
 		ClientSocket->Close();
 	}
 
-	ClientSocket = ISocketSubsystem::Get(PLATFORM_SOCKETSUBSYSTEM)->CreateSocket(NAME_Stream, host, false);
+	ClientSocket = ISocketSubsystem::Get(PLATFORM_SOCKETSUBSYSTEM)->CreateSocket(NAME_Stream, InternetAddress->ToString(true), false);
 
 	if(ClientSocket->Connect(*InternetAddress) == false)
 	{
@@ -113,6 +123,13 @@ void FRouteClient::ReadSocketBuffer()
 
 void FRouteClient::DoHeartBeat()
 {
+	if(FPlatformTime::ToSeconds(FPlatformTime::Cycles() - LastUpdateTime)  >= HeartBeatSecond)
+	{
+		if(OnHeartBeat.IsBound())
+		{
+			OnHeartBeat.Broadcast();
+		}
+	}
 }
 
 bool FRouteClientRunner::Init()

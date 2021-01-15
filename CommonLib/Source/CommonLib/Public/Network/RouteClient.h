@@ -1,11 +1,13 @@
 ﻿#pragma once
-#include "IPv4Endpoint.h"
+#include "IPv4/IPv4Endpoint.h"
 #include "Runnable.h"
 #include "CoreMinimal.h"
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnRegistRouteClient);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnCloseRouteClient);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnHeartBeatRouteClient);
+#include "Queue.h"
+
+DECLARE_MULTICAST_DELEGATE(FOnRegistRouteClient);
+DECLARE_MULTICAST_DELEGATE(FOnCloseRouteClient);
+DECLARE_MULTICAST_DELEGATE(FOnHeartBeatRouteClient);
 
 class FRouteClient
 {
@@ -15,15 +17,20 @@ public:
 	FRouteClient& SetBuffer(int32 bufferSize);
 	FRouteClient& SetConnectTarget(FString& host, int32 port);
 
+
+	
 	FOnRegistRouteClient OnRegist;
 	FOnCloseRouteClient OnClose;
 	FOnHeartBeatRouteClient OnHeartBeat;
 
 private:
 
-	TSharedRef<FInternetAddr> InternetAddress;
+	TSharedPtr<FInternetAddr> InternetAddress;
 	int32 BufferSize = 2 * 1024 * 1024;	
 	FString Name;
+
+	int32 LastUpdateTime;
+	int32 HeartBeatSecond = 3;
 
 
 public:
@@ -48,7 +55,7 @@ private:
 	
 	FSocket* ClientSocket = nullptr;
 	FRunnableThread* RunnableThread = nullptr;
-	
+	TQueue<>
 
 	bool ShouldStop = false;
 };
