@@ -3,6 +3,7 @@
 #include "UnrealString.h"
 #include "RouteProto.generated.h"
 
+UENUM()
 enum class REAUTOMATIC_API ERouteType
 {
 	RouteType_RouteServer = 0,
@@ -13,6 +14,7 @@ enum class REAUTOMATIC_API ERouteType
     RouteType_Max = RouteType_WebService        
 };
 
+UENUM()
 enum class REAUTOMATIC_API ERouteProtoID
 {
 	RouteProtoID_Regist = 0,
