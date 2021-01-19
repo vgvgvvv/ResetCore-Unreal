@@ -3,22 +3,24 @@
 #include "Runnable.h"
 #include "CoreMinimal.h"
 
+
+#include "NetPackage.h"
 #include "Queue.h"
+#include "NetPackageHandler/NetPackageHandler.h"
+#include "Serializer/FNetJsonSerializer.h"
 
 DECLARE_MULTICAST_DELEGATE(FOnRegistRouteClient);
 DECLARE_MULTICAST_DELEGATE(FOnCloseRouteClient);
 DECLARE_MULTICAST_DELEGATE(FOnHeartBeatRouteClient);
 
-class FRouteClient
+class FSocketClient
 {
 public:
 	//Client属性相关
 
-	FRouteClient& SetBuffer(int32 bufferSize);
-	FRouteClient& SetConnectTarget(FString& host, int32 port);
+	FSocketClient& SetBuffer(int32 bufferSize);
+	FSocketClient& SetConnectTarget(FString host, int32 port);
 
-
-	
 	FOnRegistRouteClient OnRegist;
 	FOnCloseRouteClient OnClose;
 	FOnHeartBeatRouteClient OnHeartBeat;
@@ -35,10 +37,11 @@ private:
 
 public:
 	//生命周期相关
-	
-	static FRouteClient Create(FString& name);
+	FSocketClient(const FString& name);
+	~FSocketClient();
+
 	void Run();
-	void SendMessage();
+	void SendMessage(FNetPackage& NetPackage);
 	void Stop();
 private:
 
@@ -49,26 +52,13 @@ private:
 	void DoHeartBeat();
 
 private:
-
-	FRouteClient(FString name);
-	~FRouteClient();
 	
 	FSocket* ClientSocket = nullptr;
 	FRunnableThread* RunnableThread = nullptr;
-	TQueue<>
+	TQueue<FNetPackage> SendMessageQueue;
+	TQueue<FNetPackage> ReceivedMessageQueue;
 
 	bool ShouldStop = false;
-};
 
-class FRouteClientRunner : public FRunnable
-{
-public:
-
-	FRouteClientRunner(FRouteClient& client) : Client(client){} 
-	
-	virtual bool Init() override;
-	virtual uint32 Run() override;
-	virtual void Stop() override;
-private:
-	FRouteClient& Client;
+	TSharedPtr<INetPackageHandler> PackageHandler;
 };

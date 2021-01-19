@@ -5,6 +5,8 @@
 #include "CoreMinimal.h"
 #include "ModuleManager.h"
 
+DECLARE_LOG_CATEGORY_EXTERN(ResetCore_CommonLib, Log, All);
+
 class FCommonLibModule : public IModuleInterface
 {
 public:
