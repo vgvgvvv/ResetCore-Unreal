@@ -1,4 +1,4 @@
-#include "AutomaticManager.h"
+#include "LocalControl/AutomaticManager.h"
 #include "RunnableThread.h"
 #include "ReAutomatic.h"
 

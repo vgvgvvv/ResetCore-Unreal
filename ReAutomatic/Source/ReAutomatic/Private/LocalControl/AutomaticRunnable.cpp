@@ -1,4 +1,4 @@
-#include "AutomaticRunnable.h"
+#include "LocalControl/AutomaticRunnable.h"
 #include "CoreMinimal.h"
 #include "ReAutomatic.h"
 #include "RunnableThread.h"

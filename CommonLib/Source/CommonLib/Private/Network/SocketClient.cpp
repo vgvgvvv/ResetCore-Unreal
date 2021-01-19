@@ -43,6 +43,17 @@ FSocketClient* FSocketClient::SetConnectTarget(FString host, int32 port)
 	return this;
 }
 
+
+const FString& FSocketClient::GetName() const
+{
+	return Name;
+}
+
+const int32 FSocketClient::GetBufferSize() const
+{
+	return BufferSize;
+}
+
 void FSocketClient::Run()
 {
 	ShouldStop = false;

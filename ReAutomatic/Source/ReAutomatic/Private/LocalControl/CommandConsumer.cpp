@@ -1,5 +1,5 @@
-#include "CommandConsumer.h"
-#include "AutomaticManager.h"
+#include "LocalControl/CommandConsumer.h"
+#include "LocalControl/AutomaticManager.h"
 #include "EventDispatcher.h"
 #include "JsonSerializer.h"
 

@@ -31,6 +31,9 @@ private:
 
 	int32 LastUpdateTime;
 	int32 HeartBeatSecond = 3;
+public:
+	const FString& GetName() const;
+	const int32 GetBufferSize() const;
 
 
 public:

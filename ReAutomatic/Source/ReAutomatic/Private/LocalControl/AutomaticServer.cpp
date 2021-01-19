@@ -1,10 +1,10 @@
-#include "AutomaticServer.h"
+#include "LocalControl/AutomaticServer.h"
 #include "ReAutomatic.h"
 #include "IPv4Address.h"
 #include "IPv4Endpoint.h"
 #include "TcpSocketBuilder.h"
 #include "Sockets.h"
-#include "AutomaticManager.h"
+#include "LocalControl/AutomaticManager.h"
 
 
 static int32 BufferSize = 2 * 1024 * 1024;
