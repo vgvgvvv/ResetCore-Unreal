@@ -2,8 +2,9 @@
 
 #include "NetPackageHandler.h"
 
-class FJsonPackageHandler : public INetPackageHandler
+class COMMONLIB_API FJsonPackageHandler : public INetPackageHandler
 {
 public:
 	virtual void HandlePackage(FSocketClient& from, FNetPackage& package) override;
+	
 };

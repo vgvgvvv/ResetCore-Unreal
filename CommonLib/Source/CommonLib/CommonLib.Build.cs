@@ -41,7 +41,8 @@ public class CommonLib : ModuleRules
 				"Slate",
 				"SlateCore",
 				"Networking",
-				"Sockets"
+				"Sockets",
+				"Json"
 				// ... add private dependencies that you statically link with here ...	
 			}
 			);

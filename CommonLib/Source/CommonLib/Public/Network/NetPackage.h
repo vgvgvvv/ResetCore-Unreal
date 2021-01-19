@@ -1,7 +1,7 @@
 #pragma once
 #include "CoreMinimal.h"
 
-struct FNetPackage
+struct COMMONLIB_API FNetPackage
 {
 	int32 Length = 0;
 	TArray<uint8> Data;
@@ -15,7 +15,7 @@ struct FNetPackage
 	T GetValue();
 };
 
-class FNetPackageUtil
+class COMMONLIB_API FNetPackageUtil
 {
 public:
 	static FNetPackage MakeEmptyPackage();

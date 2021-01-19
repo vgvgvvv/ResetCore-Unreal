@@ -1,25 +1,23 @@
 ﻿#pragma once
-#include "IPv4/IPv4Endpoint.h"
-#include "Runnable.h"
 #include "CoreMinimal.h"
-
 
 #include "NetPackage.h"
 #include "Queue.h"
 #include "NetPackageHandler/NetPackageHandler.h"
-#include "Serializer/FNetJsonSerializer.h"
 
+class FSocket;
+class FInternetAddr;
 DECLARE_MULTICAST_DELEGATE(FOnRegistRouteClient);
 DECLARE_MULTICAST_DELEGATE(FOnCloseRouteClient);
 DECLARE_MULTICAST_DELEGATE(FOnHeartBeatRouteClient);
 
-class FSocketClient
+class COMMONLIB_API FSocketClient
 {
 public:
 	//Client属性相关
 
-	FSocketClient& SetBuffer(int32 bufferSize);
-	FSocketClient& SetConnectTarget(FString host, int32 port);
+	FSocketClient* SetBuffer(int32 bufferSize);
+	FSocketClient* SetConnectTarget(FString host, int32 port);
 
 	FOnRegistRouteClient OnRegist;
 	FOnCloseRouteClient OnClose;
@@ -37,7 +35,7 @@ private:
 
 public:
 	//生命周期相关
-	FSocketClient(const FString& name);
+	FSocketClient(const FString& name, TSharedPtr<INetPackageHandler> PackageHandler);
 	~FSocketClient();
 
 	void Run();
@@ -54,7 +52,6 @@ private:
 private:
 	
 	FSocket* ClientSocket = nullptr;
-	FRunnableThread* RunnableThread = nullptr;
 	TQueue<FNetPackage> SendMessageQueue;
 	TQueue<FNetPackage> ReceivedMessageQueue;
 

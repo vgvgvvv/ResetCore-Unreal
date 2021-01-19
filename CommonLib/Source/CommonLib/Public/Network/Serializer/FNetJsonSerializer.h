@@ -3,10 +3,10 @@
 #include "JsonObject.h"
 #include "Serializer.h"
 
-class FNetJsonSerializer
+class COMMONLIB_API FNetJsonSerializer
 {
 public:
 
-	void SerializeJson(TSharedPtr<FJsonObject>, TArray<uint8>& data);
-	TSharedPtr<FJsonObject> DeSerializeJson(TArray<uint8>& data);
+	static void Serialize(TSharedPtr<FJsonObject>, TArray<uint8>& data);
+	static TSharedPtr<FJsonObject> DeSerialize(TArray<uint8>& data);
 };

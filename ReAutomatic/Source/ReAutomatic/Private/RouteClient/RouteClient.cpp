@@ -1,15 +1,12 @@
 ﻿#include "RouteClient/RouteClient.h"
 
-#include "SocketClient.h"
+
+#include "RunnableThread.h"
+#include "Network/SocketClient.h"
+#include "NetPackageHandler/JsonPackageHandler.h"
+#include "Utility/LambdaRunnable.h"
 
 void FRouteClient::Start()
 {
-	auto& Client = FSocketClient(TEXT("UE4Client"))
-		.SetConnectTarget(TEXT("121.196.216.106"), 8000);
-
-	Client.OnHeartBeat.AddLambda([]()
-	{
-		
-	});
-		
+	
 }

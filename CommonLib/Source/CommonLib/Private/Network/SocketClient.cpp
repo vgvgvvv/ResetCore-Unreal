@@ -7,13 +7,14 @@
 #include "Sockets.h"
 #include "SocketSubsystem.h"
 #include "TcpSocketBuilder.h"
-#include "Serializer/FNetJsonSerializer.h"
 
 
-FSocketClient::FSocketClient(const FString& name): LastUpdateTime(0)
+FSocketClient::FSocketClient(const FString& name, TSharedPtr<INetPackageHandler> handler)
 {
 	Name = name;
 	ShouldStop = false;
+	LastUpdateTime = FPlatformTime::Cycles();
+	PackageHandler = handler;
 }
 
 
@@ -22,17 +23,15 @@ FSocketClient::~FSocketClient()
 	delete ClientSocket;
 	ClientSocket = nullptr;
 
-	delete RunnableThread;
-	RunnableThread = nullptr;
 }
 
-FSocketClient& FSocketClient::SetBuffer(int32 bufferSize)
+FSocketClient* FSocketClient::SetBuffer(int32 bufferSize)
 {
 	BufferSize = bufferSize;
-	return *this;
+	return this;
 }
 
-FSocketClient& FSocketClient::SetConnectTarget(FString host, int32 port)
+FSocketClient* FSocketClient::SetConnectTarget(FString host, int32 port)
 {
 	FIPv4Address ip;
 	FIPv4Address::Parse(host, ip);
@@ -40,7 +39,7 @@ FSocketClient& FSocketClient::SetConnectTarget(FString host, int32 port)
 	InternetAddress = ISocketSubsystem::Get(PLATFORM_SOCKETSUBSYSTEM)->CreateInternetAddr();
 	InternetAddress->SetIp(ip.Value);
 	InternetAddress->SetPort(port);
-	return *this;
+	return this;
 }
 
 void FSocketClient::Run()
@@ -169,10 +168,16 @@ void FSocketClient::ReadSocketBuffer()
 
 			ReceivedData.Add(0);
 			ReceivedMessageQueue.Enqueue(FNetPackage(Len, ReceivedData));
-
 		}
-		
 
+	}
+
+	while(!ReceivedMessageQueue.IsEmpty())
+	{
+		FNetPackage Package;
+		ReceivedMessageQueue.Dequeue(Package);
+
+		PackageHandler->HandlePackage(*this, Package);
 	}
 
 }

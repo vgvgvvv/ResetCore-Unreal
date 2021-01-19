@@ -13,7 +13,7 @@ FNetPackage::FNetPackage(int32 length, TArray<uint8> data)
 
 bool FNetPackage::IsEmpty() const
 {
-	return Length > 0;
+	return Length == 0;
 }
 
 FNetPackage FNetPackageUtil::MakeEmptyPackage()

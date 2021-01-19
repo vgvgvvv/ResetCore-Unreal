@@ -1,10 +1,10 @@
 #include "Network/Serializer/FNetJsonSerializer.h"
 
-
 #include "CommonLib.h"
-#include "Runtime/JsonUtilities/Public/JsonObjectConverter.h"
+#include "JsonSerializer.h"
+#include "JsonWriter.h"
 
-void FNetJsonSerializer::SerializeJson(TSharedPtr<FJsonObject> json, TArray<uint8>& data)
+void FNetJsonSerializer::Serialize(TSharedPtr<FJsonObject> json, TArray<uint8>& data)
 {
 	FString jsonStr;
 	TSharedRef<TJsonWriter<>> Writer = TJsonWriterFactory<>::Create(&jsonStr);
@@ -20,7 +20,7 @@ void FNetJsonSerializer::SerializeJson(TSharedPtr<FJsonObject> json, TArray<uint
 	
 }
 
-TSharedPtr<FJsonObject> FNetJsonSerializer::DeSerializeJson(TArray<uint8>& data)
+TSharedPtr<FJsonObject> FNetJsonSerializer::DeSerialize(TArray<uint8>& data)
 {
 	data.Add(0);
 	auto jsonString = FString(ANSI_TO_TCHAR(reinterpret_cast<const char*>(data.GetData())));
