@@ -20,6 +20,7 @@ FSocketClient::FSocketClient(const FString& name, TSharedPtr<INetPackageHandler>
 
 FSocketClient::~FSocketClient()
 {
+	ShouldStop = true;
 	delete ClientSocket;
 	ClientSocket = nullptr;
 
