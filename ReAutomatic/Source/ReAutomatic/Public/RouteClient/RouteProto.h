@@ -1,33 +1,35 @@
 ﻿#pragma once
+
 #include "ObjectMacros.h"
 #include "UnrealString.h"
 #include "RouteProto.generated.h"
 
+
 UENUM()
-enum class REAUTOMATIC_API ERouteType
+enum class ERouteType : uint8
 {
-	RouteType_RouteServer = 0,
-    RouteType_LocalController = 1,
-    RouteType_MobileDevice = 2, 
-    RouteType_UnrealEngine = 3,
-    RouteType_WebService = 4,
-    RouteType_Max = RouteType_WebService        
+
+	RouteServer = 0,
+    LocalController = 1,
+    MobileDevice = 2, 
+    UnrealEngine = 3,
+    WebService = 4,
+    Max = WebService        
 };
 
 UENUM()
-enum class REAUTOMATIC_API ERouteProtoID
-{
-	RouteProtoID_Regist = 0,
-	RouteProtoID_NormalMessage = 1,
-	RouteProtoID_Close = 2,        
-	RouteProtoID_HeartBeat = 3,   
-	RouteProtoID_Log = 4,		  
-	RouteProtoID_ListDevice = 5,	  
-	RouteProtoID_Max = RouteProtoID_ListDevice         
+enum class ERouteProtoID  : uint8 {
+	Regist = 0,
+	NormalMessage = 1,
+	Close = 2,        
+	HeartBeat = 3,   
+	Log = 4,		  
+	ListDevice = 5,	  
+	Max = ListDevice         
 };
 
 USTRUCT()
-struct FRouteRegistMessage
+struct REAUTOMATIC_API FRouteRegistMessage
 {
 	GENERATED_BODY()
 
@@ -39,7 +41,7 @@ struct FRouteRegistMessage
 };
 
 USTRUCT()
-struct FRouteCloseMessage
+struct REAUTOMATIC_API FRouteCloseMessage
 {
 	GENERATED_BODY()
 	
@@ -51,7 +53,7 @@ struct FRouteCloseMessage
 };
 
 USTRUCT()
-struct FRouteSendMessage
+struct REAUTOMATIC_API FRouteSendMessage
 {
 	GENERATED_BODY()
 	
@@ -70,35 +72,30 @@ struct FRouteSendMessage
 };
 
 USTRUCT()
-struct FCmdTypes
+struct REAUTOMATIC_API FCmdTypes
 {
 	GENERATED_BODY()
 	
 	using FCmdType=FString;
 
-	UPROPERTY()
-	static FCmdType Log = "Log";
+	static FCmdType Log;
 
-	UPROPERTY()
-	static FCmdType UE4Msg = "UE4Msg";
+	static FCmdType UE4Msg;
 
-	UPROPERTY()
-	static FCmdType ListDevice = "ListDevice";
+	static FCmdType ListDevice;
 
-	UPROPERTY()
-	static FCmdType Shell = "Shell";
+	static FCmdType Shell;
 
-	UPROPERTY()
-	static FCmdType DownloadFile = "DownloadFile";
+	static FCmdType DownloadFile;
 	
 };
 
 USTRUCT()
-struct FRawCommandMessage
+struct REAUTOMATIC_API FRawCommandMessage
 {
 	GENERATED_BODY()
 	
 	UPROPERTY()
-	FCmdTypes::FCmdType CmdId;
+	FString CmdId;
 	
 };
