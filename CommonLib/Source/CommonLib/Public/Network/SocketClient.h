@@ -29,7 +29,7 @@ private:
 	int32 BufferSize = 2 * 1024 * 1024;	
 	FString Name;
 
-	int32 LastUpdateTime;
+	int32 LastHeartBeatTime;
 	int32 HeartBeatSecond = 3;
 public:
 	const FString& GetName() const;
@@ -59,6 +59,7 @@ private:
 	TQueue<FNetPackage> ReceivedMessageQueue;
 
 	bool ShouldStop = false;
+	bool NeedReconnect = false;
 
 	TSharedPtr<INetPackageHandler> PackageHandler;
 };

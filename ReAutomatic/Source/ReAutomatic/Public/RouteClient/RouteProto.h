@@ -1,5 +1,6 @@
 ﻿#pragma once
 
+#include "JsonObject.h"
 #include "ObjectMacros.h"
 #include "UnrealString.h"
 #include "RouteProto.generated.h"
@@ -59,7 +60,8 @@ struct REAUTOMATIC_API FRawCommandMessage
 	
 	UPROPERTY()
 	FString CmdId;
-	
+
+	TSharedPtr<FJsonObject> Content;
 };
 
 
@@ -80,7 +82,6 @@ struct REAUTOMATIC_API FRouteSendMessage
 	UPROPERTY()
 	FString TargetRouteName;
 
-	UPROPERTY()
 	FRawCommandMessage Content;
 	
 };

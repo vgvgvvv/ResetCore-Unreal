@@ -13,7 +13,7 @@ FSocketClient::FSocketClient(const FString& name, TSharedPtr<INetPackageHandler>
 {
 	Name = name;
 	ShouldStop = false;
-	LastUpdateTime = FPlatformTime::Cycles();
+	LastHeartBeatTime = FPlatformTime::Cycles();
 	PackageHandler = handler;
 }
 
@@ -71,8 +71,14 @@ void FSocketClient::Run()
 			}
 			
 			UE_LOG(LogTemp, Warning, TEXT("Connect To %s Error Success!!"), *InternetAddress->ToString(true))
+			NeedReconnect = false;
 			while(ClientSocket != nullptr && ClientSocket->GetConnectionState() == SCS_Connected)
 			{
+				if(ShouldStop || NeedReconnect)
+				{
+					break;
+				}
+
 
 				WriteMessageBuffer();
 				ReadSocketBuffer();
@@ -137,6 +143,11 @@ void FSocketClient::WriteMessageBuffer()
 		int32 len = sendContent.Length;
 		ClientSocket->Send((uint8*)&len, 4, bytesSend);
 		ClientSocket->Send(sendContent.Data.GetData(), sendContent.Length, bytesSend);
+
+		if(bytesSend < 0)
+		{
+			NeedReconnect = true;
+		}
 	}
 }
 
@@ -191,17 +202,19 @@ void FSocketClient::ReadSocketBuffer()
 
 		PackageHandler->HandlePackage(*this, Package);
 	}
+	
 
 }
 
 void FSocketClient::DoHeartBeat()
 {
-	if(FPlatformTime::ToSeconds(FPlatformTime::Cycles() - LastUpdateTime)  >= HeartBeatSecond)
+	if(FPlatformTime::ToSeconds(FPlatformTime::Cycles() - LastHeartBeatTime)  >= HeartBeatSecond)
 	{
 		if(OnHeartBeat.IsBound())
 		{
 			OnHeartBeat.Broadcast();
 		}
+		LastHeartBeatTime = FPlatformTime::Cycles();
 	}
 }
 

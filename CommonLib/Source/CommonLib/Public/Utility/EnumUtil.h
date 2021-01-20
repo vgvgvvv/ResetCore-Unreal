@@ -4,7 +4,7 @@
 #include "UnrealString.h"
 #include "UObjectGlobals.h"
 
-class FEnumUtil
+class COMMONLIB_API FEnumUtil
 {
 public:
 
