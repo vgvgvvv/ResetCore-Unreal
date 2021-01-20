@@ -11,19 +11,19 @@
 
 FRouteClient::~FRouteClient()
 {
+	if(LocalClient)
+	{
+		LocalClient->Stop();
+	}
+	
 	if(Runner)
 	{
-		Runner->Stop();
-		Runner->EnsureCompletion();
-
 		delete Runner;
 		Runner = nullptr;
 	}
 	
 	if(LocalClient)
 	{
-		LocalClient->Stop();
-
 		delete LocalClient;
 		LocalClient = nullptr;
 	}

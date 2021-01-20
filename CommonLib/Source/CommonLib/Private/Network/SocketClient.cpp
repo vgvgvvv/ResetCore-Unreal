@@ -79,7 +79,6 @@ void FSocketClient::Run()
 					break;
 				}
 
-
 				WriteMessageBuffer();
 				ReadSocketBuffer();
 				DoHeartBeat();
@@ -96,6 +95,7 @@ void FSocketClient::Run()
 	}
 
 	ClientSocket->Close();
+	ClientSocket = nullptr;
 }
 
 void FSocketClient::SendMessage(FNetPackage& NetPackage)
@@ -181,9 +181,12 @@ void FSocketClient::ReadSocketBuffer()
 			ReceivedData.Init(0, FMath::Max(Size, 3000u));
 		
 			bool result = ClientSocket->Wait(ESocketWaitConditions::WaitForRead, FTimespan(0,0,120));
+			
 			//超时没收到包，关闭socket，走重连逻辑
 			if (!result) {
+				ClientSocket->Close();
 				ClientSocket = nullptr;
+				NeedReconnect = true;
 				UE_LOG(ResetCore_CommonLib, Error, TEXT("Recv timeout"));
 				return;
 			}

@@ -12,8 +12,8 @@ class COMMONLIB_API FLambdaRunnable : public FRunnable
 {
 private:
 	/** Thread to run the worker FRunnable on */
-	FRunnableThread* Thread;
-	uint64 Number;
+	FRunnableThread* Thread = nullptr;
+	uint64 Number = 0;
 
 	//Lambda function pointer
 	TFunction< void()> FunctionPointer;
@@ -32,12 +32,15 @@ public:
 	virtual ~FLambdaRunnable();
 
 	// Begin FRunnable interface.
-	virtual bool Init();
-	virtual uint32 Run();
-	virtual void Stop();
-	virtual void Exit() override;
+	bool Init() override;
+	uint32 Run() override;
+	void Stop() override;
+	void Exit() override;
 	// End FRunnable interface
 
+
+	void End();
+	
 	/** Makes sure this thread has stopped properly */
 	void EnsureCompletion();
 

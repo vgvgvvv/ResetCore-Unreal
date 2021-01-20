@@ -1,4 +1,5 @@
 ﻿#include "Utility/LambdaRunnable.h"
+#include "CommonLib.h"
 
 uint64 FLambdaRunnable::ThreadNumber = 0;
 
@@ -15,24 +16,30 @@ FLambdaRunnable::FLambdaRunnable(TFunction< void()> InFunction)
 
 FLambdaRunnable::~FLambdaRunnable()
 {
-	delete Thread;
-	Thread = NULL;
+	if (Thread)
+	{
+		delete Thread;
+		Thread = nullptr;
+	}
 }
 
 //Init
 bool FLambdaRunnable::Init()
 {
-	//UE_LOG(LogClass, Log, TEXT("FLambdaRunnable %d Init"), Number);
+	UE_LOG(ResetCore_CommonLib, Log, TEXT("FLambdaRunnable %d Init"), Number);
 	return true;
 }
 
 //Run
 uint32 FLambdaRunnable::Run()
 {
+	
+	
 	if (FunctionPointer)
 		FunctionPointer();
+	
 
-	//UE_LOG(LogClass, Log, TEXT("FLambdaRunnable %d Run complete"), Number);
+	UE_LOG(ResetCore_CommonLib, Log, TEXT("FLambdaRunnable %d Run complete"), Number);
 	return 0;
 }
 
@@ -44,12 +51,10 @@ void FLambdaRunnable::Stop()
 
 void FLambdaRunnable::Exit()
 {
-	Finished = true;
-	//UE_LOG(LogClass, Log, TEXT("FLambdaRunnable %d Exit"), Number);
-
-	//delete ourselves when we're done
-	delete this;
+	Stop();
+	UE_LOG(ResetCore_CommonLib, Log, TEXT("FLambdaRunnable %d Exit"), Number);
 }
+
 
 void FLambdaRunnable::EnsureCompletion()
 {
