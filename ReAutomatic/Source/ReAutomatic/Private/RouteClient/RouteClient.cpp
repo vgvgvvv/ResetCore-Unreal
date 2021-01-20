@@ -3,6 +3,7 @@
 
 
 #include "FNetJsonSerializer.h"
+#include "RouteMessagePackage.h"
 #include "RouteClient/RouteProto.h"
 #include "Network/SocketClient.h"
 #include "Network/NetPackageHandler/JsonPackageHandler.h"
@@ -41,15 +42,16 @@ void FRouteClient::Init(const FString Name, const FString Host, const int32 Port
 		Message.RegistType = ERouteType::UnrealEngine;
 
 		const auto JSONObj = FJsonObjectConverter::UStructToJsonObject(Message);
-		SendProtoIDMessage(ERouteProtoID::Regist, JSONObj);
+
+		auto Package = FRouteMessagePackage::MakeFromProtoIDMessage(ERouteProtoID::Regist, JSONObj);
+		LocalClient->SendMessage(Package);
 	});
 
 	LocalClient->OnHeartBeat.AddLambda([this]()
 	{
-		SendProtoIDMessage(ERouteProtoID::HeartBeat, MakeShared<FJsonObject>());
+		auto Package = FRouteMessagePackage::MakeFromProtoIDMessage(ERouteProtoID::Regist, MakeShared<FJsonObject>());
+		LocalClient->SendMessage(Package);
 	});
-	
-	
 }
 
 
@@ -74,34 +76,3 @@ void FRouteClient::Stop() const
 	LocalClient->Stop();
 }
 
-
-void FRouteClient::SendMessage(TSharedPtr<FJsonObject> JsonObject) const
-{
-	FNetPackage Package = FNetPackageUtil::MakePack<TSharedPtr<FJsonObject>, FNetJsonSerializer>(JsonObject);
-	LocalClient->SendMessage(Package);
-}
-
-void FRouteClient::SendProtoIDMessage(ERouteProtoID ProtoID,TSharedPtr<FJsonObject> Content) const
-{
-	TSharedPtr<FJsonObject> message = MakeShared<FJsonObject>();
-	message->SetNumberField("ProtoID", static_cast<int32>(ProtoID));
-	message->SetObjectField("Content", Content);
-
-	SendMessage(message);
-}
-
-void FRouteClient::SendRouteMessage(const FRawCommandMessage& CommandMessage, const FString& TargetName, const ERouteType TargetType) const
-{
-	FRouteSendMessage RouteSendMessage;
-	RouteSendMessage.TargetRouteName = TargetName;
-	RouteSendMessage.TargetRouteType = TargetType;
-	auto RouteSendMessageObj = FJsonObjectConverter::UStructToJsonObject(RouteSendMessage);
-
-	TSharedPtr<FJsonObject> RawCommandMessageObj = MakeShared<FJsonObject>();
-	RawCommandMessageObj->SetStringField("CmdId", CommandMessage.CmdId);
-	RawCommandMessageObj->SetObjectField("Content", CommandMessage.Content);
-	
-	RouteSendMessageObj->SetObjectField("Content", RawCommandMessageObj);
-	
-	SendProtoIDMessage(ERouteProtoID::NormalMessage, RouteSendMessageObj);
-}
