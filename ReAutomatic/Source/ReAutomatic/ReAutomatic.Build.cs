@@ -28,10 +28,8 @@ public class ReAutomatic : ModuleRules
 			new string[]
 			{
 				"Core",
-				"Json",
 				"CommonLib",
-				"Networking",
-				"Sockets",
+				
 				// ... add other public dependencies that you statically link with here ...
 			}
 			);
@@ -44,7 +42,10 @@ public class ReAutomatic : ModuleRules
 				"Engine",
 				"Slate",
 				"SlateCore",
-
+				"Json",
+				"JsonUtilities",
+				"Networking",
+				"Sockets",
 				// ... add private dependencies that you statically link with here ...
 			}
 			);

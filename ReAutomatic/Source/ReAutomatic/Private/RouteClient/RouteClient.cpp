@@ -45,6 +45,11 @@ void FRouteClient::Start(const FString Name, const FString Host, const int32 Por
 		
 		LocalClient->SendMessage(Package);
 	});
+
+	LocalClient->OnHeartBeat.AddLambda([]()
+	{
+		
+	});
 	
 	Runner = FLambdaRunnable::RunLambdaOnBackGroundThread([this]()
     {

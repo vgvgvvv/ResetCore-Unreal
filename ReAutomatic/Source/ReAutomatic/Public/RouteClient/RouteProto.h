@@ -53,6 +53,17 @@ struct REAUTOMATIC_API FRouteCloseMessage
 };
 
 USTRUCT()
+struct REAUTOMATIC_API FRawCommandMessage
+{
+	GENERATED_BODY()
+	
+	UPROPERTY()
+	FString CmdId;
+	
+};
+
+
+USTRUCT()
 struct REAUTOMATIC_API FRouteSendMessage
 {
 	GENERATED_BODY()
@@ -68,6 +79,9 @@ struct REAUTOMATIC_API FRouteSendMessage
 
 	UPROPERTY()
 	FString TargetRouteName;
+
+	UPROPERTY()
+	FRawCommandMessage Content;
 	
 };
 
@@ -90,12 +104,3 @@ struct REAUTOMATIC_API FCmdTypes
 	
 };
 
-USTRUCT()
-struct REAUTOMATIC_API FRawCommandMessage
-{
-	GENERATED_BODY()
-	
-	UPROPERTY()
-	FString CmdId;
-	
-};

@@ -6,13 +6,13 @@
 #include "CommonLib.h"
 
 
-
 void FJsonPackageHandler::HandlePackage(FSocketClient& from, FNetPackage& package)
 {
-	auto result = package.GetValue<TSharedPtr<FJsonObject>, FNetJsonSerializer>();
+	const auto result = package.GetValue<TSharedPtr<FJsonObject>, FNetJsonSerializer>();
+	HandleJsonInfo(from, result);	
+}
 
-	auto str = FJsonUtil::JsonObjectToString(result);
-
-	UE_LOG(ResetCore_CommonLib, Log, TEXT("recv json %s"), *str);
-	
+void FJsonPackageHandler::HandleJsonInfo(FSocketClient& from, TSharedPtr<FJsonObject> jsonObject)
+{
+	UE_LOG(ResetCore_CommonLib, Log, TEXT("recv json %s"), *FJsonUtil::JsonObjectToString(jsonObject));
 }
