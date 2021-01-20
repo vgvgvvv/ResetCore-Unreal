@@ -1,6 +1,7 @@
 ﻿#pragma once
 #include "JsonObject.h"
 #include "LambdaRunnable.h"
+#include "NetPackage.h"
 #include "RouteProto.h"
 #include "SharedPointer.h"
 #include "UnrealString.h"
@@ -22,10 +23,10 @@ public:
 
 public:
 
-	void SendMessage(TSharedPtr<FJsonObject> JsonObject) const;
-	void SendProtoIDMessage(ERouteProtoID ProtoID,TSharedPtr<FJsonObject> JsonObject) const;
-	void SendRouteMessage(const FRawCommandMessage& CommandMessage, const FString& TargetName, const ERouteType TargetType) const;
-
+	static FNetPackage MakeFromJsonObject(TSharedPtr<FJsonObject> JsonObject);
+	static FNetPackage MakeFromProtoIDMessage(ERouteProtoID ProtoID, TSharedPtr<FJsonObject> Content);
+	static FNetPackage MakeFromRouteMessage(const FRawCommandMessage& CommandMessage, const FString& TargetName, const ERouteType TargetType);
+	
 private:
 	class FSocketClient* LocalClient = nullptr;
 	class FLambdaRunnable* Runner = nullptr;

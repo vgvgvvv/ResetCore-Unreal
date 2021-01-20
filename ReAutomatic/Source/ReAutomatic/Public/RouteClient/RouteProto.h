@@ -61,7 +61,7 @@ struct REAUTOMATIC_API FRawCommandMessage
 	UPROPERTY()
 	FString CmdId;
 
-	TSharedPtr<FJsonObject> Content;
+	TSharedPtr<FJsonValue> Content;
 };
 
 

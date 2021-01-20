@@ -1,7 +1,6 @@
 #include "RouteClient/NetPackageHandler/RouteMessageHandler.h"
 
 
-
 #include "EnumUtil.h"
 #include "JsonUtil.h"
 #include "ReAutomatic.h"
@@ -24,6 +23,8 @@ void FRouteMessageHandler::HandleJsonInfo(FSocketClient& from, TSharedPtr<FJsonO
 
 	if(CmdId == FCmdTypes::Log)
 	{
-		from.SendMessage()
+		auto Value = ContentObject->GetField<EJson::String>("Content");
+		auto LogStr = Value->AsString();
+		UE_LOG(LogAutomatic, Log, TEXT("Log From Route Server : %s"), *LogStr)
 	}
 }
