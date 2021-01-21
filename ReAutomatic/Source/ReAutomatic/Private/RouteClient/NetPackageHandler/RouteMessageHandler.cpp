@@ -8,6 +8,7 @@
 #include "JsonUtilities.h"
 #include "SocketClient.h"
 #include "UE4ControlCenter/UE4ControlCenter.h"
+#include "Async/Async.h"
 
 
 void FRouteMessageHandler::HandleJsonInfo(FSocketClient& from, TSharedPtr<FJsonObject> jsonObject)
@@ -38,14 +39,22 @@ void FRouteMessageHandler::HandleJsonInfo(FSocketClient& from, TSharedPtr<FJsonO
 		auto CmdContent = UE4JsonObj->GetField<EJson::None>("Content");
 
 		auto Arg = FUE4CmdArg(CmdId, CmdContent);
-		FUE4ControlCenter::Get().Trigger(FName(*CmdId), Arg);
+
+		AsyncTask(ENamedThreads::GameThread, [CmdId, Arg]()
+		{
+			auto Temp = Arg;
+			FUE4ControlCenter::Get().Trigger(FName(*CmdId), Temp);
+		});
 	}
 	else if (CmdId == FCmdTypes::RunLua)
 	{
 		auto Value = ContentObject->GetField<EJson::String>("Content");
 		auto LuaStr = Value->AsString();
-		
-		FUE4ControlCenter::Get().OnRunLua.Broadcast(LuaStr);
+
+		AsyncTask(ENamedThreads::GameThread, [LuaStr]()
+		{
+			FUE4ControlCenter::Get().OnRunLua.Broadcast(LuaStr);
+		});
 	}else
 	{
 		UE_LOG(LogAutomatic, Error, TEXT("Not Support Cmdid : %s"), *CmdId)
