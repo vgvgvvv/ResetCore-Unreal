@@ -17,12 +17,17 @@ struct REAUTOMATIC_API FUE4CmdArg : CommonLib::IArg
 class REAUTOMATIC_API FUE4ControlCenter
 {
 public:
-	
+
+	DECLARE_MULTICAST_DELEGATE_OneParam(FUE4ControlRunLuaDelegate, FString);
+
+	// UE4 Message 
 	const CommonLib::IListener* RegisterCmdEvent(const FName& CmdName, TFunction<void(CommonLib::IArg*)> Handler);
 	void RemoveCmdEventLister(const CommonLib::IListener* Listener);
-
 	void Trigger(const FName& EventName, CommonLib::IArg& Arg);
 
+	// Run Lua
+	FUE4ControlRunLuaDelegate OnRunLua;
+	
 private:
 	CommonLib::FEventDispatcher EventDispatcher;
 public:

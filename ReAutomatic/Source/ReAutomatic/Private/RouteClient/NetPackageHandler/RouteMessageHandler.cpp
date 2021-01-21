@@ -40,4 +40,14 @@ void FRouteMessageHandler::HandleJsonInfo(FSocketClient& from, TSharedPtr<FJsonO
 		auto Arg = FUE4CmdArg(CmdId, CmdContent);
 		FUE4ControlCenter::Get().Trigger(FName(*CmdId), Arg);
 	}
+	else if (CmdId == FCmdTypes::RunLua)
+	{
+		auto Value = ContentObject->GetField<EJson::String>("Content");
+		auto LuaStr = Value->AsString();
+		
+		FUE4ControlCenter::Get().OnRunLua.Broadcast(LuaStr);
+	}else
+	{
+		UE_LOG(LogAutomatic, Error, TEXT("Not Support Cmdid : %s"), *CmdId)
+	}
 }

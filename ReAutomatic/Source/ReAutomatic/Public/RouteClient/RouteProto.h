@@ -102,6 +102,8 @@ struct REAUTOMATIC_API FCmdTypes
 	static FCmdType Shell;
 
 	static FCmdType DownloadFile;
+
+	static FCmdType RunLua;
 	
 };
 
