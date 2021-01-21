@@ -94,16 +94,12 @@ struct REAUTOMATIC_API FCmdTypes
 	using FCmdType=FString;
 
 	static FCmdType Log;
-
 	static FCmdType UE4Msg;
-
+	static FCmdType UE4MsgResult;
 	static FCmdType ListDevice;
-
 	static FCmdType Shell;
-
 	static FCmdType DownloadFile;
-
 	static FCmdType RunLua;
-	
+	static FCmdType RunLuaFinish;
 };
 

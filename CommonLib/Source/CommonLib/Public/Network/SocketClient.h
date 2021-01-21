@@ -42,7 +42,7 @@ public:
 	~FSocketClient();
 
 	void Run();
-	void SendMessage(FNetPackage& NetPackage);
+	void SendMessage(const FNetPackage& NetPackage);
 	void Stop();
 private:
 

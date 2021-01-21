@@ -106,6 +106,15 @@ void FRouteClient::Stop() const
 	LocalClient->Stop();
 }
 
+
+void FRouteClient::SendMessage(const FNetPackage& Package)
+{
+	if(LocalClient)
+	{
+		LocalClient->SendMessage(Package);
+	}
+}
+
 FNetPackage FRouteClient::NetPackageFromJsonObject(TSharedPtr<FJsonObject> JsonObject)
 {
 	return FNetPackageUtil::MakePack<TSharedPtr<FJsonObject>, FNetJsonSerializer>(JsonObject);
@@ -145,4 +154,25 @@ FNetPackage FRouteClient::NetPackageFromLogMessage(const FString& Log, const FSt
 	LogMessage.Content = MakeShared<FJsonValueString>(Log);
 
 	return NetPackageFromRouteMessage(LogMessage, TargetName, TargetType);
+}
+
+
+FNetPackage FRouteClient::NetPackageFromLuaResult(const TSharedPtr<FJsonValue> Result, const FString& TargetName,
+	const ERouteType TargetType)
+{
+	FRawCommandMessage LogMessage;
+	LogMessage.CmdId = FCmdTypes::RunLuaFinish;
+	LogMessage.Content = Result;
+
+	return NetPackageFromRouteMessage(LogMessage, TargetName, TargetType);
+}
+
+FNetPackage FRouteClient::NetPackageFromUE4MsgResult(const TSharedPtr<FJsonValue> Result, const FString& TargetName,
+	const ERouteType TargetType)
+{
+	FRawCommandMessage LogMessage;
+    LogMessage.CmdId = FCmdTypes::UE4MsgResult;
+    LogMessage.Content = Result;
+
+    return NetPackageFromRouteMessage(LogMessage, TargetName, TargetType);
 }

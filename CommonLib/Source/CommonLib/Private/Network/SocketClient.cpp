@@ -98,7 +98,7 @@ void FSocketClient::Run()
 	ClientSocket = nullptr;
 }
 
-void FSocketClient::SendMessage(FNetPackage& NetPackage)
+void FSocketClient::SendMessage(const FNetPackage& NetPackage)
 {
 	SendMessageQueue.Enqueue(NetPackage);
 }

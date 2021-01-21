@@ -26,11 +26,18 @@ public:
 
 public:
 
+	void SendMessage(const FNetPackage& Package);
+	
+public:
+
 	static FNetPackage NetPackageFromJsonObject(TSharedPtr<FJsonObject> JsonObject);
 	static FNetPackage NetPackageFromProtoIDMessage(ERouteProtoID ProtoID, TSharedPtr<FJsonObject> Content);
 	static FNetPackage NetPackageFromRouteMessage(const FRawCommandMessage& CommandMessage, const FString& TargetName, const ERouteType TargetType);
 
 	static FNetPackage NetPackageFromLogMessage(const FString& Log, const FString& TargetName, const ERouteType TargetType);
+
+	static FNetPackage NetPackageFromLuaResult(const TSharedPtr<FJsonValue> Result, const FString& TargetName, const ERouteType TargetType);
+	static FNetPackage NetPackageFromUE4MsgResult(const TSharedPtr<FJsonValue> Result, const FString& TargetName, const ERouteType TargetType);
 	
 private:
 	class FSocketClient* LocalClient = nullptr;
