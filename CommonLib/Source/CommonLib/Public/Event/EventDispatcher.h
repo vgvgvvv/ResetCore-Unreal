@@ -38,6 +38,8 @@ namespace CommonLib
 
 		void RemoveListener(const IListener& Listener);
 
+		void Clear();
+
 		void TriggerEvent(const FName& EventName, IArg& arg);
 
 		void TriggerEvent(FName&& EventName, IArg& arg);

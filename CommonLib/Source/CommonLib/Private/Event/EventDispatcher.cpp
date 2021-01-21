@@ -104,6 +104,11 @@ namespace CommonLib
 		}
 	}
 
+	void FEventDispatcher::Clear()
+	{
+		ListenerCenter.Empty();
+	}
+
 	void FEventDispatcher::TriggerEvent(const FName& EventName, IArg& arg)
 	{
 		auto Group = ListenerCenter.Find(EventName);

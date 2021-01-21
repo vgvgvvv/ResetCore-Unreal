@@ -24,6 +24,7 @@ public:
 	const CommonLib::IListener* RegisterCmdEvent(const FName& CmdName, TFunction<void(CommonLib::IArg*)> Handler);
 	void RemoveCmdEventLister(const CommonLib::IListener* Listener);
 	void Trigger(const FName& EventName, CommonLib::IArg& Arg);
+	void ClearAllCmd();
 
 	// Run Lua
 	FUE4ControlRunLuaDelegate OnRunLua;

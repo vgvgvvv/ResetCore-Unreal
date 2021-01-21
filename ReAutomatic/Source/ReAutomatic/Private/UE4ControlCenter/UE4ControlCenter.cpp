@@ -27,6 +27,11 @@ void FUE4ControlCenter::Trigger(const FName& EventName, CommonLib::IArg& Arg)
 	EventDispatcher.TriggerEvent(EventName, Arg);
 }
 
+void FUE4ControlCenter::ClearAllCmd()
+{
+	EventDispatcher.Clear();
+}
+
 FUE4ControlCenter* FUE4ControlCenter::Instance = nullptr;
 
 FUE4ControlCenter& FUE4ControlCenter::Get()
