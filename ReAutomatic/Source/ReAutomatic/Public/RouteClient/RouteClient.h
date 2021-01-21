@@ -11,7 +11,10 @@ enum class ERouteProtoID : uint8;
 class REAUTOMATIC_API FRouteClient
 {
 public:
-	void Init(const FString Name, const FString Host, const int32 Port);
+
+	bool InitWithFile();
+
+	void Init(const FString& Name, const FString& Host, const int32 Port);
 
 	FLambdaRunnable* RunWithBackground();
 

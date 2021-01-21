@@ -1,10 +1,13 @@
 ﻿#include "RouteClient/RouteClient.h"
 
-
+#include "ReAutomatic.h"
+#include "FileHelper.h"
 #include "Network/Serializer/FNetJsonSerializer.h"
 #include "JsonObjectConverter.h"
+#include "Paths.h"
 #include "RouteClient/NetPackageHandler/RouteMessageHandler.h"
 #include "Network/SocketClient.h"
+#include "Utility/JsonUtil.h"
 
 
 FRouteClient::~FRouteClient()
@@ -27,7 +30,36 @@ FRouteClient::~FRouteClient()
 	}
 }
 
-void FRouteClient::Init(const FString Name, const FString Host, const int32 Port)
+
+bool FRouteClient::InitWithFile()
+{
+	const FString AutomaticConfigFilePath = FPaths::ProjectSavedDir() + TEXT("run_automatic.json");
+	if (!FPaths::FileExists(*AutomaticConfigFilePath))
+	{
+		UE_LOG(LogAutomatic, Log, TEXT("Remote Contorl not enabled"))
+		return false;
+	}
+
+	FString ConfigJson;
+	FFileHelper::LoadFileToString(ConfigJson, *AutomaticConfigFilePath);
+
+	if(ConfigJson.IsEmpty())
+	{
+		UE_LOG(LogAutomatic, Log, TEXT("File is empty : %s"), *AutomaticConfigFilePath)
+		return false;
+	}
+
+	auto JsonObject = FJsonUtil::StringToJsonObject(ConfigJson);
+
+	auto Name = JsonObject->GetStringField("Name");
+	auto Host = JsonObject->GetStringField("Host");
+	auto Port = JsonObject->GetIntegerField("Port");
+	
+	Init(Name, Host, Port);
+	return true;
+}
+
+void FRouteClient::Init(const FString& Name, const FString& Host, const int32 Port)
 {
 	LocalClient = new FSocketClient(Name, MakeShared<FRouteMessageHandler>());
 	LocalClient->SetConnectTarget(Host, Port);
