@@ -23,9 +23,11 @@ public:
 
 public:
 
-	static FNetPackage MakeFromJsonObject(TSharedPtr<FJsonObject> JsonObject);
-	static FNetPackage MakeFromProtoIDMessage(ERouteProtoID ProtoID, TSharedPtr<FJsonObject> Content);
-	static FNetPackage MakeFromRouteMessage(const FRawCommandMessage& CommandMessage, const FString& TargetName, const ERouteType TargetType);
+	static FNetPackage NetPackageFromJsonObject(TSharedPtr<FJsonObject> JsonObject);
+	static FNetPackage NetPackageFromProtoIDMessage(ERouteProtoID ProtoID, TSharedPtr<FJsonObject> Content);
+	static FNetPackage NetPackageFromRouteMessage(const FRawCommandMessage& CommandMessage, const FString& TargetName, const ERouteType TargetType);
+
+	static FNetPackage NetPackageFromLogMessage(const FString& Log, const FString& TargetName, const ERouteType TargetType);
 	
 private:
 	class FSocketClient* LocalClient = nullptr;

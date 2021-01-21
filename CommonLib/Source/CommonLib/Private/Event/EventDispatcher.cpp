@@ -3,8 +3,64 @@
 
 namespace CommonLib
 {
-	TMap<FName, IListener> FEventDispatcher::GlobalListener;
+	void FListenerGroup::AddListener(const IListener& Listener)
+	{
+		if (!Listeners.Contains(Listener))
+		{
+			Listeners.Add(Listener);
+		}
+		//等待被删除
+		if (WaitToRemove.Contains(Listener))
+		{
+			WaitToRemove.Remove(Listener);
+		}
+	}
 
+	void FListenerGroup::RemoveListener(const IListener& Listener)
+	{
+		if (IsRunning)
+		{
+			if (!WaitToRemove.Contains(Listener))
+			{
+				WaitToRemove.Add(Listener);
+			}
+		}
+		else
+		{
+			if (Listeners.Contains(Listener))
+			{
+				Listeners.Remove(Listener);
+			}
+		}
+	}
+
+	void FListenerGroup::Trigger(IArg& arg)
+	{
+		IsRunning = true;
+		for (int i = 0; i < Listeners.Num(); i ++)
+		{
+			if (WaitToRemove.Contains(Listeners[i]))
+			{
+				continue;
+			}
+			Listeners[i].OnTrigger(arg);
+		}
+		IsRunning = false;
+		CleanWaitToRemove();
+	}
+
+	void FListenerGroup::CleanWaitToRemove()
+	{
+		if (IsRunning || WaitToRemove.Num() == 0)
+		{
+			return;
+		}
+		for (auto& Listener : WaitToRemove)
+		{
+			Listeners.Remove(Listener);
+		}
+		WaitToRemove.Empty();
+	}
 
 	BaseListener FEventDispatcher::CreateListener(const FName& eventName)
 	{
@@ -19,35 +75,50 @@ namespace CommonLib
 
 	void FEventDispatcher::RegisterListener(IListener& Listener)
 	{
-		GlobalListener.Add(Listener.GetEventName(), Listener);
+		FListenerGroup* Group = ListenerCenter.Find(Listener.GetEventName());
+		if(!Group)
+		{
+			const FListenerGroup NewGroup;
+			ListenerCenter.Add(Listener.GetEventName(), NewGroup);
+			Group = ListenerCenter.Find(Listener.GetEventName());
+		}
+		Group->AddListener(Listener);
 	}
 
-	void FEventDispatcher::RemoveListener(const FName& EventName)
+	void FEventDispatcher::RemoveAllListener(const FName& EventName)
 	{
-		GlobalListener.Remove(EventName);
+		ListenerCenter.Remove(EventName);
 	}
 
-	void FEventDispatcher::RemoveListener(FName&& EventName)
+	void FEventDispatcher::RemoveAllListener(FName&& EventName)
 	{
-		GlobalListener.Remove(MoveTemp(EventName));
+		ListenerCenter.Remove(MoveTemp(EventName));
 	}
 
+	void FEventDispatcher::RemoveListener(const IListener& Listener)
+	{
+		auto Group = ListenerCenter.Find(Listener.GetEventName());
+		if(Group)
+		{
+			Group->RemoveListener(Listener);
+		}
+	}
 
 	void FEventDispatcher::TriggerEvent(const FName& EventName, IArg& arg)
 	{
-		auto Listener = GlobalListener.Find(EventName);
-		if(Listener)
+		auto Group = ListenerCenter.Find(EventName);
+		if(Group)
 		{
-			Listener->OnTrigger(arg);
+			Group->Trigger(arg);
 		}
 	}
 
 	void FEventDispatcher::TriggerEvent(FName&& EventName, IArg& arg)
 	{
-		auto Listener = GlobalListener.Find(MoveTemp(EventName));
-		if (Listener)
+		auto Group = ListenerCenter.Find(MoveTemp(EventName));
+		if (Group)
 		{
-			Listener->OnTrigger(arg);
+			Group->Trigger(arg);
 		}
 	}
 

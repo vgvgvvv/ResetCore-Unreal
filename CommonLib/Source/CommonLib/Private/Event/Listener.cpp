@@ -4,10 +4,17 @@
 
 namespace CommonLib
 {
-
-	void IListener::RegisterListener()
+	int32 IListener::CurrentIndex = 0;
+	
+	IListener::IListener()
 	{
-		FEventDispatcher::RegisterListener(*this);
+		Index = ++CurrentIndex;
+	}
+
+	const IListener* IListener::RegisterListener(FEventDispatcher& EventDispatcher)
+	{
+		EventDispatcher.RegisterListener(*this);
+		return this;
 	}
 
 	WhereListener IListener::Where(TFunction<bool(IArg*)> Condition)

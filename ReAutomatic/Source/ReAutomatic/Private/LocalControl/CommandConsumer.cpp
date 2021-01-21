@@ -2,6 +2,7 @@
 #include "LocalControl/AutomaticManager.h"
 #include "EventDispatcher.h"
 #include "JsonSerializer.h"
+#include "UE4ControlCenter/UE4ControlCenter.h"
 
 using namespace CommonLib;
 
@@ -10,12 +11,12 @@ FCommandConsumer::FCommandConsumer()
 {
 	FEventDispatcher::CreateListener(FName("SendMessage"))
 		.AddHandler(SendCommandToClient)
-		.RegisterListener();
+		.RegisterListener(EventDispatcher);
 }
 
 FCommandConsumer::~FCommandConsumer()
 {
-	FEventDispatcher::RemoveListener(FName("SendMessage"));
+	EventDispatcher.RemoveAllListener(FName("SendMessage"));
 }
 
 void FCommandConsumer::SetEnable(bool Enable)
@@ -26,7 +27,7 @@ void FCommandConsumer::SetEnable(bool Enable)
 
 void FCommandConsumer::PushCommand(FString ReceivedStr)
 {
-	FJsonArg Result;
+	FUE4CmdArg Result;
 	if(ParseCommandString(ReceivedStr, Result))
 	{
 		JsonQueue.Enqueue(Result);
@@ -35,8 +36,7 @@ void FCommandConsumer::PushCommand(FString ReceivedStr)
 
 void FCommandConsumer::SendCommandToClient(IArg* Arg)
 {
-
-	FAutomaticManager::Get().SendCommandToClient(GetSendString(*(FJsonArg*)Arg));
+	FAutomaticManager::Get().SendCommandToClient(GetSendString(*(FUE4CmdArg*)Arg));
 }
 
 
@@ -44,9 +44,9 @@ void FCommandConsumer::Tick(float DeltaTime)
 {
 	while(!JsonQueue.IsEmpty())
 	{
-		FJsonArg JsonArg;
+		FUE4CmdArg JsonArg;
 		JsonQueue.Dequeue(JsonArg);
-		FEventDispatcher::TriggerEvent(FName("AutomaticEvent"), JsonArg);
+		EventDispatcher.TriggerEvent(FName("AutomaticEvent"), JsonArg);
 	}
 }
 
@@ -60,29 +60,30 @@ TStatId FCommandConsumer::GetStatId() const
 	return TStatId();
 }
 
-bool FCommandConsumer::ParseCommandString(const FString& CommandStr, FJsonArg& JsonArg) const
+bool FCommandConsumer::ParseCommandString(const FString& CommandStr, FUE4CmdArg& JsonArg) const
 {
 	TSharedPtr<FJsonObject> JsonObject;
 	TSharedRef< TJsonReader<TCHAR> > Reader = TJsonReaderFactory<TCHAR>::Create(CommandStr);
 
-	int CmdId;
+	FString CmdId;
 
 	if (FJsonSerializer::Deserialize(Reader, JsonObject) == false)
 	{
 		return false;
 	}
 
-	if (JsonObject->TryGetNumberField(TEXT("cmd"),   CmdId) == false)
+	if (JsonObject->TryGetStringField(TEXT("cmd"),   CmdId) == false)
 	{
 		return false;
 	}
 
-	JsonArg = FJsonArg(CmdId, JsonObject);
+	TSharedPtr<FJsonValueObject> JsonValue = MakeShared<FJsonValueObject>(JsonObject);
+	JsonArg = FUE4CmdArg(CmdId, JsonValue);
 
 	return true;
 }
 
-FString FCommandConsumer::GetSendString(const FJsonArg& Arg)
+FString FCommandConsumer::GetSendString(const FUE4CmdArg& Arg)
 {
 	typedef TJsonWriter<TCHAR, TPrettyJsonPrintPolicy<TCHAR>> FStringWriter;
 	typedef TJsonWriterFactory<TCHAR, TPrettyJsonPrintPolicy<TCHAR>> FStringWriterFactory;
@@ -91,7 +92,8 @@ FString FCommandConsumer::GetSendString(const FJsonArg& Arg)
 	TSharedRef<FStringWriter> Writer = FStringWriterFactory::Create(&CopyStr);
 	Writer->WriteValue("cmd", Arg.CmdId);
 
-	FJsonSerializer::Serialize(Arg.JsonObject.ToSharedRef(), Writer);
+	auto Object = Arg.Content->AsObject();
+	FJsonSerializer::Serialize(Object.ToSharedRef(), Writer);
 
 	return CopyStr;
 }

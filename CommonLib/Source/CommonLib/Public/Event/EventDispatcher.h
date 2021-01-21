@@ -1,12 +1,28 @@
 #pragma once
 #include "CoreMinimal.h"
+
+#include "List.h"
 #include "Event/Listener.h"
 
 namespace CommonLib
 {
+	class COMMONLIB_API FListenerGroup
+	{
+	public:
+		void AddListener(const IListener& Listener);
+		void RemoveListener(const IListener& Listener);
+		void Trigger(IArg& arg);
+	private:
+		void CleanWaitToRemove();
+	private:
+		TArray<IListener> Listeners;
+		TArray<IListener> WaitToRemove;
+		bool IsRunning = false;
+	};
+	
 	class COMMONLIB_API FEventDispatcher
 	{
-		static TMap<FName, IListener> GlobalListener;
+		TMap<FName, FListenerGroup> ListenerCenter;
 
 	public:
 
@@ -14,14 +30,16 @@ namespace CommonLib
 
 		static BaseListener CreateListener(FName&& eventName);
 
-		static void RegisterListener(IListener& Listener);
+		void RegisterListener(IListener& Listener);
 
-		static void RemoveListener(const FName& EventName);
+		void RemoveAllListener(const FName& EventName);
 
-		static void RemoveListener(FName&& EventName);
+		void RemoveAllListener(FName&& EventName);
 
-		static void TriggerEvent(const FName& EventName, IArg& arg);
+		void RemoveListener(const IListener& Listener);
 
-		static void TriggerEvent(FName&& EventName, IArg& arg);
+		void TriggerEvent(const FName& EventName, IArg& arg);
+
+		void TriggerEvent(FName&& EventName, IArg& arg);
 	};
 }

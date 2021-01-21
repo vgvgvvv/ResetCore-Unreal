@@ -5,6 +5,8 @@
 
 namespace CommonLib
 {
+	class FEventDispatcher;
+
 	class COMMONLIB_API IArg
 	{
 
@@ -14,6 +16,8 @@ namespace CommonLib
 	{
 	public:
 
+		IListener();
+		
 		virtual ~IListener() = default;
 
 		virtual IListener& GetParent() { IListener* listener = nullptr; return *listener; };
@@ -22,15 +26,27 @@ namespace CommonLib
 
 		virtual void OnTrigger(IArg& arg) {};
 
-	public:
+
+		friend bool operator==(const IListener& Lhs, const IListener& RHS)
+		{
+			return Lhs.Index == RHS.Index;
+		}
+
+		friend bool operator!=(const IListener& Lhs, const IListener& RHS)
+		{
+			return !(Lhs == RHS);
+		}
+
 		// Operators
-		void RegisterListener();
+		const IListener* RegisterListener(FEventDispatcher& EventDispatcher);
 
 		class WhereListener Where(TFunction<bool(IArg*)> Condition);
 
 		IListener& AddHandler(TFunction<void(IArg*)> Handler);
 
-
+	private:
+		int32 Index;
+		static int32 CurrentIndex;
 	};
 
 	class COMMONLIB_API BaseListener : public IListener
@@ -45,11 +61,11 @@ namespace CommonLib
 
 		BaseListener(FName&& eventName);
 
-		IListener& GetParent() override;
+		virtual IListener& GetParent() override;
 
-		const FName& GetEventName() const override;
+		virtual const FName& GetEventName() const override;
 
-		void OnTrigger(IArg& arg) override;
+		virtual void OnTrigger(IArg& arg) override;
 	private:
 
 		FName EventName;
@@ -60,9 +76,9 @@ namespace CommonLib
 	public:
 		WhereListener(IListener& Parent, TFunction<bool(IArg*)> Condition);
 
-		IListener& GetParent() override;
-		const FName& GetEventName() const override;
-		void OnTrigger(IArg& arg) override;
+		virtual IListener& GetParent() override;
+		virtual const FName& GetEventName() const override;
+		virtual void OnTrigger(IArg& arg) override;
 	private:
 		IListener& Parent;
 		TFunction<bool(IArg*)> Condition;
