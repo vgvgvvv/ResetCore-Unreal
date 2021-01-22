@@ -49,7 +49,7 @@ FNetPackage IRouteClient::NetPackageFromLogMessage(const FString& Log, const FSt
 }
 
 
-FNetPackage IRouteClient::NetPackageFromLuaResult(int32 Index, const TSharedPtr<FJsonValue> Result, const FString& TargetName,
+FNetPackage IRouteClient::NetPackageFromLuaResult(int32 Index, const TSharedPtr<FJsonObject> Result, const FString& TargetName,
 	const ERouteType TargetType)
 {
 	FRawCommandMessage ResultMessage;
@@ -57,13 +57,13 @@ FNetPackage IRouteClient::NetPackageFromLuaResult(int32 Index, const TSharedPtr<
 
 	TSharedPtr<FJsonObject> ResultObj = MakeShared<FJsonObject>();
 	ResultObj->SetNumberField("Index", Index);
-	ResultObj->SetField("Content", Result);
+	ResultObj->SetObjectField("Content", Result);
 	ResultMessage.Content = MakeShared<FJsonValueObject>(ResultObj);
 
 	return NetPackageFromRouteMessage(ResultMessage, TargetName, TargetType);
 }
 
-FNetPackage IRouteClient::NetPackageFromUE4MsgResult(int32 Index, const TSharedPtr<FJsonValue> Result, const FString& TargetName,
+FNetPackage IRouteClient::NetPackageFromUE4MsgResult(int32 Index, const TSharedPtr<FJsonObject> Result, const FString& TargetName,
 	const ERouteType TargetType)
 {
 	FRawCommandMessage ResultMessage;
@@ -71,19 +71,19 @@ FNetPackage IRouteClient::NetPackageFromUE4MsgResult(int32 Index, const TSharedP
 
 	TSharedPtr<FJsonObject> ResultObj = MakeShared<FJsonObject>();
 	ResultObj->SetNumberField("Index", Index);
-	ResultObj->SetField("Content", Result);
+	ResultObj->SetObjectField("Content", Result);
     ResultMessage.Content = MakeShared<FJsonValueObject>(ResultObj);
 
     return NetPackageFromRouteMessage(ResultMessage, TargetName, TargetType);
 }
 
-FNetPackage IRouteClient::NetPackageFromLuaResult(int32 Index, const TSharedPtr<FJsonValue> Result,
+FNetPackage IRouteClient::NetPackageFromLuaResult(int32 Index, const TSharedPtr<FJsonObject> Result,
 	const FRemoteControllerInfo& ControllerInfo)
 {
 	return NetPackageFromLuaResult(Index, Result, ControllerInfo.ControllerName, ControllerInfo.ControllerType);
 }
 
-FNetPackage IRouteClient::NetPackageFromUE4MsgResult(int32 Index, const TSharedPtr<FJsonValue> Result,
+FNetPackage IRouteClient::NetPackageFromUE4MsgResult(int32 Index, const TSharedPtr<FJsonObject> Result,
 	const FRemoteControllerInfo& ControllerInfo)
 {
 	return NetPackageFromUE4MsgResult(Index, Result, ControllerInfo.ControllerName, ControllerInfo.ControllerType);
