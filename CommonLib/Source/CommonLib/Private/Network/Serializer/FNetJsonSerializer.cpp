@@ -15,7 +15,7 @@ void FNetJsonSerializer::Serialize(TSharedPtr<FJsonObject> json, TArray<uint8>& 
 	data.Empty(size);
 	for(int i = 0; i < size ; i ++)
 	{
-		data.Add(bytes[i]);
+		data.Emplace(bytes[i]);
 	}
 	
 }

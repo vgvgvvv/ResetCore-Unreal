@@ -65,7 +65,7 @@ void FRouteMessageHandler::HandleJsonInfo(FSocketClient& from, TSharedPtr<FJsonO
 		auto LuaStr = RunLuaMessageObject->GetStringField("LuaScript");
 
 		FLuaScriptMessage Message;
-		Message.Inedx = Index;
+		Message.Index = Index;
 		Message.LuaScript = LuaStr;
 
 		auto Task = [Message, controllerInfo]()
