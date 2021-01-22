@@ -28,5 +28,7 @@ public:
 
 	static FNetPackage NetPackageFromLuaResult(const TSharedPtr<FJsonValue> Result, const FString& TargetName, const ERouteType TargetType);
 	static FNetPackage NetPackageFromUE4MsgResult(const TSharedPtr<FJsonValue> Result, const FString& TargetName, const ERouteType TargetType);
+	static FNetPackage NetPackageFromLuaResult(const TSharedPtr<FJsonValue> Result, const FRemoteControllerInfo& ControllerInfo);
+	static FNetPackage NetPackageFromUE4MsgResult(const TSharedPtr<FJsonValue> Result, const FRemoteControllerInfo& ControllerInfo);
 	
 };

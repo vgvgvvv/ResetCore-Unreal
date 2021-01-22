@@ -52,19 +52,31 @@ FNetPackage IRouteClient::NetPackageFromLogMessage(const FString& Log, const FSt
 FNetPackage IRouteClient::NetPackageFromLuaResult(const TSharedPtr<FJsonValue> Result, const FString& TargetName,
 	const ERouteType TargetType)
 {
-	FRawCommandMessage LogMessage;
-	LogMessage.CmdId = FCmdTypes::RunLuaFinish;
-	LogMessage.Content = Result;
+	FRawCommandMessage ResultMessage;
+	ResultMessage.CmdId = FCmdTypes::RunLuaFinish;
+	ResultMessage.Content = Result;
 
-	return NetPackageFromRouteMessage(LogMessage, TargetName, TargetType);
+	return NetPackageFromRouteMessage(ResultMessage, TargetName, TargetType);
 }
 
 FNetPackage IRouteClient::NetPackageFromUE4MsgResult(const TSharedPtr<FJsonValue> Result, const FString& TargetName,
 	const ERouteType TargetType)
 {
-	FRawCommandMessage LogMessage;
-    LogMessage.CmdId = FCmdTypes::UE4MsgResult;
-    LogMessage.Content = Result;
+	FRawCommandMessage ResultMessage;
+    ResultMessage.CmdId = FCmdTypes::UE4MsgResult;
+    ResultMessage.Content = Result;
 
-    return NetPackageFromRouteMessage(LogMessage, TargetName, TargetType);
+    return NetPackageFromRouteMessage(ResultMessage, TargetName, TargetType);
+}
+
+FNetPackage IRouteClient::NetPackageFromLuaResult(const TSharedPtr<FJsonValue> Result,
+	const FRemoteControllerInfo& ControllerInfo)
+{
+	return NetPackageFromLuaResult(Result, ControllerInfo.ControllerName, ControllerInfo.ControllerType);
+}
+
+FNetPackage IRouteClient::NetPackageFromUE4MsgResult(const TSharedPtr<FJsonValue> Result,
+	const FRemoteControllerInfo& ControllerInfo)
+{
+	return NetPackageFromUE4MsgResult(Result, ControllerInfo.ControllerName, ControllerInfo.ControllerType);
 }
