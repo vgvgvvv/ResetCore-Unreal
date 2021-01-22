@@ -26,9 +26,9 @@ public:
 
 	static FNetPackage NetPackageFromLogMessage(const FString& Log, const FString& TargetName, const ERouteType TargetType);
 
-	static FNetPackage NetPackageFromLuaResult(const TSharedPtr<FJsonValue> Result, const FString& TargetName, const ERouteType TargetType);
-	static FNetPackage NetPackageFromUE4MsgResult(const TSharedPtr<FJsonValue> Result, const FString& TargetName, const ERouteType TargetType);
-	static FNetPackage NetPackageFromLuaResult(const TSharedPtr<FJsonValue> Result, const FRemoteControllerInfo& ControllerInfo);
-	static FNetPackage NetPackageFromUE4MsgResult(const TSharedPtr<FJsonValue> Result, const FRemoteControllerInfo& ControllerInfo);
+	static FNetPackage NetPackageFromLuaResult(int32 Index, const TSharedPtr<FJsonValue> Result, const FString& TargetName, const ERouteType TargetType);
+	static FNetPackage NetPackageFromUE4MsgResult(int32 Index, const TSharedPtr<FJsonValue> Result, const FString& TargetName, const ERouteType TargetType);
+	static FNetPackage NetPackageFromLuaResult(int32 Index, const TSharedPtr<FJsonValue> Result, const FRemoteControllerInfo& ControllerInfo);
+	static FNetPackage NetPackageFromUE4MsgResult(int32 Index, const TSharedPtr<FJsonValue> Result, const FRemoteControllerInfo& ControllerInfo);
 	
 };
