@@ -2,10 +2,7 @@
 
 #include "CoreMinimal.h"
 
-
-namespace CommonLib
-{
-	class FEventDispatcher;
+class FEventDispatcher;
 
 	class COMMONLIB_API IArg
 	{
@@ -83,4 +80,3 @@ namespace CommonLib
 		IListener& Parent;
 		TFunction<bool(IArg*)> Condition;
 	};
-}

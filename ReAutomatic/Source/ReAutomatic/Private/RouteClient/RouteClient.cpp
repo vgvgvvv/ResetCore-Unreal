@@ -8,6 +8,7 @@
 #include "RouteClient/NetPackageHandler/RouteMessageHandler.h"
 #include "Network/SocketClient.h"
 #include "Utility/JsonUtil.h"
+#include "UE4ControlCenter/IRouteClient.h"
 
 
 FRouteClient::~FRouteClient()
@@ -64,24 +65,8 @@ void FRouteClient::Init(const FString& Name, const FString& Host, const int32 Po
 	LocalClient = new FSocketClient(Name, MakeShared<FRouteMessageHandler>());
 	LocalClient->SetConnectTarget(Host, Port);
 
-	LocalClient->OnRegist.AddLambda([this]()
-	{
-		FRouteRegistMessage Message;
-		Message.RegistName = LocalClient->GetName();
-		Message.RegistType = ERouteType::UnrealEngine;
-	
-		const auto JSONObj = FJsonObjectConverter::UStructToJsonObject(Message);
-	
-		auto Package = NetPackageFromProtoIDMessage(ERouteProtoID::Regist, JSONObj);
-		LocalClient->SendMessage(Package);
-	});
-	
-	LocalClient->OnHeartBeat.AddLambda([this]()
-	{
-		const TSharedPtr<FJsonObject> JSONObj = MakeShared<FJsonObject>();
-		auto Package = NetPackageFromProtoIDMessage(ERouteProtoID::HeartBeat, JSONObj);
-		LocalClient->SendMessage(Package);
-	});
+	LocalClient->OnRegist.AddRaw(this, &FRouteClient::OnRegister);
+	LocalClient->OnHeartBeat.AddRaw(this, &FRouteClient::OnHeartBeat);
 }
 
 
@@ -107,6 +92,11 @@ void FRouteClient::Stop() const
 }
 
 
+const FString& FRouteClient::GetName() const
+{
+	return LocalClient->GetName();
+}
+
 void FRouteClient::SendMessage(const FNetPackage& Package)
 {
 	if(LocalClient)
@@ -115,64 +105,23 @@ void FRouteClient::SendMessage(const FNetPackage& Package)
 	}
 }
 
-FNetPackage FRouteClient::NetPackageFromJsonObject(TSharedPtr<FJsonObject> JsonObject)
+
+void FRouteClient::OnRegister()
 {
-	return FNetPackageUtil::MakePack<TSharedPtr<FJsonObject>, FNetJsonSerializer>(JsonObject);
+	FRouteRegistMessage Message;
+    Message.RegistName = LocalClient->GetName();
+    Message.RegistType = ERouteType::UnrealEngine;
+
+    const TSharedPtr<FJsonObject> JSONObj = FJsonObjectConverter::UStructToJsonObject(Message);
+
+    auto Package = NetPackageFromProtoIDMessage(ERouteProtoID::Regist, JSONObj);
+    LocalClient->SendMessage(Package);
 }
 
-FNetPackage FRouteClient::NetPackageFromProtoIDMessage(ERouteProtoID ProtoID, TSharedPtr<FJsonObject> Content)
+void FRouteClient::OnHeartBeat()
 {
-	TSharedPtr<FJsonObject> message = MakeShared<FJsonObject>();
-	message->SetNumberField("ProtoID", static_cast<int32>(ProtoID));
-	message->SetObjectField("Content", Content);
-	
-	return NetPackageFromJsonObject(message);
+	const TSharedPtr<FJsonObject> JSONObj = MakeShared<FJsonObject>();
+    auto Package = NetPackageFromProtoIDMessage(ERouteProtoID::HeartBeat, JSONObj);
+    LocalClient->SendMessage(Package);
 }
 
-FNetPackage FRouteClient::NetPackageFromRouteMessage(const FRawCommandMessage& CommandMessage,
-    const FString& TargetName, const ERouteType TargetType)
-{
-	FRouteSendMessage RouteSendMessage;
-	RouteSendMessage.TargetRouteName = TargetName;
-	RouteSendMessage.TargetRouteType = TargetType;
-	auto RouteSendMessageObj = FJsonObjectConverter::UStructToJsonObject(RouteSendMessage);
-
-	TSharedPtr<FJsonObject> RawCommandMessageObj = MakeShared<FJsonObject>();
-	RawCommandMessageObj->SetStringField("CmdId", CommandMessage.CmdId);
-	RawCommandMessageObj->SetField("Content", CommandMessage.Content);
-	
-	RouteSendMessageObj->SetObjectField("Content", RawCommandMessageObj);
-	
-	return NetPackageFromProtoIDMessage(ERouteProtoID::NormalMessage, RouteSendMessageObj);
-}
-
-FNetPackage FRouteClient::NetPackageFromLogMessage(const FString& Log, const FString& TargetName,
-	const ERouteType TargetType)
-{
-	FRawCommandMessage LogMessage;
-	LogMessage.CmdId = FCmdTypes::Log;
-	LogMessage.Content = MakeShared<FJsonValueString>(Log);
-
-	return NetPackageFromRouteMessage(LogMessage, TargetName, TargetType);
-}
-
-
-FNetPackage FRouteClient::NetPackageFromLuaResult(const TSharedPtr<FJsonValue> Result, const FString& TargetName,
-	const ERouteType TargetType)
-{
-	FRawCommandMessage LogMessage;
-	LogMessage.CmdId = FCmdTypes::RunLuaFinish;
-	LogMessage.Content = Result;
-
-	return NetPackageFromRouteMessage(LogMessage, TargetName, TargetType);
-}
-
-FNetPackage FRouteClient::NetPackageFromUE4MsgResult(const TSharedPtr<FJsonValue> Result, const FString& TargetName,
-	const ERouteType TargetType)
-{
-	FRawCommandMessage LogMessage;
-    LogMessage.CmdId = FCmdTypes::UE4MsgResult;
-    LogMessage.Content = Result;
-
-    return NetPackageFromRouteMessage(LogMessage, TargetName, TargetType);
-}

@@ -1,10 +1,7 @@
 #include "Event/Listener.h"
 #include "Event/EventDispatcher.h"
-#include "CoreMinimal.h"
 
-namespace CommonLib
-{
-	int32 IListener::CurrentIndex = 0;
+int32 IListener::CurrentIndex = 0;
 	
 	IListener::IListener()
 	{
@@ -88,5 +85,3 @@ namespace CommonLib
 			Parent.OnTrigger(arg);
 		}
 	}
-}
-

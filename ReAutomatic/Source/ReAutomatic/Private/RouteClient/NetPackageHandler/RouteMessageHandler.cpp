@@ -4,11 +4,11 @@
 #include "EnumUtil.h"
 #include "JsonUtil.h"
 #include "ReAutomatic.h"
-#include "RouteProto.h"
 #include "JsonUtilities.h"
-#include "SocketClient.h"
-#include "UE4ControlCenter/UE4ControlCenter.h"
+#include "RouteProto.h"
 #include "Async/Async.h"
+#include "UE4ControlCenter/UE4CmdArg.h"
+#include "UE4ControlCenter/UE4ControlCenter.h"
 
 
 void FRouteMessageHandler::HandleJsonInfo(FSocketClient& from, TSharedPtr<FJsonObject> jsonObject)
@@ -20,6 +20,10 @@ void FRouteMessageHandler::HandleJsonInfo(FSocketClient& from, TSharedPtr<FJsonO
 		*FEnumUtil::EnumToString(TEXT("ERouteType"), msg.FromRouteType),
 		*FJsonUtil::JsonObjectToString(jsonObject))
 
+	FRemoteControllerInfo controllerInfo;
+	controllerInfo.ControllerName = msg.FromRouteName;
+	controllerInfo.ControllerType = msg.FromRouteType;
+	
 	auto ContentObject = jsonObject->GetObjectField("Content");
 	// RawCommand
 	auto CmdId = ContentObject->GetStringField("CmdId");
@@ -38,13 +42,19 @@ void FRouteMessageHandler::HandleJsonInfo(FSocketClient& from, TSharedPtr<FJsonO
 		auto Index = UE4MessageObject->GetIntegerField("Index");
 		auto CmdContent = UE4MessageObject->GetField<EJson::None>("Content");
 
-		auto Arg = FUE4CmdArg(CmdId, RawCommandContent);
+		FUE4CmdArg Arg;
+		Arg.CmdId = CmdId;
+		Arg.Content = RawCommandContent;
+		Arg.ControllerInfo = controllerInfo;
 
-		AsyncTask(ENamedThreads::GameThread, [CmdId, Arg]()
+
+		auto Task = [CmdId, Arg]()
 		{
-			auto Temp = Arg;
-			FUE4ControlCenter::Get().Trigger(FName(*CmdId), Temp);
-		});
+			FUE4CmdArg Temp = Arg;
+			FName Name = FName(*CmdId);
+			FUE4ControlCenter::Get().Trigger(Name, Temp);
+		};
+		AsyncTask(ENamedThreads::GameThread, Task);
 	}
 	else if (CmdId == FCmdTypes::RunLua)
 	{
@@ -52,10 +62,12 @@ void FRouteMessageHandler::HandleJsonInfo(FSocketClient& from, TSharedPtr<FJsonO
 		auto Index = RunLuaMessageObject->GetIntegerField("Index");
 		auto LuaStr = RunLuaMessageObject->GetStringField("LuaScript");
 
-		AsyncTask(ENamedThreads::GameThread, [LuaStr]()
+		auto Task = [LuaStr, controllerInfo]()
 		{
-			FUE4ControlCenter::Get().OnRunLua.Broadcast(LuaStr);
-		});
+			FUE4ControlCenter::Get().OnRunLua.Broadcast(LuaStr, controllerInfo);
+		};
+		
+		AsyncTask(ENamedThreads::GameThread, Task);
 	}else
 	{
 		UE_LOG(LogAutomatic, Error, TEXT("Not Support Cmdid : %s"), *CmdId)

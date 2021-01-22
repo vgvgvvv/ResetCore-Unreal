@@ -4,11 +4,11 @@
 #include "NetPackage.h"
 #include "RouteProto.h"
 #include "SharedPointer.h"
-#include "UnrealString.h"
+#include "UE4ControlCenter/IRouteClient.h"
 
 enum class ERouteProtoID : uint8;
 
-class REAUTOMATIC_API FRouteClient
+class REAUTOMATIC_API FRouteClient : public IRouteClient
 {
 public:
 
@@ -23,21 +23,20 @@ public:
 	void Stop() const;
 	
 	~FRouteClient();
-
 public:
 
-	void SendMessage(const FNetPackage& Package);
+	virtual const FString& GetName() const override;
 	
 public:
 
-	static FNetPackage NetPackageFromJsonObject(TSharedPtr<FJsonObject> JsonObject);
-	static FNetPackage NetPackageFromProtoIDMessage(ERouteProtoID ProtoID, TSharedPtr<FJsonObject> Content);
-	static FNetPackage NetPackageFromRouteMessage(const FRawCommandMessage& CommandMessage, const FString& TargetName, const ERouteType TargetType);
+	virtual void SendMessage(const FNetPackage& Package) override;
 
-	static FNetPackage NetPackageFromLogMessage(const FString& Log, const FString& TargetName, const ERouteType TargetType);
 
-	static FNetPackage NetPackageFromLuaResult(const TSharedPtr<FJsonValue> Result, const FString& TargetName, const ERouteType TargetType);
-	static FNetPackage NetPackageFromUE4MsgResult(const TSharedPtr<FJsonValue> Result, const FString& TargetName, const ERouteType TargetType);
+	
+private:
+
+	void OnRegister();
+	void OnHeartBeat();
 	
 private:
 	class FSocketClient* LocalClient = nullptr;

@@ -1,9 +1,7 @@
 #include "Event/EventDispatcher.h"
 #include "UnrealTemplate.h"
 
-namespace CommonLib
-{
-	void FListenerGroup::AddListener(const IListener& Listener)
+void FListenerGroup::AddListener(const IListener& Listener)
 	{
 		if (!Listeners.Contains(Listener))
 		{
@@ -126,6 +124,3 @@ namespace CommonLib
 			Group->Trigger(arg);
 		}
 	}
-
-
-}

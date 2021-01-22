@@ -2,14 +2,12 @@
 
 #include "JsonObject.h"
 #include "ObjectMacros.h"
-#include "UnrealString.h"
 #include "RouteProto.generated.h"
 
 
 UENUM()
 enum class ERouteType : uint8
 {
-
 	RouteServer = 0,
     LocalController = 1,
     MobileDevice = 2, 
@@ -84,6 +82,12 @@ struct REAUTOMATIC_API FRouteSendMessage
 
 	FRawCommandMessage Content;
 	
+};
+
+struct REAUTOMATIC_API FRemoteControllerInfo
+{
+	FString ControllerName;
+	ERouteType ControllerType;
 };
 
 USTRUCT()
