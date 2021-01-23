@@ -4,6 +4,6 @@
 
 struct FLuaScriptMessage
 {
-	int32 Inedx;
+	int32 Index;
 	FString LuaScript;
 };
