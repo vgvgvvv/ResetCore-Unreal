@@ -25,6 +25,7 @@ FNetPackage IRouteClient::NetPackageFromRouteMessage(const FRawCommandMessage& C
     const FString& TargetName, const ERouteType TargetType)
 {
 	FRouteSendMessage RouteSendMessage;
+	RouteSendMessage.FromRouteType = ERouteType::UnrealEngine;
 	RouteSendMessage.TargetRouteName = TargetName;
 	RouteSendMessage.TargetRouteType = TargetType;
 	auto RouteSendMessageObj = FJsonObjectConverter::UStructToJsonObject(RouteSendMessage);

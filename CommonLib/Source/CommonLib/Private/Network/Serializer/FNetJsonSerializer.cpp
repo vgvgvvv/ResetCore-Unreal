@@ -1,7 +1,11 @@
 #include "Network/Serializer/FNetJsonSerializer.h"
 
+#include <string>
+
+
 #include "CommonLib.h"
 #include "JsonSerializer.h"
+#include "JsonUtil.h"
 #include "JsonWriter.h"
 
 void FNetJsonSerializer::Serialize(TSharedPtr<FJsonObject> json, TArray<uint8>& data)
@@ -10,14 +14,25 @@ void FNetJsonSerializer::Serialize(TSharedPtr<FJsonObject> json, TArray<uint8>& 
 	TSharedRef<TJsonWriter<>> Writer = TJsonWriterFactory<>::Create(&jsonStr);
 	FJsonSerializer::Serialize(json.ToSharedRef(), Writer);
 
-	auto bytes = (uint8*)TCHAR_TO_ANSI(*jsonStr);
+	// auto bytes = TCHAR_TO_ANSI(*jsonStr);
+
 	auto size =sizeof(ANSICHAR)*(jsonStr.Len() + 1);
+	std::string jsonstdstr(TCHAR_TO_ANSI(*jsonStr));
+	// data.SetNum(size);
+	// FPlatformMemory::Memcmp(jsonstdstr.c_str(), data.GetData(), size);
 	data.Empty(size);
 	for(int i = 0; i < size ; i ++)
 	{
-		data.Add(bytes[i]);
+		data.Emplace(jsonstdstr[i]);
 	}
 	
+	auto jsonObject = DeSerialize(data);
+	if(!jsonObject.IsValid())
+	{
+		return;
+	}
+	auto str = FJsonUtil::JsonObjectToString(jsonObject);
+	UE_LOG(LogTemp, Log, TEXT("json string : %s"), *str)
 }
 
 TSharedPtr<FJsonObject> FNetJsonSerializer::DeSerialize(TArray<uint8>& data)
