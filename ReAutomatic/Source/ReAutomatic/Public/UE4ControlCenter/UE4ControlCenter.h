@@ -14,8 +14,6 @@ class REAUTOMATIC_API FUE4ControlCenter
 {
 public:
 
-	DECLARE_MULTICAST_DELEGATE_TwoParams(FUE4ControlRunLuaDelegate, const FLuaScriptMessage&, const FRemoteControllerInfo&);
-
 	// 注册多个控制本端的控制器
 	void RegisterRouteClient(class IRouteClient& RouteClient);
 	void RemoveRouteClient(class IRouteClient& RouteClient);
