@@ -1,0 +1,4 @@
+# LocalControl文件夹
+
+UE4建立监听Socket，等待电脑端连接
+本地连线调试工具，电脑侧消息接受并分发到UE4ControlCenter

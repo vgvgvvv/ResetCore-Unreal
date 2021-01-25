@@ -35,8 +35,8 @@ public:
 	
 private:
 
-	void OnRegister();
-	void OnHeartBeat();
+	void OnRegister() const;
+	void OnHeartBeat() const;
 	
 private:
 	class FSocketClient* LocalClient = nullptr;

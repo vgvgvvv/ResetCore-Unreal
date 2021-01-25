@@ -7,7 +7,7 @@ struct FRemoteControllerInfo;
 struct FLuaScriptMessage;
 class FJsonValue;
 
-DECLARE_MULTICAST_DELEGATE_TwoParams(FUE4ControlRunLuaDelegate, const FString&, const struct FRemoteControllerInfo&);
+DECLARE_MULTICAST_DELEGATE_TwoParams(FUE4ControlRunLuaDelegate, const FLuaScriptMessage&, const struct FRemoteControllerInfo&);
 DECLARE_MULTICAST_DELEGATE_TwoParams(FUE4ControlUE4MsgTriggerDelegate, const FName&, IArg*);
 
 class REAUTOMATIC_API FUE4ControlCenter

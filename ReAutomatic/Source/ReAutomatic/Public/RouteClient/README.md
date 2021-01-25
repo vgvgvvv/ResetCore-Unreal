@@ -1,0 +1,4 @@
+# RouteClient文件夹
+
+UE4端主动连接到Route服务器，等待Route服务器分发消息
+用于远程控制，远端消息接受，并且分发到UE4ControlCenter

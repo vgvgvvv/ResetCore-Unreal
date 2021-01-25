@@ -60,6 +60,7 @@ bool FRouteClient::InitWithFile()
 	return true;
 }
 
+/// 初始化RouteClient
 void FRouteClient::Init(const FString& Name, const FString& Host, const int32 Port)
 {
 	LocalClient = new FSocketClient(Name, MakeShared<FRouteMessageHandler>());
@@ -69,9 +70,13 @@ void FRouteClient::Init(const FString& Name, const FString& Host, const int32 Po
 	LocalClient->OnHeartBeat.AddRaw(this, &FRouteClient::OnHeartBeat);
 }
 
-
+/// 后台运行RouteClient
 FLambdaRunnable* FRouteClient::RunWithBackground()
 {
+	if(Runner != nullptr)
+	{
+		return Runner;
+	}
 	Runner = FLambdaRunnable::RunLambdaOnBackGroundThread([this]()
     {
         LocalClient->Run();
@@ -80,7 +85,7 @@ FLambdaRunnable* FRouteClient::RunWithBackground()
 	return Runner;
 }
 
-
+/// 在Tick中运行
 void FRouteClient::RunWithTick(float DeltaTime)
 {
 	//TODO
@@ -88,7 +93,10 @@ void FRouteClient::RunWithTick(float DeltaTime)
 
 void FRouteClient::Stop() const
 {
-	LocalClient->Stop();
+	if(LocalClient)
+	{
+		LocalClient->Stop();
+	}
 }
 
 
@@ -106,7 +114,7 @@ void FRouteClient::SendMessage(const FNetPackage& Package)
 }
 
 
-void FRouteClient::OnRegister()
+void FRouteClient::OnRegister() const
 {
 	FRouteRegistMessage Message;
     Message.RegistName = LocalClient->GetName();
@@ -118,7 +126,7 @@ void FRouteClient::OnRegister()
     LocalClient->SendMessage(Package);
 }
 
-void FRouteClient::OnHeartBeat()
+void FRouteClient::OnHeartBeat() const
 {
 	const TSharedPtr<FJsonObject> JSONObj = MakeShared<FJsonObject>();
     auto Package = NetPackageFromProtoIDMessage(ERouteProtoID::HeartBeat, JSONObj);
