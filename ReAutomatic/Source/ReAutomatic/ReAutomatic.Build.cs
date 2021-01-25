@@ -28,8 +28,7 @@ public class ReAutomatic : ModuleRules
 			new string[]
 			{
 				"Core",
-				"CommonLib",
-				
+                "CommonLib",
 				// ... add other public dependencies that you statically link with here ...
 			}
 			);

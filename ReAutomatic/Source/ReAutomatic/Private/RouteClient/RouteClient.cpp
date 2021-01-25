@@ -9,6 +9,7 @@
 #include "Network/SocketClient.h"
 #include "Utility/JsonUtil.h"
 #include "UE4ControlCenter/IRouteClient.h"
+#include "Utility/LambdaRunnable.h"
 
 
 FRouteClient::~FRouteClient()

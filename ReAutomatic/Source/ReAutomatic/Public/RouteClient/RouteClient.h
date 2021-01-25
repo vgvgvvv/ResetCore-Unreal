@@ -1,9 +1,4 @@
 ﻿#pragma once
-#include "JsonObject.h"
-#include "LambdaRunnable.h"
-#include "NetPackage.h"
-#include "RouteProto.h"
-#include "SharedPointer.h"
 #include "UE4ControlCenter/IRouteClient.h"
 
 enum class ERouteProtoID : uint8;
@@ -16,7 +11,7 @@ public:
 
 	void Init(const FString& Name, const FString& Host, const int32 Port);
 
-	FLambdaRunnable* RunWithBackground();
+	class FLambdaRunnable* RunWithBackground();
 
 	void RunWithTick(float DeltaTime);
 	
