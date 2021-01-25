@@ -29,22 +29,22 @@ const IListener* FUE4ControlCenter::RegisterCmdEvent(const FName& CmdName, TFunc
 {
 	return FEventDispatcher::CreateListener(CmdName)
 	       .AddHandler(Handler)
-	       .RegisterListener(EventDispatcher);
+	       .RegisterListener(UE4MsgEventDispatcher);
 }
 
 void FUE4ControlCenter::RemoveCmdEventLister(const IListener* Listener)
 {
-	EventDispatcher.RemoveListener(*Listener);
+	UE4MsgEventDispatcher.RemoveListener(*Listener);
 }
 
 void FUE4ControlCenter::Trigger(const FName& EventName, IArg& Arg)
 {
-	EventDispatcher.TriggerEvent(EventName, Arg);
+	UE4MsgEventDispatcher.TriggerEvent(EventName, Arg);
 }
 
 void FUE4ControlCenter::ClearAllCmd()
 {
-	EventDispatcher.Clear();
+	UE4MsgEventDispatcher.Clear();
 }
 
 
