@@ -48,20 +48,21 @@ void FUE4ControlCenter::ClearAllCmd()
 }
 
 
-void FUE4ControlCenter::SendBackUE4MsgResult(const TSharedPtr<FJsonValue> Result,
+void FUE4ControlCenter::SendBackUE4MsgResult(int32 Index, const TSharedPtr<FJsonObject> Result,
 	const FRemoteControllerInfo& ControllerInfo)
 {
 	for(auto& Client : RouteClients)
 	{
-		Client->SendMessage(FRouteClient::NetPackageFromUE4MsgResult(Result, ControllerInfo.ControllerName, ControllerInfo.ControllerType));
+		Client->SendMessage(FRouteClient::NetPackageFromUE4MsgResult(Index, Result, ControllerInfo.ControllerName, ControllerInfo.ControllerType));
 	}
 }
 
-void FUE4ControlCenter::SendBackRunLuaResult(const TSharedPtr<FJsonValue> Result,
+void FUE4ControlCenter::SendBackRunLuaResult(int32 Index, const TSharedPtr<FJsonObject> Result,
 	const FRemoteControllerInfo& ControllerInfo)
 {
 	for(auto& Client : RouteClients)
 	{
-		Client->SendMessage(FRouteClient::NetPackageFromLuaResult(Result, ControllerInfo.ControllerName, ControllerInfo.ControllerType));
+		
+		Client->SendMessage(FRouteClient::NetPackageFromLuaResult(Index, Result, ControllerInfo.ControllerName, ControllerInfo.ControllerType));
 	}
 }

@@ -5,6 +5,7 @@
 #include "JsonUtil.h"
 #include "ReAutomatic.h"
 #include "JsonUtilities.h"
+#include "LuaScriptMessage.h"
 #include "RouteProto.h"
 #include "Async/Async.h"
 #include "UE4ControlCenter/UE4CmdArg.h"
@@ -44,6 +45,7 @@ void FRouteMessageHandler::HandleJsonInfo(FSocketClient& from, TSharedPtr<FJsonO
 
 		FUE4CmdArg Arg;
 		Arg.CmdId = CmdId;
+		Arg.Index = Index;
 		Arg.Content = RawCommandContent;
 		Arg.ControllerInfo = controllerInfo;
 
@@ -62,9 +64,13 @@ void FRouteMessageHandler::HandleJsonInfo(FSocketClient& from, TSharedPtr<FJsonO
 		auto Index = RunLuaMessageObject->GetIntegerField("Index");
 		auto LuaStr = RunLuaMessageObject->GetStringField("LuaScript");
 
-		auto Task = [LuaStr, controllerInfo]()
+		FLuaScriptMessage Message;
+		Message.Index = Index;
+		Message.LuaScript = LuaStr;
+
+		auto Task = [Message, controllerInfo]()
 		{
-			FUE4ControlCenter::Get().OnRunLua.Broadcast(LuaStr, controllerInfo);
+			FUE4ControlCenter::Get().OnRunLua.Broadcast(Message, controllerInfo);
 		};
 		
 		AsyncTask(ENamedThreads::GameThread, Task);

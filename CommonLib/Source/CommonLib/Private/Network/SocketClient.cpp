@@ -70,7 +70,7 @@ void FSocketClient::Run()
 				OnRegist.Broadcast();
 			}
 			
-			UE_LOG(LogTemp, Warning, TEXT("Connect To %s Error Success!!"), *InternetAddress->ToString(true))
+			UE_LOG(LogTemp, Warning, TEXT("Connect To %s Success!!"), *InternetAddress->ToString(true))
 			NeedReconnect = false;
 			while(ClientSocket != nullptr && ClientSocket->GetConnectionState() == SCS_Connected)
 			{
