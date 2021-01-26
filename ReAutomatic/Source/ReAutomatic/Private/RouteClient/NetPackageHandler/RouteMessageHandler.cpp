@@ -10,6 +10,7 @@
 #include "Async/Async.h"
 #include "UE4ControlCenter/UE4CmdArg.h"
 #include "UE4ControlCenter/UE4ControlCenter.h"
+#include "Utility/JsonUtil.h"
 
 
 void FRouteMessageHandler::HandleJsonInfo(FSocketClient& from, TSharedPtr<FJsonObject> jsonObject)
@@ -48,7 +49,6 @@ void FRouteMessageHandler::HandleJsonInfo(FSocketClient& from, TSharedPtr<FJsonO
 		Arg.Index = Index;
 		Arg.Content = RawCommandContent;
 		Arg.ControllerInfo = controllerInfo;
-
 
 		auto Task = [CmdId, Arg]()
 		{

@@ -84,9 +84,15 @@ struct REAUTOMATIC_API FRouteSendMessage
 	
 };
 
+USTRUCT()
 struct REAUTOMATIC_API FRemoteControllerInfo
 {
+	GENERATED_BODY()
+
+	UPROPERTY()
 	FString ControllerName;
+
+	UPROPERTY()
 	ERouteType ControllerType;
 };
 
