@@ -18,11 +18,16 @@ FString FJsonUtil::JsonObjectToString(FJsonObjectPtr JSONObject)
 
 FJsonObjectPtr FJsonUtil::StringToJsonObject(const FString& JSONString)
 {
+	if(JSONString.IsEmpty())
+	{
+		return MakeShared<FJsonObject>();
+	}
+	
 	FJsonReaderRef Reader = TJsonReaderFactory<>::Create(JSONString);
 	FJsonObjectPtr Object;
 	if (!FJsonSerializer::Deserialize(Reader, Object))
 	{
-		UE_LOG(ResetCore_CommonLib, Error, TEXT("Cannot Parse Json!!!"))
+		UE_LOG(ResetCore_CommonLib, Error, TEXT("Cannot Parse Json!!! %s"), *JSONString)
 		return nullptr;
 	}
 	return Object;

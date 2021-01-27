@@ -47,7 +47,7 @@ void FRouteMessageHandler::HandleJsonInfo(FSocketClient& from, TSharedPtr<FJsonO
 		FUE4CmdArg Arg;
 		Arg.CmdId = CmdId;
 		Arg.Index = Index;
-		Arg.Content = RawCommandContent;
+		Arg.Content = CmdContent;
 		Arg.ControllerInfo = controllerInfo;
 
 		auto Task = [CmdId, Arg]()

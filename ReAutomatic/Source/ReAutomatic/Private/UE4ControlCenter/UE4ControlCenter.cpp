@@ -40,6 +40,7 @@ void FUE4ControlCenter::RemoveCmdEventLister(const IListener* Listener)
 void FUE4ControlCenter::Trigger(const FName& EventName, IArg& Arg)
 {
 	UE4MsgEventDispatcher.TriggerEvent(EventName, Arg);
+	OnUE4Msg.Broadcast(EventName, &Arg);
 }
 
 void FUE4ControlCenter::ClearAllCmd()
