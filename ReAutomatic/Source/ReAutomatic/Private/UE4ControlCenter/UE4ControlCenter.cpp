@@ -63,7 +63,14 @@ void FUE4ControlCenter::SendBackRunLuaResult(int32 Index, const TSharedPtr<FJson
 {
 	for(auto& Client : RouteClients)
 	{
-		
 		Client->SendMessage(FRouteClient::NetPackageFromLuaResult(Index, Result, ControllerInfo.ControllerName, ControllerInfo.ControllerType));
+	}
+}
+
+void FUE4ControlCenter::LogToRemote(const FString& LogInfo, const FRemoteControllerInfo& ControllerInfo)
+{
+	for(auto& Client : RouteClients)
+	{
+		Client->SendMessage(FRouteClient::NetPackageFromLogMessage(LogInfo, ControllerInfo.ControllerName, ControllerInfo.ControllerType));
 	}
 }

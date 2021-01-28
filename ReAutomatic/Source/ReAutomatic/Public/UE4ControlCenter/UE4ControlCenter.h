@@ -29,6 +29,8 @@ public:
 	// Run Lua
 	FUE4ControlRunLuaDelegate OnRunLua;
 	void SendBackRunLuaResult(int32 Index, const TSharedPtr<FJsonObject> Result, const FRemoteControllerInfo& ControllerInfo);
+
+	void LogToRemote(const FString& LogInfo, const FRemoteControllerInfo& ControllerInfo);
 	
 private:
 	FEventDispatcher UE4MsgEventDispatcher;
