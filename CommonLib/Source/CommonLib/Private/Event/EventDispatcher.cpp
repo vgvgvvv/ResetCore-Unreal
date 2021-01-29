@@ -1,6 +1,7 @@
 #include "Event/EventDispatcher.h"
 #include "UnrealTemplate.h"
 
+
 void FListenerGroup::AddListener(const IListener& Listener)
 	{
 		if (!Listeners.Contains(Listener))
@@ -76,7 +77,7 @@ void FListenerGroup::AddListener(const IListener& Listener)
 		FListenerGroup* Group = ListenerCenter.Find(Listener.GetEventName());
 		if(!Group)
 		{
-			const FListenerGroup NewGroup;
+			FListenerGroup NewGroup;
 			ListenerCenter.Add(Listener.GetEventName(), NewGroup);
 			Group = ListenerCenter.Find(Listener.GetEventName());
 		}

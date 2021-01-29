@@ -4,11 +4,12 @@
 class COMMONLIB_API FListenerGroup
 {
 	public:
-	void AddListener(const IListener& Listener);
-	void RemoveListener(const IListener& Listener);
-	void Trigger(IArg& arg);
-	private:
-	void CleanWaitToRemove();
+		FListenerGroup() = default;
+		void AddListener(const IListener& Listener);
+		void RemoveListener(const IListener& Listener);
+		void Trigger(IArg& arg);
+		private:
+		void CleanWaitToRemove();
 	private:
 	TArray<IListener> Listeners;
 	TArray<IListener> WaitToRemove;
