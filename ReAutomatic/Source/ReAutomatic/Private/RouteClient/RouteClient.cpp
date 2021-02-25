@@ -53,7 +53,11 @@ bool FRouteClient::InitWithFile()
 
 	auto JsonObject = FJsonUtil::StringToJsonObject(ConfigJson);
 
-	auto Name = JsonObject->GetStringField("Name");
+	FString Name = FPlatformMisc::GetDeviceMakeAndModel() + "(" + FPlatformMisc::GetUniqueDeviceId() + ")";
+	if(JsonObject->HasField("Name"))
+	{
+		Name = JsonObject->GetStringField("Name");
+	}
 	auto Host = JsonObject->GetStringField("Host");
 	auto Port = JsonObject->GetIntegerField("Port");
 	
