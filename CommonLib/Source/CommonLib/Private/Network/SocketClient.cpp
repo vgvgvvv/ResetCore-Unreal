@@ -118,7 +118,7 @@ bool FSocketClient::Connect()
 	}
 
 	ClientSocket = ISocketSubsystem::Get(PLATFORM_SOCKETSUBSYSTEM)->CreateSocket(NAME_Stream, InternetAddress->ToString(true), false);
-
+	ClientSocket->IsNotEncrypt = true;
 	if(ClientSocket->Connect(*InternetAddress) == false)
 	{
 		return false;
