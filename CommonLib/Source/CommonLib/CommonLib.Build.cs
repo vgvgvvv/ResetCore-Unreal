@@ -28,6 +28,7 @@ public class CommonLib : ModuleRules
 			new string[]
 			{
 				"Core",
+				"Http",
 				// ... add other public dependencies that you statically link with here ...
 			}
 			);
@@ -43,7 +44,6 @@ public class CommonLib : ModuleRules
 				"Networking",
 				"Sockets",
 				"Json",
-				"Http",
 				// ... add private dependencies that you statically link with here ...	
 			}
 			);

@@ -3,9 +3,6 @@
 #pragma once
 
 #include "Http.h"
-#include "Misc/Paths.h"
-#include "HAL/PlatformFilemanager.h"
-#include "GenericPlatform/GenericPlatformFile.h"
 #include "RuntimeFilesDownloaderLibrary.generated.h"
 
 /**
@@ -29,9 +26,8 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FOnProgress, const int32, BytesSe
  * Declare a delegate that will be called on the download result
  */
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnResult, TEnumAsByte < DownloadResult >, Result);
-
 UCLASS(BlueprintType, Category = "RuntimeFilesDownloader")
-class RUNTIMEFILESDOWNLOADER_API URuntimeFilesDownloaderLibrary : public UObject
+class COMMONLIB_API URuntimeFilesDownloaderLibrary : public UObject
 {
 	GENERATED_BODY()
 

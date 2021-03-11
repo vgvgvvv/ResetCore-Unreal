@@ -8,6 +8,7 @@
 #include "JsonUtilities.h"
 #include "LuaScriptMessage.h"
 #include "RouteProto.h"
+#include "RuntimeFilesDownloaderLibrary.h"
 #include "SocketClient.h"
 #include "Async/Async.h"
 #include "UE4ControlCenter/UE4CmdArg.h"
@@ -85,6 +86,11 @@ void FRouteMessageHandler::HandleJsonInfo(FSocketClient& from, TSharedPtr<FJsonO
 		auto TargetPath = SendFileMessageObject->GetStringField("TargetPath");
 		auto FileServerUrl = SendFileMessageObject->GetStringField("FileServerUrl");
 		//TODO ·¢ËÍÎÄ¼þÂß¼­
+
+		URuntimeFilesDownloaderLibrary* downloader = URuntimeFilesDownloaderLibrary::CreateDownloader();
+		downloader->DownloadFile(TEXT("http://www.resetoter.cn:8001/api/file/download/reset/testfile.json"), TEXT("D:\\run_automatic1.json"));
+
+		UE_LOG(LogAutomatic, Log, TEXT("Downloading ~"))
 	}
 	else
 	{
