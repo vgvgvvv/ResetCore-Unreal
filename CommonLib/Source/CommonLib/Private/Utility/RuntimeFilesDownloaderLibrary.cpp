@@ -37,6 +37,7 @@ void URuntimeFilesDownloaderLibrary::OnProgress_Internal(FHttpRequestPtr Request
 	{
 		int32 FullSize = Response->GetContentLength();
 		OnProgress.Broadcast(BytesSent, BytesReceived, FullSize);
+		OnProgressCpp.Broadcast(BytesSent, BytesReceived, FullSize);
 	}
 }
 
@@ -58,6 +59,7 @@ void URuntimeFilesDownloaderLibrary::OnReady_Internal(FHttpRequestPtr Request, F
 			if (!PlatformFile.CreateDirectoryTree(*Path))
 			{
 				OnResult.Broadcast(DownloadResult::DirectoryCreationFailed);
+				OnResultCpp.Broadcast(DownloadResult::DirectoryCreationFailed);
 				return;
 			}
 		}
@@ -72,14 +74,17 @@ void URuntimeFilesDownloaderLibrary::OnReady_Internal(FHttpRequestPtr Request, F
 			delete FileHandle;
 
 			OnResult.Broadcast(DownloadResult::SuccessDownloading);
+			OnResultCpp.Broadcast(DownloadResult::SuccessDownloading);
 		}
 		else
 		{
 			OnResult.Broadcast(DownloadResult::SaveFailed);
+			OnResultCpp.Broadcast(DownloadResult::SaveFailed);
 		}
 	}
 	else
 	{
 		OnResult.Broadcast(DownloadResult::DownloadFailed);
+		OnResultCpp.Broadcast(DownloadResult::DownloadFailed);
 	}
 }

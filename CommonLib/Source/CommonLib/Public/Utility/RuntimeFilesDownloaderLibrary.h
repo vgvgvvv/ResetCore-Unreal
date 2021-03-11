@@ -21,11 +21,14 @@ enum DownloadResult
  * Declare delegate which will be called during the download process
  */
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FOnProgress, const int32, BytesSent, const int32, BytesReceived, const int32, ContentLength);
+DECLARE_MULTICAST_DELEGATE_ThreeParams(FOnProgressCpp, const int32, const int32, const int32);
 
 /**
  * Declare a delegate that will be called on the download result
  */
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnResult, TEnumAsByte < DownloadResult >, Result);
+DECLARE_MULTICAST_DELEGATE_OneParam(FOnResultCpp, TEnumAsByte < DownloadResult >);
+
 UCLASS(BlueprintType, Category = "RuntimeFilesDownloader")
 class COMMONLIB_API URuntimeFilesDownloaderLibrary : public UObject
 {
@@ -36,13 +39,17 @@ public:
 	 * Bind to know when the download is on progress.
 	 */
 	UPROPERTY(BlueprintAssignable, Category = "RuntimeFilesDownloader")
-		FOnProgress OnProgress;
+	FOnProgress OnProgress;
+
+	FOnProgressCpp OnProgressCpp;
 
 	/**
 	 * Bind to know when the download is complete (even if it fails).
 	 */
 	UPROPERTY(BlueprintAssignable, Category = "RuntimeFilesDownloader")
-		FOnResult OnResult;
+	FOnResult OnResult;
+
+	FOnResultCpp OnResultCpp;
 
 	/**
 	 * The URL used to start this download.

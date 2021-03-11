@@ -85,15 +85,27 @@ void FRouteMessageHandler::HandleJsonInfo(FSocketClient& from, TSharedPtr<FJsonO
 		auto FileName = SendFileMessageObject->GetStringField("FileName");
 		auto TargetPath = SendFileMessageObject->GetStringField("TargetPath");
 		auto FileServerUrl = SendFileMessageObject->GetStringField("FileServerUrl");
-		//TODO ·¢ËÍÎÄ¼þÂß¼­
 
 		URuntimeFilesDownloaderLibrary* downloader = URuntimeFilesDownloaderLibrary::CreateDownloader();
-		downloader->DownloadFile(TEXT("http://www.resetoter.cn:8001/api/file/download/reset/testfile.json"), TEXT("D:\\run_automatic1.json"));
-
-		UE_LOG(LogAutomatic, Log, TEXT("Downloading ~"))
+		auto RequestUrl = FString::Printf(TEXT("http://%s/api/file/download/%s/%s"), *FileServerUrl, *msg.TargetRouteName, *FileName);
+		downloader->OnProgressCpp.AddRaw(this, &FRouteMessageHandler::OnDownloadFileProgress);
+		downloader->OnResultCpp.AddRaw(this, &FRouteMessageHandler::OnDownloadFileResult);
+		
+		downloader->DownloadFile(RequestUrl, TargetPath);
 	}
 	else
 	{
 		UE_LOG(LogAutomatic, Error, TEXT("Not Support Cmdid : %s"), *CmdId)
 	}
+}
+
+void FRouteMessageHandler::OnDownloadFileProgress(const int32 BytesSent, const int32 BytesReceived,
+	const int32 ContentLength)
+{
+	UE_LOG(LogAutomatic, Log, TEXT("OnDownloadFileProgress BytesSent: %d, BytesReceived %d, ContentLength: %d"), BytesSent, BytesReceived, ContentLength);
+}
+
+void FRouteMessageHandler::OnDownloadFileResult(TEnumAsByte<DownloadResult> Result)
+{
+	UE_LOG(LogAutomatic, Log, TEXT("OnDownloadFileResult %d"), static_cast<int32>(Result.GetValue()));
 }
