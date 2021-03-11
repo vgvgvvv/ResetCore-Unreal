@@ -2,11 +2,13 @@
 
 
 #include "EnumUtil.h"
+#include "HttpModule.h"
 #include "JsonUtil.h"
 #include "ReAutomatic.h"
 #include "JsonUtilities.h"
 #include "LuaScriptMessage.h"
 #include "RouteProto.h"
+#include "SocketClient.h"
 #include "Async/Async.h"
 #include "UE4ControlCenter/UE4CmdArg.h"
 #include "UE4ControlCenter/UE4ControlCenter.h"
@@ -74,7 +76,17 @@ void FRouteMessageHandler::HandleJsonInfo(FSocketClient& from, TSharedPtr<FJsonO
 		};
 		
 		AsyncTask(ENamedThreads::GameThread, Task);
-	}else
+	}
+	else if(CmdId == FCmdTypes::SendFile)
+	{
+		auto SendFileMessageObject = RawCommandContent->AsObject();
+		auto FileSize = SendFileMessageObject->GetIntegerField("FileSize");
+		auto FileName = SendFileMessageObject->GetStringField("FileName");
+		auto TargetPath = SendFileMessageObject->GetStringField("TargetPath");
+		auto FileServerUrl = SendFileMessageObject->GetStringField("FileServerUrl");
+		//TODO ·¢ËÍÎÄ¼þÂß¼­
+	}
+	else
 	{
 		UE_LOG(LogAutomatic, Error, TEXT("Not Support Cmdid : %s"), *CmdId)
 	}
