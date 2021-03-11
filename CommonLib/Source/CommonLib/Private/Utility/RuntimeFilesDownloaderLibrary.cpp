@@ -1,6 +1,9 @@
 ﻿// Respirant 2020.
-
 #include "Utility/RuntimeFilesDownloaderLibrary.h"
+#include "Http.h"
+#include "Misc/Paths.h"
+#include "HAL/PlatformFilemanager.h"
+#include "GenericPlatform/GenericPlatformFile.h"
 
 URuntimeFilesDownloaderLibrary* URuntimeFilesDownloaderLibrary::CreateDownloader()
 {
@@ -13,7 +16,7 @@ URuntimeFilesDownloaderLibrary* URuntimeFilesDownloaderLibrary::DownloadFile(con
 	FileUrl = URL;
 	FileSavePath = SavePath;
 
-	TSharedRef< IHttpRequest, ESPMode::ThreadSafe > HttpRequest = FHttpModule::Get().CreateRequest();
+	TSharedRef<IHttpRequest> HttpRequest = FHttpModule::Get().CreateRequest();
 
 	HttpRequest->SetVerb("GET");
 	HttpRequest->SetURL(URL);
