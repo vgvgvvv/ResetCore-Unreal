@@ -45,7 +45,8 @@ public class ReAutomatic : ModuleRules
 				"JsonUtilities",
 				"Networking",
 				"Sockets",
-				"UMG"
+				"UMG",
+				"Http",
 				// ... add private dependencies that you statically link with here ...
 			}
 			);
