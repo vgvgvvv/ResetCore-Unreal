@@ -9,7 +9,7 @@ public:
 
 	bool InitWithFile();
 
-	void Init(const FString& Name, const FString& Host, const int32 Port);
+	bool Init(const FString& Name, const FString& Host, const int32 Port);
 
 	class FLambdaRunnable* RunWithBackground();
 
