@@ -66,13 +66,14 @@ bool FRouteClient::InitWithFile()
 }
 
 /// 初始化RouteClient
-void FRouteClient::Init(const FString& Name, const FString& Host, const int32 Port)
+bool FRouteClient::Init(const FString& Name, const FString& Host, const int32 Port)
 {
 	LocalClient = new FSocketClient(Name, MakeShared<FRouteMessageHandler>());
 	LocalClient->SetConnectTarget(Host, Port);
 
 	LocalClient->OnRegist.AddRaw(this, &FRouteClient::OnRegister);
 	LocalClient->OnHeartBeat.AddRaw(this, &FRouteClient::OnHeartBeat);
+	return true;
 }
 
 /// 后台运行RouteClient
