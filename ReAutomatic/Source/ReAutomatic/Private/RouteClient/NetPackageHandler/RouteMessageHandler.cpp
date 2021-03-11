@@ -87,7 +87,8 @@ void FRouteMessageHandler::HandleJsonInfo(FSocketClient& from, TSharedPtr<FJsonO
 		auto FileServerUrl = SendFileMessageObject->GetStringField("FileServerUrl");
 
 		URuntimeFilesDownloaderLibrary* downloader = URuntimeFilesDownloaderLibrary::CreateDownloader();
-		auto RequestUrl = FString::Printf(TEXT("http://%s/api/file/download/%s/%s"), *FileServerUrl, *msg.TargetRouteName, *FileName);
+		auto RequestUrl = FString::Printf(TEXT("%s/api/file/download/%s/%s"), *FileServerUrl, *msg.TargetRouteName, *FileName);
+		UE_LOG(LogAutomatic, Log, TEXT("Download From %s"), *RequestUrl)
 		downloader->OnProgressCpp.AddRaw(this, &FRouteMessageHandler::OnDownloadFileProgress);
 		downloader->OnResultCpp.AddRaw(this, &FRouteMessageHandler::OnDownloadFileResult);
 		
