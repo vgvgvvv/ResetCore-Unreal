@@ -15,6 +15,17 @@
 #include "UE4ControlCenter/UE4ControlCenter.h"
 #include "Utility/JsonUtil.h"
 
+static void OnDownloadFileProgress(const int32 BytesSent, const int32 BytesReceived,
+    const int32 ContentLength)
+{
+	UE_LOG(LogAutomatic, Log, TEXT("OnDownloadFileProgress BytesSent: %d, BytesReceived %d, ContentLength: %d"), BytesSent, BytesReceived, ContentLength);
+}
+
+static void OnDownloadFileResult(TEnumAsByte<DownloadResult> Result)
+{
+	UE_LOG(LogAutomatic, Log, TEXT("OnDownloadFileResult %d"), static_cast<int32>(Result.GetValue()));
+}
+
 
 void FRouteMessageHandler::HandleJsonInfo(FSocketClient& from, TSharedPtr<FJsonObject> jsonObject)
 {
@@ -89,8 +100,8 @@ void FRouteMessageHandler::HandleJsonInfo(FSocketClient& from, TSharedPtr<FJsonO
 		URuntimeFilesDownloaderLibrary* downloader = URuntimeFilesDownloaderLibrary::CreateDownloader();
 		auto RequestUrl = FString::Printf(TEXT("%s/api/file/download/%s/%s"), *FileServerUrl, *msg.TargetRouteName, *FileName);
 		UE_LOG(LogAutomatic, Log, TEXT("Download From %s"), *RequestUrl)
-		downloader->OnProgressCpp.AddRaw(this, &FRouteMessageHandler::OnDownloadFileProgress);
-		downloader->OnResultCpp.AddRaw(this, &FRouteMessageHandler::OnDownloadFileResult);
+		downloader->OnProgressCpp.AddStatic(&OnDownloadFileProgress);
+		downloader->OnResultCpp.AddStatic(&OnDownloadFileResult);
 		
 		downloader->DownloadFile(RequestUrl, TargetPath);
 	}
@@ -100,13 +111,3 @@ void FRouteMessageHandler::HandleJsonInfo(FSocketClient& from, TSharedPtr<FJsonO
 	}
 }
 
-void FRouteMessageHandler::OnDownloadFileProgress(const int32 BytesSent, const int32 BytesReceived,
-	const int32 ContentLength)
-{
-	UE_LOG(LogAutomatic, Log, TEXT("OnDownloadFileProgress BytesSent: %d, BytesReceived %d, ContentLength: %d"), BytesSent, BytesReceived, ContentLength);
-}
-
-void FRouteMessageHandler::OnDownloadFileResult(TEnumAsByte<DownloadResult> Result)
-{
-	UE_LOG(LogAutomatic, Log, TEXT("OnDownloadFileResult %d"), static_cast<int32>(Result.GetValue()));
-}
