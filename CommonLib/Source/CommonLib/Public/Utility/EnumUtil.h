@@ -1,8 +1,8 @@
 ﻿#pragma once
-#include "Class.h"
-#include "Package.h"
-#include "UnrealString.h"
-#include "UObjectGlobals.h"
+#include "UObject/Class.h"
+#include "UObject/Package.h"
+#include "Containers/UnrealString.h"
+#include "UObject/UObjectGlobals.h"
 
 class COMMONLIB_API FEnumUtil
 {

@@ -2,11 +2,9 @@
 
 #include "CommonLib.h"
 #include "IPAddress.h"
-#include "IPv4Address.h"
-#include "RunnableThread.h"
+#include "Interfaces/IPv4/IPv4Address.h"
 #include "Sockets.h"
 #include "SocketSubsystem.h"
-#include "TcpSocketBuilder.h"
 
 
 FSocketClient::FSocketClient(const FString& name, TSharedPtr<INetPackageHandler> handler)

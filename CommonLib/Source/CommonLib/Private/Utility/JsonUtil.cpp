@@ -1,7 +1,7 @@
 ﻿#include "Utility/JsonUtil.h"
 
-#include "JsonSerializer.h"
-#include "JsonWriter.h"
+#include "Serialization/JsonSerializer.h"
+#include "Serialization/JsonWriter.h"
 #include "CommonLib.h"
 
 using FJsonObjectPtr = TSharedPtr<FJsonObject>;
