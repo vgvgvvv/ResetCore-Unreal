@@ -2,15 +2,29 @@
 
 
 #include "EnumUtil.h"
+#include "HttpModule.h"
 #include "JsonUtil.h"
 #include "ReAutomatic.h"
 #include "JsonUtilities.h"
 #include "LuaScriptMessage.h"
 #include "RouteProto.h"
+#include "RuntimeFilesDownloaderLibrary.h"
+#include "SocketClient.h"
 #include "Async/Async.h"
 #include "UE4ControlCenter/UE4CmdArg.h"
 #include "UE4ControlCenter/UE4ControlCenter.h"
 #include "Utility/JsonUtil.h"
+
+static void OnDownloadFileProgress(const int32 BytesSent, const int32 BytesReceived,
+    const int32 ContentLength)
+{
+	UE_LOG(LogAutomatic, Log, TEXT("OnDownloadFileProgress BytesSent: %d, BytesReceived %d, ContentLength: %d"), BytesSent, BytesReceived, ContentLength);
+}
+
+static void OnDownloadFileResult(TEnumAsByte<DownloadResult> Result)
+{
+	UE_LOG(LogAutomatic, Log, TEXT("OnDownloadFileResult %d"), static_cast<int32>(Result.GetValue()));
+}
 
 
 void FRouteMessageHandler::HandleJsonInfo(FSocketClient& from, TSharedPtr<FJsonObject> jsonObject)
@@ -74,8 +88,26 @@ void FRouteMessageHandler::HandleJsonInfo(FSocketClient& from, TSharedPtr<FJsonO
 		};
 		
 		AsyncTask(ENamedThreads::GameThread, Task);
-	}else
+	}
+	else if(CmdId == FCmdTypes::SendFile)
+	{
+		auto SendFileMessageObject = RawCommandContent->AsObject();
+		auto FileSize = SendFileMessageObject->GetIntegerField("FileSize");
+		auto FileName = SendFileMessageObject->GetStringField("FileName");
+		auto TargetPath = SendFileMessageObject->GetStringField("TargetPath");
+		auto FileServerUrl = SendFileMessageObject->GetStringField("FileServerUrl");
+
+		URuntimeFilesDownloaderLibrary* downloader = URuntimeFilesDownloaderLibrary::CreateDownloader();
+		auto RequestUrl = FString::Printf(TEXT("%s/api/file/download/%s/%s"), *FileServerUrl, *msg.TargetRouteName, *FileName);
+		UE_LOG(LogAutomatic, Log, TEXT("Download From %s"), *RequestUrl)
+		downloader->OnProgressCpp.AddStatic(&OnDownloadFileProgress);
+		downloader->OnResultCpp.AddStatic(&OnDownloadFileResult);
+		
+		downloader->DownloadFile(RequestUrl, TargetPath);
+	}
+	else
 	{
 		UE_LOG(LogAutomatic, Error, TEXT("Not Support Cmdid : %s"), *CmdId)
 	}
 }
+

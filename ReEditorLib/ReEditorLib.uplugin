@@ -1,0 +1,23 @@
+{
+	"FileVersion": 3,
+	"Version": 1,
+	"VersionName": "1.0",
+	"FriendlyName": "ReEditorLib",
+	"Description": "EditorCommonLib",
+	"Category": "Other",
+	"CreatedBy": "resetoter",
+	"CreatedByURL": "www.resetoter.cn",
+	"DocsURL": "",
+	"MarketplaceURL": "",
+	"SupportURL": "",
+	"CanContainContent": true,
+	"IsBetaVersion": false,
+	"Installed": false,
+	"Modules": [
+		{
+			"Name": "ReEditorLib",
+			"Type": "Editor",
+			"LoadingPhase": "PostDefault"
+		}
+	]
+}

@@ -8,3 +8,5 @@ FCmdTypes::FCmdType FCmdTypes::Shell = "Shell";
 FCmdTypes::FCmdType FCmdTypes::DownloadFile = "DownloadFile";
 FCmdTypes::FCmdType FCmdTypes::RunLua = "RunLua";
 FCmdTypes::FCmdType FCmdTypes::RunLuaFinish = "RunLuaFinish";
+FCmdTypes::FCmdType FCmdTypes::SendFile = "SendFile";
+FCmdTypes::FCmdType FCmdTypes::SendFileFinish = "SendFileFinish";

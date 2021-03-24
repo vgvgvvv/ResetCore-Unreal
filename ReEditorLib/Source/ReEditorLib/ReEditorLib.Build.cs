@@ -2,15 +2,15 @@
 
 using UnrealBuildTool;
 
-public class CommonLib : ModuleRules
+public class ReEditorLib : ModuleRules
 {
-	public CommonLib(ReadOnlyTargetRules Target) : base(Target)
+	public ReEditorLib(ReadOnlyTargetRules Target) : base(Target)
 	{
 		PCHUsage = ModuleRules.PCHUsageMode.UseExplicitOrSharedPCHs;
 		
 		PublicIncludePaths.AddRange(
 			new string[] {
-				"CommonLib/Public"
+				"ReEditorLib/Public"
 				// ... add public include paths required here ...
 			}
 			);
@@ -18,7 +18,7 @@ public class CommonLib : ModuleRules
 		
 		PrivateIncludePaths.AddRange(
 			new string[] {
-				"CommonLib/Private",
+				"ReEditorLib/Private",
 				// ... add other private include paths required here ...
 			}
 			);
@@ -28,7 +28,6 @@ public class CommonLib : ModuleRules
 			new string[]
 			{
 				"Core",
-				"Http",
 				// ... add other public dependencies that you statically link with here ...
 			}
 			);
@@ -41,9 +40,6 @@ public class CommonLib : ModuleRules
 				"Engine",
 				"Slate",
 				"SlateCore",
-				"Networking",
-				"Sockets",
-				"Json",
 				// ... add private dependencies that you statically link with here ...	
 			}
 			);
