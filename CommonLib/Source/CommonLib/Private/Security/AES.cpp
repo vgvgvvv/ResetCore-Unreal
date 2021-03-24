@@ -18,7 +18,7 @@ AES::AES(int keyLen)
     this->Nr = 14;
     break;
   default:
-    throw "Incorrect key length";
+    checkf(false, TEXT("Incorrect key length"));
   }
 
   blockBytesLen = 4 * this->Nb * sizeof(unsigned char);
