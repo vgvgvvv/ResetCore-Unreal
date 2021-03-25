@@ -4,6 +4,7 @@
 #include "Misc/Paths.h"
 #include "HAL/PlatformFilemanager.h"
 #include "GenericPlatform/GenericPlatformFile.h"
+#include "Runtime/Launch/Resources/Version.h"
 
 URuntimeFilesDownloaderLibrary* URuntimeFilesDownloaderLibrary::CreateDownloader()
 {
@@ -16,8 +17,11 @@ URuntimeFilesDownloaderLibrary* URuntimeFilesDownloaderLibrary::DownloadFile(con
 	FileUrl = URL;
 	FileSavePath = SavePath;
 
+#if ENGINE_MINOR_VERSION >= 26 
 	TSharedRef<IHttpRequest, ESPMode::ThreadSafe> HttpRequest = FHttpModule::Get().CreateRequest();
-
+#else
+	TSharedRef<IHttpRequest> HttpRequest = FHttpModule::Get().CreateRequest();
+#endif
 	HttpRequest->SetVerb("GET");
 	HttpRequest->SetURL(URL);
 	HttpRequest->OnProcessRequestComplete().BindUObject(this, &URuntimeFilesDownloaderLibrary::OnReady_Internal);
