@@ -2,7 +2,7 @@
 
 
 #include "JsonObjectConverter.h"
-#include "NetPackage.h"
+#include "Network/NetPackage.h"
 
 
 class FNetJsonSerializer;

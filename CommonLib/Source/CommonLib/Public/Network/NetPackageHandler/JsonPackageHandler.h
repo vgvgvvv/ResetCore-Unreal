@@ -1,8 +1,8 @@
 ﻿#pragma once
 
-#include "JsonObject.h"
+#include "Dom/JsonObject.h"
 #include "NetPackageHandler.h"
-#include "SharedPointer.h"
+#include "Templates/SharedPointer.h"
 
 class COMMONLIB_API FJsonPackageHandler : public INetPackageHandler
 {

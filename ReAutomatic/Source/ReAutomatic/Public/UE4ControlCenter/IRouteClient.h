@@ -1,5 +1,5 @@
 ﻿#pragma once
-#include "RouteProto.h"
+#include "RouteClient/RouteProto.h"
 
 // 用于抽象控制器，包括Route控制器以及本地直连控制器
 class REAUTOMATIC_API IRouteClient

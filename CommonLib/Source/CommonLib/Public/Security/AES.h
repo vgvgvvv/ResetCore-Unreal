@@ -10,75 +10,77 @@ using namespace std;
 class AES
 {
 private:
-  int Nb;
-  int Nk;
-  int Nr;
+	int Nb;
+	int Nk;
+	int Nr;
 
-  unsigned int blockBytesLen;
+	unsigned int blockBytesLen;
 
-  void SubBytes(unsigned char **state);
+	void SubBytes(unsigned char** state);
 
-  void ShiftRow(unsigned char **state, int i, int n);    // shift row i on n positions
+	void ShiftRow(unsigned char** state, int i, int n); // shift row i on n positions
 
-  void ShiftRows(unsigned char **state);
+	void ShiftRows(unsigned char** state);
 
-  unsigned char xtime(unsigned char b);    // multiply on x
+	unsigned char xtime(unsigned char b); // multiply on x
 
-  unsigned char mul_bytes(unsigned char a, unsigned char b);
+	unsigned char mul_bytes(unsigned char a, unsigned char b);
 
-  void MixColumns(unsigned char **state);
+	void MixColumns(unsigned char** state);
 
-  void MixSingleColumn(unsigned char *r);
+	void MixSingleColumn(unsigned char* r);
 
-  void AddRoundKey(unsigned char **state, unsigned char *key);
+	void AddRoundKey(unsigned char** state, unsigned char* key);
 
-  void SubWord(unsigned char *a);
+	void SubWord(unsigned char* a);
 
-  void RotWord(unsigned char *a);
+	void RotWord(unsigned char* a);
 
-  void XorWords(unsigned char *a, unsigned char *b, unsigned char *c);
+	void XorWords(unsigned char* a, unsigned char* b, unsigned char* c);
 
-  void Rcon(unsigned char * a, int n);
+	void Rcon(unsigned char* a, int n);
 
-  void InvSubBytes(unsigned char **state);
+	void InvSubBytes(unsigned char** state);
 
-  void InvMixColumns(unsigned char **state);
+	void InvMixColumns(unsigned char** state);
 
-  void InvShiftRows(unsigned char **state);
+	void InvShiftRows(unsigned char** state);
 
-  unsigned char* PaddingNulls(unsigned char in[], unsigned int inLen, unsigned int alignLen);
+	unsigned char* PaddingNulls(unsigned char in[], unsigned int inLen, unsigned int alignLen);
 
-  unsigned int GetPaddingLength(unsigned int len);
+	unsigned int GetPaddingLength(unsigned int len);
 
-  void KeyExpansion(unsigned char key[], unsigned char w[]);
+	void KeyExpansion(unsigned char key[], unsigned char w[]);
 
-  void EncryptBlock(unsigned char in[], unsigned char out[], unsigned  char key[]);
+	void EncryptBlock(unsigned char in[], unsigned char out[], unsigned char key[]);
 
-  void DecryptBlock(unsigned char in[], unsigned char out[], unsigned  char key[]);
+	void DecryptBlock(unsigned char in[], unsigned char out[], unsigned char key[]);
 
-  void XorBlocks(unsigned char *a, unsigned char * b, unsigned char *c, unsigned int len);
+	void XorBlocks(unsigned char* a, unsigned char* b, unsigned char* c, unsigned int len);
 
 public:
-  AES(int keyLen = 256);
+	AES(int keyLen = 256);
 
-  unsigned char *EncryptECB(unsigned char in[], unsigned int inLen, unsigned  char key[], unsigned int &outLen);
+	unsigned char* EncryptECB(unsigned char in[], unsigned int inLen, unsigned char key[], unsigned int& outLen);
 
-  unsigned char *DecryptECB(unsigned char in[], unsigned int inLen, unsigned  char key[]);
+	unsigned char* DecryptECB(unsigned char in[], unsigned int inLen, unsigned char key[]);
 
-  unsigned char *EncryptCBC(unsigned char in[], unsigned int inLen, unsigned  char key[], unsigned char * iv, unsigned int &outLen);
+	unsigned char* EncryptCBC(unsigned char in[], unsigned int inLen, unsigned char key[], unsigned char* iv,
+	                          unsigned int& outLen);
 
-  unsigned char *DecryptCBC(unsigned char in[], unsigned int inLen, unsigned  char key[], unsigned char * iv, unsigned int &outLen);
+	unsigned char* DecryptCBC(unsigned char in[], unsigned int inLen, unsigned char key[], unsigned char* iv,
+	                          unsigned int& outLen);
 
-  unsigned char *EncryptCFB(unsigned char in[], unsigned int inLen, unsigned  char key[], unsigned char * iv, unsigned int &outLen);
+	unsigned char* EncryptCFB(unsigned char in[], unsigned int inLen, unsigned char key[], unsigned char* iv,
+	                          unsigned int& outLen);
 
-  unsigned char *DecryptCFB(unsigned char in[], unsigned int inLen, unsigned  char key[], unsigned char * iv);
-  
-  void printHexArray (unsigned char a[], unsigned int n);
+	unsigned char* DecryptCFB(unsigned char in[], unsigned int inLen, unsigned char key[], unsigned char* iv);
 
-  unsigned char* PaddingPKCS7(unsigned char in[], unsigned int inLen, unsigned int &outLen);
+	void printHexArray(unsigned char a[], unsigned int n);
 
-  unsigned char* UnPaddingPKCS7(unsigned char in[], unsigned int inLen, unsigned int &outLen);
+	unsigned char* PaddingPKCS7(unsigned char in[], unsigned int inLen, unsigned int& outLen);
 
+	unsigned char* UnPaddingPKCS7(unsigned char in[], unsigned int inLen, unsigned int& outLen);
 };
 
 const unsigned char sbox[16][16] = {

@@ -1,6 +1,6 @@
 ﻿#pragma once
 
-#include "UnrealString.h"
+#include "Containers/UnrealString.h"
 #include "LuaScriptMessage.generated.h"
 
 USTRUCT()

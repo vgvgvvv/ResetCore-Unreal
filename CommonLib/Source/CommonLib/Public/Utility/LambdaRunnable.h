@@ -1,8 +1,7 @@
 ﻿#pragma once
-#include "Runnable.h"
-#include "RunnableThread.h"
-#include "TaskGraphInterfaces.h"
-#include "ThreadSafeBool.h"
+#include "HAL/Runnable.h"
+#include "HAL/RunnableThread.h"
+#include "HAL/ThreadSafeBool.h"
 
 /*
 Long duration lambda wrapper, which are generally not supported by the taskgraph system. New thread per lambda and they will auto-delete upon

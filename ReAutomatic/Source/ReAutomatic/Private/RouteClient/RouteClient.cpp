@@ -1,10 +1,10 @@
 ﻿#include "RouteClient/RouteClient.h"
 
 #include "ReAutomatic.h"
-#include "FileHelper.h"
+#include "Misc/FileHelper.h"
 #include "Network/Serializer/FNetJsonSerializer.h"
 #include "JsonObjectConverter.h"
-#include "Paths.h"
+#include "Misc/Paths.h"
 #include "RouteClient/NetPackageHandler/RouteMessageHandler.h"
 #include "Network/SocketClient.h"
 #include "Utility/JsonUtil.h"
@@ -53,7 +53,7 @@ bool FRouteClient::InitWithFile()
 
 	auto JsonObject = FJsonUtil::StringToJsonObject(ConfigJson);
 
-	FString Name = FPlatformMisc::GetDeviceMakeAndModel() + "(" + FPlatformMisc::GetUniqueDeviceId() + ")";
+	FString Name = FPlatformMisc::GetDeviceMakeAndModel() + "(" + FPlatformMisc::GetDeviceId() + ")";
 	if(JsonObject->HasField("Name"))
 	{
 		Name = JsonObject->GetStringField("Name");
@@ -68,7 +68,8 @@ bool FRouteClient::InitWithFile()
 /// 初始化RouteClient
 bool FRouteClient::Init(const FString& Name, const FString& Host, const int32 Port)
 {
-	LocalClient = new FSocketClient(Name, MakeShared<FRouteMessageHandler>());
+	TSharedPtr<FRouteMessageHandler> handler = MakeShared<FRouteMessageHandler>();
+	LocalClient = new FSocketClient(Name, handler);
 	LocalClient->SetConnectTarget(Host, Port);
 
 	LocalClient->OnRegist.AddRaw(this, &FRouteClient::OnRegister);
