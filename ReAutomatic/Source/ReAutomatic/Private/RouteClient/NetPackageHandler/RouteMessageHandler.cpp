@@ -11,7 +11,7 @@
 #include "Utility/RuntimeFilesDownloaderLibrary.h"
 #include "Network/SocketClient.h"
 #include "Async/Async.h"
-#include "Serializer/AESEncryptionSerializer.h"
+#include "RouteClient/Serializer/AESEncryptionSerializer.h"
 #include "UE4ControlCenter/UE4CmdArg.h"
 #include "UE4ControlCenter/UE4ControlCenter.h"
 #include "Utility/JsonUtil.h"
