@@ -3,6 +3,18 @@
 #include "CommonLib.h"
 #include "UObject/Class.h"
 
+UServiceManager* UServiceManager::Instance;
+
+UServiceManager* UServiceManager::Get(UGameInstance* GameInstance)
+{
+#if ENGINE_MINOR_VERSION >= 22 
+	return GameInstance->GetSubsystem<UServiceManager>();
+#else
+	Instance = NewObject<UServiceManager>(GameInstance);
+	return Instance;
+#endif
+}
+
 void UServiceManager::RegisterService(UObject* Service, UClass* ServiceType, const FString& ServiceName)
 {
 	FString SearchName = ServiceName;
