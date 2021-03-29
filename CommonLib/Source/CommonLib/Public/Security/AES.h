@@ -7,7 +7,7 @@
 
 using namespace std;
 
-class AES
+class COMMONLIB_API AES
 {
 private:
 	int Nb;
