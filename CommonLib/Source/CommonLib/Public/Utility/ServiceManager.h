@@ -1,6 +1,8 @@
 ﻿#pragma once
+#include "Engine/GameInstance.h"
 
 #include "ServiceManager.generated.h"
+
 
 USTRUCT()
 struct FServiceCollection
@@ -12,11 +14,18 @@ public:
 };
 
 UCLASS()
-class COMMONLIB_API UServiceManager : public UGameInstanceSubsystem
+class COMMONLIB_API UServiceManager
+#if ENGINE_MINOR_VERSION >= 22 
+	: public UGameInstanceSubsystem
+#else
+	: public UObject
+#endif
 {
 	GENERATED_BODY()
 public:
 
+	static UServiceManager* Get(UGameInstance* GameInstance);
+	
 	UFUNCTION()
 	void RegisterService(UObject* Service, UClass* ServiceType, const FString& ServiceName = "");
 
@@ -28,4 +37,6 @@ public:
 private:
 	UPROPERTY()
 	TMap<FName, FServiceCollection> Services;
+
+	static UServiceManager* Instance;
 };
