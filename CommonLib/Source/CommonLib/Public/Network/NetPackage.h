@@ -27,14 +27,20 @@ public:
 template <typename T, typename TSerializer>
 T FNetPackage::GetValue()
 {
-	return TSerializer::DeSerialize(Data);
+	if(Data.Num() > Length)
+	{
+		for(int i = Length; i < Data.Num(); i ++)
+		{
+			Data[i] = 0;
+		}
+	}
+	return TSerializer::DeSerialize(Data, Length);
 }
 
 template <typename T, typename TSerializer>
 auto FNetPackageUtil::MakePack(T Obj) -> FNetPackage
 {
 	FNetPackage result;
-	TSerializer::Serialize(Obj, result.Data);
-	result.Length = result.Data.Num();
+	TSerializer::Serialize(Obj, result.Data, result.Length);
 	return result;
 }

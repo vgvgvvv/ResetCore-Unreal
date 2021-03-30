@@ -7,6 +7,6 @@ class COMMONLIB_API FNetJsonSerializer
 {
 public:
 
-	static void Serialize(TSharedPtr<FJsonObject> json, TArray<uint8>& data);
-	static TSharedPtr<FJsonObject> DeSerialize(TArray<uint8>& data);
+	static void Serialize(TSharedPtr<FJsonObject> json, TArray<uint8>& data, int& length);
+	static TSharedPtr<FJsonObject> DeSerialize(TArray<uint8>& data, int length);
 };

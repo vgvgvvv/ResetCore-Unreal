@@ -11,7 +11,7 @@
 #include "Utility/RuntimeFilesDownloaderLibrary.h"
 #include "Network/SocketClient.h"
 #include "Async/Async.h"
-#include "Serializer/AESEncryptionSerializer.h"
+#include "RouteClient/Serializer/AESEncryptionSerializer.h"
 #include "UE4ControlCenter/UE4CmdArg.h"
 #include "UE4ControlCenter/UE4ControlCenter.h"
 #include "Utility/JsonUtil.h"
@@ -31,7 +31,10 @@ static void OnDownloadFileResult(TEnumAsByte<DownloadResult> Result)
 void FRouteMessageHandler::HandlePackage(FSocketClient& from, FNetPackage& package)
 {
 	const auto result = package.GetValue<TSharedPtr<FJsonObject>, FAESEncryptionSerializer<>>();
-	HandleJsonInfo(from, result);	
+	if(result.IsValid())
+	{
+		HandleJsonInfo(from, result);	
+	}
 }
 
 void FRouteMessageHandler::HandleJsonInfo(FSocketClient& from, TSharedPtr<FJsonObject> jsonObject)
