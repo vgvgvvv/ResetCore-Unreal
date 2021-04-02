@@ -10,32 +10,34 @@ template<typename ParentSerializer = FNetJsonSerializer>
 class FAESEncryptionSerializer
 {
 public:
-	static void Serialize(TSharedPtr<FJsonObject>json, TArray<uint8>& data);
+	static void Serialize(TSharedPtr<FJsonObject>json, TArray<uint8>& data, int& length);
 	
-	static TSharedPtr<FJsonObject> DeSerialize(TArray<uint8>& data);
+	static TSharedPtr<FJsonObject> DeSerialize(TArray<uint8>& data, int length);
 };
 
 template<typename ParentSerializer>
-void FAESEncryptionSerializer<ParentSerializer>::Serialize(TSharedPtr<FJsonObject> json, TArray<uint8>& data)
+void FAESEncryptionSerializer<ParentSerializer>::Serialize(TSharedPtr<FJsonObject> json, TArray<uint8>& data, int& length)
 {
-	ParentSerializer::Serialize(json, data);
+	int32 JsonLength;
+	ParentSerializer::Serialize(json, data, JsonLength);
 	AES aes;
 	auto key = FEncryptionSetting::GetKey();
 	auto iv = FEncryptionSetting::GetIV();
-	uint32 outlen;
-	auto result = aes.EncryptCBC(data.GetData(), data.Num(), key.GetData(), iv.GetData(), outlen);
-	data = TArray<uint8>(result, outlen);
+	uint32 outLen;
+	auto result = aes.EncryptCBC(data.GetData(), JsonLength, key.GetData(), iv.GetData(), outLen);
+	length = outLen;
+	data = TArray<uint8>(result, length);
 }
 
 template<typename ParentSerializer>
-TSharedPtr<FJsonObject> FAESEncryptionSerializer<ParentSerializer>::DeSerialize(TArray<uint8>& data)
+TSharedPtr<FJsonObject> FAESEncryptionSerializer<ParentSerializer>::DeSerialize(TArray<uint8>& data, int length)
 {
 	AES aes;
 	auto key = FEncryptionSetting::GetKey();
 	auto iv = FEncryptionSetting::GetIV();
 	uint32 outLen;
-	auto result = aes.DecryptCBC(data.GetData(), data.Num(), key.GetData(), iv.GetData(), outLen);
+	auto result = aes.DecryptCBC(data.GetData(), length, key.GetData(), iv.GetData(), outLen);
 
 	TArray<uint8> unencrypt(result, outLen);
-	return ParentSerializer::DeSerialize(unencrypt);
+	return ParentSerializer::DeSerialize(unencrypt, outLen);
 }

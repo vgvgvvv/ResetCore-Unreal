@@ -31,7 +31,10 @@ static void OnDownloadFileResult(TEnumAsByte<DownloadResult> Result)
 void FRouteMessageHandler::HandlePackage(FSocketClient& from, FNetPackage& package)
 {
 	const auto result = package.GetValue<TSharedPtr<FJsonObject>, FAESEncryptionSerializer<>>();
-	HandleJsonInfo(from, result);	
+	if(result.IsValid())
+	{
+		HandleJsonInfo(from, result);	
+	}
 }
 
 void FRouteMessageHandler::HandleJsonInfo(FSocketClient& from, TSharedPtr<FJsonObject> jsonObject)
