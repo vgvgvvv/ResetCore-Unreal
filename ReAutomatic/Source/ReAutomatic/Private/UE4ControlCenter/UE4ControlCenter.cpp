@@ -1,7 +1,7 @@
 ﻿#include "UE4ControlCenter/UE4ControlCenter.h"
 
-#include "NetPackage.h"
-#include "RouteClient.h"
+#include "Network/NetPackage.h"
+#include "RouteClient/RouteClient.h"
 
 
 FUE4ControlCenter* FUE4ControlCenter::Instance = nullptr;

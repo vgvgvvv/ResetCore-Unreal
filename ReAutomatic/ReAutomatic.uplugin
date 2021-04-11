@@ -4,7 +4,7 @@
 	"VersionName": "1.0",
 	"FriendlyName": "ReAutomatic",
 	"Description": "",
-	"Category": "Other",
+	"Category": "ResetCore",
 	"CreatedBy": "resetoter",
 	"CreatedByURL": "www.resetoter.cn",
 	"DocsURL": "",
@@ -20,10 +20,10 @@
 			"LoadingPhase": "Default"
 		}
 	],
-	"Plugins": [                      
-     {                                
-       "Name": "CommonLib",    
-       "Enabled": true                
-     }                                
-   ]
+	"Plugins": [
+		{
+			"Name": "CommonLib",
+			"Enabled": true
+		}
+	]
 }

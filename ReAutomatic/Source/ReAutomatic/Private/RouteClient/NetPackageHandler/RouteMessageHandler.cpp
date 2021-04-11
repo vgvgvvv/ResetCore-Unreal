@@ -1,16 +1,17 @@
 #include "RouteClient/NetPackageHandler/RouteMessageHandler.h"
 
 
-#include "EnumUtil.h"
+#include "Utility/EnumUtil.h"
 #include "HttpModule.h"
-#include "JsonUtil.h"
+#include "Utility/JsonUtil.h"
 #include "ReAutomatic.h"
 #include "JsonUtilities.h"
-#include "LuaScriptMessage.h"
-#include "RouteProto.h"
-#include "RuntimeFilesDownloaderLibrary.h"
-#include "SocketClient.h"
+#include "UE4ControlCenter/LuaScriptMessage.h"
+#include "RouteClient/RouteProto.h"
+#include "Utility/RuntimeFilesDownloaderLibrary.h"
+#include "Network/SocketClient.h"
 #include "Async/Async.h"
+#include "RouteClient/Serializer/AESEncryptionSerializer.h"
 #include "UE4ControlCenter/UE4CmdArg.h"
 #include "UE4ControlCenter/UE4ControlCenter.h"
 #include "Utility/JsonUtil.h"
@@ -26,6 +27,15 @@ static void OnDownloadFileResult(TEnumAsByte<DownloadResult> Result)
 	UE_LOG(LogAutomatic, Log, TEXT("OnDownloadFileResult %d"), static_cast<int32>(Result.GetValue()));
 }
 
+
+void FRouteMessageHandler::HandlePackage(FSocketClient& from, FNetPackage& package)
+{
+	const auto result = package.GetValue<TSharedPtr<FJsonObject>, FAESEncryptionSerializer<>>();
+	if(result.IsValid())
+	{
+		HandleJsonInfo(from, result);	
+	}
+}
 
 void FRouteMessageHandler::HandleJsonInfo(FSocketClient& from, TSharedPtr<FJsonObject> jsonObject)
 {
@@ -54,23 +64,22 @@ void FRouteMessageHandler::HandleJsonInfo(FSocketClient& from, TSharedPtr<FJsonO
 	{
 		auto UE4MessageObject = RawCommandContent->AsObject();
 		
-		auto CmdId = UE4MessageObject->GetStringField("CmdId");
+		auto Id = UE4MessageObject->GetStringField("CmdId");
 		auto Index = UE4MessageObject->GetIntegerField("Index");
 		auto CmdContent = UE4MessageObject->GetField<EJson::None>("Content");
 
 		FUE4CmdArg Arg;
-		Arg.CmdId = CmdId;
+		Arg.CmdId = Id;
 		Arg.Index = Index;
 		Arg.Content = CmdContent;
 		Arg.ControllerInfo = controllerInfo;
 
-		auto Task = [CmdId, Arg]()
-		{
-			FUE4CmdArg Temp = Arg;
-			FName Name = FName(*CmdId);
-			FUE4ControlCenter::Get().Trigger(Name, Temp);
-		};
-		AsyncTask(ENamedThreads::GameThread, Task);
+		AsyncTask(ENamedThreads::GameThread, [Id, Arg]()
+                                             		{
+                                             			FUE4CmdArg Temp = Arg;
+                                             			FName Name = FName(*Id);
+                                             			FUE4ControlCenter::Get().Trigger(Name, Temp);
+                                             		});
 	}
 	else if (CmdId == FCmdTypes::RunLua)
 	{
@@ -82,12 +91,10 @@ void FRouteMessageHandler::HandleJsonInfo(FSocketClient& from, TSharedPtr<FJsonO
 		Message.Index = Index;
 		Message.LuaScript = LuaStr;
 
-		auto Task = [Message, controllerInfo]()
-		{
-			FUE4ControlCenter::Get().OnRunLua.Broadcast(Message, controllerInfo);
-		};
-		
-		AsyncTask(ENamedThreads::GameThread, Task);
+		AsyncTask(ENamedThreads::GameThread, [Message, controllerInfo]()
+                                             		{
+                                             			FUE4ControlCenter::Get().OnRunLua.Broadcast(Message, controllerInfo);
+                                             		});
 	}
 	else if(CmdId == FCmdTypes::SendFile)
 	{

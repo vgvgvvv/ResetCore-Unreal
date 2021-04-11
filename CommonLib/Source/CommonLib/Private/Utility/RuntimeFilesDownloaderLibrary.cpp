@@ -16,8 +16,12 @@ URuntimeFilesDownloaderLibrary* URuntimeFilesDownloaderLibrary::DownloadFile(con
 	FileUrl = URL;
 	FileSavePath = SavePath;
 
+#if ENGINE_MINOR_VERSION > 22
+	TSharedRef<IHttpRequest, ESPMode::ThreadSafe> HttpRequest = FHttpModule::Get().CreateRequest();
+#else
 	TSharedRef<IHttpRequest> HttpRequest = FHttpModule::Get().CreateRequest();
-
+#endif
+	
 	HttpRequest->SetVerb("GET");
 	HttpRequest->SetURL(URL);
 	HttpRequest->OnProcessRequestComplete().BindUObject(this, &URuntimeFilesDownloaderLibrary::OnReady_Internal);

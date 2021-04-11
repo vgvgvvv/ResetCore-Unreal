@@ -2,14 +2,15 @@
 
 
 #include "JsonObjectConverter.h"
-#include "NetPackage.h"
+#include "Network/NetPackage.h"
+#include "RouteClient/Serializer/AESEncryptionSerializer.h"
 
 
 class FNetJsonSerializer;
 
 FNetPackage IRouteClient::NetPackageFromJsonObject(TSharedPtr<FJsonObject> JsonObject)
 {
-	return FNetPackageUtil::MakePack<TSharedPtr<FJsonObject>, FNetJsonSerializer>(JsonObject);
+	return FNetPackageUtil::MakePack<TSharedPtr<FJsonObject>, FAESEncryptionSerializer<>>(JsonObject);
 }
 
 FNetPackage IRouteClient::NetPackageFromProtoIDMessage(ERouteProtoID ProtoID, TSharedPtr<FJsonObject> Content)

@@ -1,5 +1,5 @@
 #pragma once
-#include "Function.h"
+#include "Templates/Function.h"
 #include "NetPackageHandler.h"
 
 class COMMONLIB_API FDynamicPackageHandler : public INetPackageHandler

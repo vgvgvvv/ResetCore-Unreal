@@ -2,7 +2,7 @@
 #include "CoreMinimal.h"
 
 #include "NetPackage.h"
-#include "Queue.h"
+#include "Containers/Queue.h"
 #include "NetPackageHandler/NetPackageHandler.h"
 
 class FSocket;

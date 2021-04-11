@@ -1,7 +1,7 @@
 ﻿#include "Network/NetPackageHandler/JsonPackageHandler.h"
 
-#include "NetPackage.h"
-#include "Serializer/FNetJsonSerializer.h"
+#include "Network/NetPackage.h"
+#include "Network/Serializer/FNetJsonSerializer.h"
 #include "Utility/JsonUtil.h"
 #include "CommonLib.h"
 

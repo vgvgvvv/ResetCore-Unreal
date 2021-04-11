@@ -1,11 +1,12 @@
 #pragma once
-#include "JsonPackageHandler.h"
+#include "Network/NetPackageHandler/JsonPackageHandler.h"
 
 
-class FRouteMessageHandler : public FJsonPackageHandler
+class FRouteMessageHandler : public INetPackageHandler
 {
 public:
+	virtual void HandlePackage(FSocketClient& from, FNetPackage& package) override;
 
-	virtual void HandleJsonInfo(FSocketClient& from, TSharedPtr<FJsonObject> jsonObject) override;
+	void HandleJsonInfo(FSocketClient& from, TSharedPtr<FJsonObject> jsonObject);
 
 };
