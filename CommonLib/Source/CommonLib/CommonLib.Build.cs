@@ -10,16 +10,22 @@ public class CommonLib : ModuleRules
 		
 		PublicIncludePaths.AddRange(
 			new string[] {
-				"CommonLib/Public"
-				// ... add public include paths required here ...
+#if UE_4_20_OR_LATER
+				Path.Combine(ModuleDirectory, "Public"),
+#else
+				"CommonLib/Public",
+#endif
 			}
 			);
 				
 		
 		PrivateIncludePaths.AddRange(
 			new string[] {
+#if UE_4_20_OR_LATER
+				Path.Combine(ModuleDirectory, "Private")
+#else
 				"CommonLib/Private",
-				// ... add other private include paths required here ...
+#endif
 			}
 			);
 			

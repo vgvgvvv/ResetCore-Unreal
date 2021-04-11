@@ -175,14 +175,7 @@ unsigned char* AES::UnPaddingPKCS7(unsigned char *in, unsigned int inLen, unsign
 
 unsigned int AES::GetPaddingLength(unsigned int len)
 {
-  unsigned int lengthWithPadding =  (len / blockBytesLen);
-  if (len % blockBytesLen) {
-	  lengthWithPadding++;
-  }
-  
-  lengthWithPadding *=  blockBytesLen;
-  
-  return lengthWithPadding;
+  return len + blockBytesLen - len % blockBytesLen;
 }
 
 void AES::EncryptBlock(unsigned char in[], unsigned char out[], unsigned  char *roundKeys)
