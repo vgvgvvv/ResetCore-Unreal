@@ -2,30 +2,24 @@
 
 using UnrealBuildTool;
 
-public class CommonLib : ModuleRules
+public class ResourcesCheckTool : ModuleRules
 {
-	public CommonLib(ReadOnlyTargetRules Target) : base(Target)
+	public ResourcesCheckTool(ReadOnlyTargetRules Target) : base(Target)
 	{
 		PCHUsage = ModuleRules.PCHUsageMode.UseExplicitOrSharedPCHs;
 		
 		PublicIncludePaths.AddRange(
 			new string[] {
-#if UE_4_20_OR_LATER
-				Path.Combine(ModuleDirectory, "Public"),
-#else
-				"CommonLib/Public",
-#endif
+				"ResourcesCheckTool/Public"
+				// ... add public include paths required here ...
 			}
 			);
 				
 		
 		PrivateIncludePaths.AddRange(
 			new string[] {
-#if UE_4_20_OR_LATER
-				Path.Combine(ModuleDirectory, "Private")
-#else
-				"CommonLib/Private",
-#endif
+				"ResourcesCheckTool/Private",
+				// ... add other private include paths required here ...
 			}
 			);
 			
@@ -34,7 +28,6 @@ public class CommonLib : ModuleRules
 			new string[]
 			{
 				"Core",
-				"Http",
 				// ... add other public dependencies that you statically link with here ...
 			}
 			);
@@ -47,9 +40,6 @@ public class CommonLib : ModuleRules
 				"Engine",
 				"Slate",
 				"SlateCore",
-				"Networking",
-				"Sockets",
-				"Json",
 				// ... add private dependencies that you statically link with here ...	
 			}
 			);
