@@ -42,9 +42,7 @@ void FRouteMessageHandler::HandleJsonInfo(FSocketClient& from, TSharedPtr<FJsonO
 	FRouteSendMessage msg;
 	FJsonObjectConverter::JsonObjectToUStruct<FRouteSendMessage>(jsonObject.ToSharedRef(), &msg);
 
-	UE_LOG(LogAutomatic, Log, TEXT("recv from %s (%s) %s"), *msg.FromRouteName,
-		*FEnumUtil::EnumToString(TEXT("ERouteType"), msg.FromRouteType),
-		*FJsonUtil::JsonObjectToString(jsonObject))
+	
 
 	FRemoteControllerInfo controllerInfo;
 	controllerInfo.ControllerName = msg.FromRouteName;
@@ -55,6 +53,13 @@ void FRouteMessageHandler::HandleJsonInfo(FSocketClient& from, TSharedPtr<FJsonO
 	auto CmdId = ContentObject->GetStringField("CmdId");
 	auto RawCommandContent = ContentObject->GetField<EJson::None>("Content");
 
+	if(CmdId != FCmdTypes::HeatBeatRep)
+	{
+		UE_LOG(LogAutomatic, Log, TEXT("recv from %s (%s) %s"), *msg.FromRouteName,
+        *FEnumUtil::EnumToString(TEXT("ERouteType"), msg.FromRouteType),
+        *FJsonUtil::JsonObjectToString(jsonObject))
+	}
+	
 	if(CmdId == FCmdTypes::Log)
 	{
 		auto LogStr = RawCommandContent->AsString();
@@ -111,6 +116,10 @@ void FRouteMessageHandler::HandleJsonInfo(FSocketClient& from, TSharedPtr<FJsonO
 		downloader->OnResultCpp.AddStatic(&OnDownloadFileResult);
 		
 		downloader->DownloadFile(RequestUrl, TargetPath);
+	}
+	else if(CmdId == FCmdTypes::HeatBeatRep)
+	{
+		UE_LOG(LogAutomatic, Log, TEXT("Get Heart Beat Response : %s"), *CmdId)
 	}
 	else
 	{
