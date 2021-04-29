@@ -10,3 +10,4 @@ FCmdTypes::FCmdType FCmdTypes::RunLua = "RunLua";
 FCmdTypes::FCmdType FCmdTypes::RunLuaFinish = "RunLuaFinish";
 FCmdTypes::FCmdType FCmdTypes::SendFile = "SendFile";
 FCmdTypes::FCmdType FCmdTypes::SendFileFinish = "SendFileFinish";
+FCmdTypes::FCmdType FCmdTypes::HeatBeatRep = "HeatBeatRep";

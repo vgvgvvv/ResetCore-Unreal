@@ -113,5 +113,6 @@ struct REAUTOMATIC_API FCmdTypes
 	static FCmdType RunLuaFinish;
 	static FCmdType SendFile;
 	static FCmdType SendFileFinish;
+	static FCmdType HeatBeatRep;
 };
 
