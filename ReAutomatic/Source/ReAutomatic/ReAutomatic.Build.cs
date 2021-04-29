@@ -10,16 +10,22 @@ public class ReAutomatic : ModuleRules
 
 		PublicIncludePaths.AddRange(
 			new string[] {
-				"ReAutomatic/Public"
-				// ... add public include paths required here ...
+#if UE_4_20_OR_LATER
+				Path.Combine(ModuleDirectory, "Public"),
+#else
+				"ReAutomatic/Public",
+#endif
 			}
 			);
 
 
 		PrivateIncludePaths.AddRange(
 			new string[] {
+#if UE_4_20_OR_LATER
+				Path.Combine(ModuleDirectory, "Private"),
+#else
 				"ReAutomatic/Private",
-				// ... add other private include paths required here ...
+#endif
 			}
 			);
 
