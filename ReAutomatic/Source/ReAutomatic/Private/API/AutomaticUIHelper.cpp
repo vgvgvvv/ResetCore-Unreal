@@ -2,11 +2,11 @@
 
 
 
-#include "CheckBox.h"
-#include "MultiLineEditableText.h"
-#include "MultiLineEditableTextBox.h"
-#include "RichTextBlock.h"
-#include "TextBlock.h"
+#include "Components/CheckBox.h"
+#include "Components/MultiLineEditableText.h"
+#include "Components/MultiLineEditableTextBox.h"
+#include "Components/RichTextBlock.h"
+#include "Components/TextBlock.h"
 #include "Internationalization/Regex.h"
 #include "Components/Button.h"
 #include "Components/ScrollBox.h"
@@ -215,7 +215,7 @@ bool UAutomaticUIHelper::IsWidgetTextMatchRegex(const UWidget* widget, const FSt
 		return FindInChildUserWidgetByCondition(widget, widget->GetName(), [regex](UWidget* widget)
 		{
 			return IsWidgetTextMatchRegex(widget, regex);
-		}, 0, currentindex);
+		}, 0, currentindex) != nullptr;
     }
 	
 	FRegexPattern pattern(regex);
