@@ -14,12 +14,7 @@ public:
 };
 
 UCLASS()
-class COMMONLIB_API UServiceManager
-#if ENGINE_MINOR_VERSION >= 22 
-	: public UGameInstanceSubsystem
-#else
-	: public UObject
-#endif
+class COMMONLIB_API UServiceManager : public UObject
 {
 	GENERATED_BODY()
 public:
