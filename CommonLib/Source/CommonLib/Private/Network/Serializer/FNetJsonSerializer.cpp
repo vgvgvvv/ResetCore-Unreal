@@ -13,20 +13,25 @@ void FNetJsonSerializer::Serialize(TSharedPtr<FJsonObject> json, TArray<uint8>& 
 	TSharedRef<TJsonWriter<>> Writer = TJsonWriterFactory<>::Create(&jsonStr);
 	FJsonSerializer::Serialize(json.ToSharedRef(), Writer);
 
-	length = sizeof(ANSICHAR)*(jsonStr.Len() + 1);
-	std::string jsonstdstr(TCHAR_TO_ANSI(*jsonStr));
+	TCHAR* pSendData = jsonStr.GetCharArray().GetData();
+	uint8* dst = (uint8*)TCHAR_TO_UTF8(pSendData);
 
-	data.Empty(length);
+	FTCHARToUTF8 EchoStrUtf8(*jsonStr);
+	length = EchoStrUtf8.Length();
+	
+	data.Init(0, length);
 	for(int i = 0; i < length ; i ++)
 	{
-		data.Emplace(jsonstdstr[i]);
+		data[i] = dst[i];
+		UE_LOG(LogTemp, Log, TEXT("xxx %x"), data[i])
 	}
+
 }
 
 TSharedPtr<FJsonObject> FNetJsonSerializer::DeSerialize(TArray<uint8>& data, int length)
 {
 	data.Add('\0');
-	auto jsonString = FString(length, ANSI_TO_TCHAR(reinterpret_cast<const char*>(data.GetData())));
+	auto jsonString = FString(UTF8_TO_TCHAR(data.GetData()));
 
 	TSharedRef< TJsonReader<> > Reader = TJsonReaderFactory<>::Create( jsonString );
 	TSharedPtr<FJsonObject> Object;
