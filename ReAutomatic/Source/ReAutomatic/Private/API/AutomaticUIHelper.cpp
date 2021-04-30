@@ -194,11 +194,6 @@ bool UAutomaticUIHelper::IsWidgetTextMatchRegex(const UWidget* widget, const FSt
 		auto TextWidget = Cast<UTextBlock>(widget);
 		content = TextWidget->Text.ToString();
 	}
-	else if(widget->IsA(URichTextBlock::StaticClass()))
-	{
-		auto TextWidget = Cast<URichTextBlock>(widget);
-		content = TextWidget->GetLabelText().ToString();
-	}
 	else if(widget->IsA(UMultiLineEditableText::StaticClass()))
 	{
 		auto TextWidget = Cast<UMultiLineEditableText>(widget);
