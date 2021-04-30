@@ -23,7 +23,6 @@ void FNetJsonSerializer::Serialize(TSharedPtr<FJsonObject> json, TArray<uint8>& 
 	for(int i = 0; i < length ; i ++)
 	{
 		data[i] = dst[i];
-		UE_LOG(LogTemp, Log, TEXT("xxx %x"), data[i])
 	}
 
 }
