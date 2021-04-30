@@ -215,7 +215,7 @@ bool UAutomaticUIHelper::IsWidgetTextMatchRegex(const UWidget* widget, const FSt
 		return FindInChildUserWidgetByCondition(widget, widget->GetName(), [regex](UWidget* widget)
 		{
 			return IsWidgetTextMatchRegex(widget, regex);
-		}, 0, currentindex);
+		}, 0, currentindex) != nullptr;
     }
 	
 	FRegexPattern pattern(regex);
