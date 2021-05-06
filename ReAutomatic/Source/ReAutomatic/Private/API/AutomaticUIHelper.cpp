@@ -14,6 +14,7 @@
 #include "UObject/UObjectIterator.h"
 #include "Components/WidgetSwitcher.h"
 #include "Blueprint/WidgetTree.h"
+#include "CommonInterfaces/CustomUIInterface.h"
 
 class UUserWidget;
 
@@ -171,7 +172,8 @@ bool UAutomaticUIHelper::IsWidgetMatchType(const UWidget* widget, EUIType type)
     		}
     		break;
     	case EUIType::Text:
-    		if(!widget->IsA(UTextBlock::StaticClass()))
+    		if(!widget->IsA(UTextBlock::StaticClass()) &&
+    			!widget->Implements<UTextWidgetInterface>())
     		{
     			return false;
     		}
@@ -193,6 +195,11 @@ bool UAutomaticUIHelper::IsWidgetTextMatchRegex(const UWidget* widget, const FSt
 	{
 		auto TextWidget = Cast<UTextBlock>(widget);
 		content = TextWidget->Text.ToString();
+	}
+	else if(widget->Implements<UTextWidgetInterface>())
+	{
+		const ITextWidgetInterface* TextWidget = Cast<ITextWidgetInterface>(widget);
+		content = TextWidget->GetTextContent();
 	}
 	else if(widget->IsA(UMultiLineEditableText::StaticClass()))
 	{
