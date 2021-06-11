@@ -21,7 +21,8 @@ public:
 	UFUNCTION()
 	virtual const FString& GetTextContent() const
 	{
-		return *(FString*)nullptr;
+		static FString defaultValue;
+		return defaultValue;
 	}
 };	
 
