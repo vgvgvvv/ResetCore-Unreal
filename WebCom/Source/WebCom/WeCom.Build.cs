@@ -40,6 +40,10 @@ public class WeCom : ModuleRules
 				"Engine",
 				"Slate",
 				"SlateCore",
+				"Http",
+				"Json",
+				"JsonUtilities",
+				"CommonLib",
 				// ... add private dependencies that you statically link with here ...	
 			}
 			);
