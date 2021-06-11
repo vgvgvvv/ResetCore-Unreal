@@ -2,11 +2,11 @@
 
 
 
-#include "Components/CheckBox.h"
-#include "Components/MultiLineEditableText.h"
-#include "Components/MultiLineEditableTextBox.h"
-#include "Components/RichTextBlock.h"
-#include "Components/TextBlock.h"
+#include "CheckBox.h"
+#include "MultiLineEditableText.h"
+#include "MultiLineEditableTextBox.h"
+#include "RichTextBlock.h"
+#include "TextBlock.h"
 #include "Internationalization/Regex.h"
 #include "Components/Button.h"
 #include "Components/ScrollBox.h"
