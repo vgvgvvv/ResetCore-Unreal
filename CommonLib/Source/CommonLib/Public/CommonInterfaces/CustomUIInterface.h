@@ -19,6 +19,10 @@ class ITextWidgetInterface
 public:
 	
 	UFUNCTION()
-	virtual FString& GetTextContent() const;
+	virtual const FString& GetTextContent() const
+	{
+		static FString defaultValue;
+		return defaultValue;
+	}
 };	
 

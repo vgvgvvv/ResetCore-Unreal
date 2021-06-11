@@ -139,6 +139,7 @@ void FSocketClient::WriteMessageBuffer()
 		int32 bytesSend = 0;
 		
 		int32 len = sendContent.Length;
+		ClientSocket->IsNotEncrypt = true;
 		ClientSocket->Send((uint8*)&len, 4, bytesSend);
 		ClientSocket->Send(sendContent.Data.GetData(), sendContent.Length, bytesSend);
 
