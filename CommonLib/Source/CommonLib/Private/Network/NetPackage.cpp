@@ -3,6 +3,8 @@
 
 FNetPackage::FNetPackage()
 {
+	Length = 0;
+	Data.Reset();
 }
 
 FNetPackage::FNetPackage(int32 length, TArray<uint8> data)
