@@ -20,23 +20,7 @@ FNetPackage IRouteClient::NetPackageFromJsonObject(TSharedPtr<FJsonObject> JsonO
 	{
 		BytesStr = BytesStr + FString::FromInt(Result.Data[i]) + ",";
 	}
-
-	// TArray<uint8> jsonData;
-	// int length;
-	// FNetJsonSerializer::Serialize(JsonObject, jsonData, length);
-	// auto str = BytesToHex(jsonData.GetData(), length);
-	// UE_LOG(LogTemp, Log, TEXT("Net Package Json Bytes Hex : %s"), *str)
-	//
-	// AES aes;
-	// auto key = FEncryptionSetting::GetKey();
-	// auto iv = FEncryptionSetting::GetIV();
-	// uint32 outLen;
-	// auto result = aes.EncryptCBC(jsonData.GetData(), length, key.GetData(), iv.GetData(), outLen);
-	// auto aes_data = TArray<uint8>(result, outLen);
-	// UE_LOG(LogTemp, Log, TEXT("AES Length : %d Content:%s"), outLen, *BytesToHex(aes_data.GetData(), outLen))
-	
-	UE_LOG(LogTemp, Log, TEXT("Make Net Package : %s \n Length : %d \n Content:%s \n Bytes : %s"), *FJsonUtil::JsonObjectToString(JsonObject), Result.Data.Num(), *BytesToHex(Result.Data.GetData(), Result.Length), *BytesStr)
-
+	UE_LOG(LogTemp, Log, TEXT("Make Net Package : %s Length : %d Content:%s"), *FJsonUtil::JsonObjectToString(JsonObject), Result.Data.Num(), *BytesStr)
 #endif
 	
 	return Result;

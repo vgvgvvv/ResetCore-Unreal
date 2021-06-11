@@ -19,31 +19,14 @@ template<typename ParentSerializer>
 void FAESEncryptionSerializer<ParentSerializer>::Serialize(TSharedPtr<FJsonObject> json, TArray<uint8>& data, int& length)
 {
 	int32 JsonLength;
-	TArray<uint8> jsonData;
-	ParentSerializer::Serialize(json, jsonData, JsonLength);
-
-#if UE_BUILD_DEVELOPMENT
-	{
-		auto str = BytesToHex(jsonData.GetData(), JsonLength);
-		UE_LOG(LogTemp, Log, TEXT("Net Package Json Bytes Hex Lenth: %d Content : %s"), JsonLength, *str)
-
-		AES aes;
-		auto key = FEncryptionSetting::GetKey();
-		auto iv = FEncryptionSetting::GetIV();
-		uint32 outLen;
-		auto result = aes.EncryptCBC(jsonData.GetData(), JsonLength, key.GetData(), iv.GetData(), outLen);
-		auto aes_data = TArray<uint8>(result, outLen);
-		UE_LOG(LogTemp, Log, TEXT("AES Length : %d Content:%s"), outLen, *BytesToHex(aes_data.GetData(), outLen))
-	}
-#endif
-	
+	ParentSerializer::Serialize(json, data, JsonLength);
 	AES aes;
 	auto key = FEncryptionSetting::GetKey();
 	auto iv = FEncryptionSetting::GetIV();
 	uint32 outLen;
-	auto result = aes.EncryptCBC(jsonData.GetData(), JsonLength, key.GetData(), iv.GetData(), outLen);
+	auto result = aes.EncryptCBC(data.GetData(), JsonLength, key.GetData(), iv.GetData(), outLen);
 	length = outLen;
-	data = TArray<uint8>(result, outLen);
+	data = TArray<uint8>(result, length);
 }
 
 template<typename ParentSerializer>
