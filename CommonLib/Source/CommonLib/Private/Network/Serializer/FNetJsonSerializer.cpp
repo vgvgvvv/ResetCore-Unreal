@@ -13,14 +13,15 @@ void FNetJsonSerializer::Serialize(TSharedPtr<FJsonObject> json, TArray<uint8>& 
 	TSharedRef<TJsonWriter<>> Writer = TJsonWriterFactory<>::Create(&jsonStr);
 	FJsonSerializer::Serialize(json.ToSharedRef(), Writer);
 
-	length = sizeof(ANSICHAR)*(jsonStr.Len() + 1);
-	std::string jsonstdstr(TCHAR_TO_ANSI(*jsonStr));
+	const TCHAR* pSendData = *jsonStr;
 
-	data.Empty(length);
-	for(int i = 0; i < length ; i ++)
-	{
-		data.Emplace(jsonstdstr[i]);
-	}
+	FTCHARToUTF8 EchoStrUtf8(pSendData);
+	length = EchoStrUtf8.Length();
+	
+	data.SetNum(length);
+	memcpy(data.GetData(), EchoStrUtf8.Get(), length);
+
+	UE_LOG(LogTemp, Log, TEXT("Json Data : str : %s hex : %s"), *jsonStr, *BytesToHex(data.GetData(), length))
 }
 
 TSharedPtr<FJsonObject> FNetJsonSerializer::DeSerialize(TArray<uint8>& data, int length)
