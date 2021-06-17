@@ -5,6 +5,7 @@
 #include "JsonObjectConverter.h"
 #include "JsonSerializer.h"
 #include "JsonUtil.h"
+#include "Utility/JsonUtil.h"
 
 class IHttpRequest;
 
