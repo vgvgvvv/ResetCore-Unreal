@@ -28,6 +28,9 @@ public class ResourcesCheckTool : ModuleRules
 			new string[]
 			{
 				"Core",
+				"CommonLib",
+				"Json",
+				"JsonUtilities",
 				// ... add other public dependencies that you statically link with here ...
 			}
 			);
