@@ -12,7 +12,7 @@ class COMMONLIB_API ILuaService
 {
 	GENERATED_BODY()
 public:
-	virtual void InitLuaState(const FString& LuaRoot){};
+	virtual void InitLuaState(){};
 
 	virtual void RunLua(const FString& LuaFile){};
 	
