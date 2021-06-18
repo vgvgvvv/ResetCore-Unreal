@@ -10,6 +10,7 @@ class ULuaService : public UInterface
 
 class COMMONLIB_API ILuaService
 {
+	GENERATED_BODY()
 public:
 	virtual void InitLuaState(const FString& LuaRoot){};
 
