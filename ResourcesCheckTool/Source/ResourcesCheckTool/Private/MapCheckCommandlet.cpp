@@ -1,6 +1,8 @@
 ﻿#include "MapCheckCommandlet.h"
 
 
+
+#include "Editor.h"
 #include "FileHelpers.h"
 #include "Engine/Engine.h"
 #include "Engine/ObjectLibrary.h"
@@ -14,18 +16,16 @@ UMapCheckCommandlet::UMapCheckCommandlet()
 int32 UMapCheckCommandlet::Main(const FString& Params)
 {
 
-	UWorld* NewWorld = UWorld::CreateWorld(EWorldType::None, false);
+	auto result = LoadLevel("/Game/Maps/TestUnrealResetCore.umap");
 
-	// UGameplayStatics::OpenLevel( GWorld, FName( "TestMap" ), true );
-	// GEngine->LoadMap( *GEngine->GetWorldContextFromWorld( GWorld ), URL, nullptr, Error );
-	GEngine->SetClientTravel( GWorld, TEXT( "TestMap" ), TRAVEL_Absolute );
-	// UPackage* Package = LoadPackage( nullptr, TEXT( "/Game/Maps/SunTemple.umap" ), LOAD_EditorOnly );
-	// GEditor->HandleMapCommand( TEXT( "LOAD FILE=" ), Ar, GWorld );
-	// FEditorFileUtils::LoadMap( TEXT( "/Game/TestMap.umap" ) );
+	if(!result)
+	{
+		UE_LOG(LogTemp, Error, TEXT("Cannot load map"));
+		return 0;
+	}
 	
-	// UGameplayStatics::OpenLevel(NewWorld, FName(TEXT("TestMap")));
 	TArray<AActor*> Result;
-	UGameplayStatics::GetAllActorsOfClass(NewWorld, AActor::StaticClass(), Result);
+	UGameplayStatics::GetAllActorsOfClass(GWorld, AActor::StaticClass(), Result);
 
 	
 	for(auto actor : Result)
@@ -55,4 +55,59 @@ TArray<FString> UMapCheckCommandlet::GetAllMapNames(){
 	}
 	return Names;
 }
- 
+
+
+bool UMapCheckCommandlet::LoadLevel(const FString& LevelToLoad)
+{
+	bool bResult = false;
+    
+    	if (!LevelToLoad.IsEmpty())
+    	{
+    		UE_LOG(LogTemp, Log, TEXT("Loading Map %s"), *LevelToLoad);
+    
+    		FString Filename;
+    		if (FPackageName::TryConvertLongPackageNameToFilename(LevelToLoad, Filename))
+    		{
+    			UPackage* Package = LoadPackage(NULL, *Filename, 0);
+    
+    			UWorld* World = UWorld::FindWorldInPackage(Package);
+    			if (World)
+    			{
+    				// Clean up any previous world.  The world should have already been saved
+    				UWorld* ExistingWorld = GEditor->GetEditorWorldContext().World();
+    
+    				GEngine->DestroyWorldContext(ExistingWorld);
+    				ExistingWorld->DestroyWorld(true, World);
+    
+    				GWorld = World;
+    
+    				World->WorldType = EWorldType::Editor;
+    
+    				FWorldContext& WorldContext = GEngine->CreateNewWorldContext(World->WorldType);
+    				WorldContext.SetCurrentWorld(World);
+    
+    				// add the world to the root set so that the garbage collection to delete replaced actors doesn't garbage collect the whole world
+    				World->AddToRoot();
+    
+    				// initialize the levels in the world
+    				World->InitWorld(UWorld::InitializationValues().AllowAudioPlayback(false));
+    				World->GetWorldSettings()->PostEditChange();
+    				World->UpdateWorldComponents(true, false);
+    
+    				bResult = true;
+    			}
+    		}
+    	}
+    	else
+    	{
+    		// a map was not specified, ignore
+    		bResult = true;
+    	}
+    
+    	if (!bResult)
+    	{
+    		UE_LOG(LogTemp, Error, TEXT("Could not find or load level %s"), *LevelToLoad);
+    	}
+    
+    	return bResult;
+}

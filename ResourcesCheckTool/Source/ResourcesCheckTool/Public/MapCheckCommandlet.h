@@ -12,4 +12,5 @@ public:
 	virtual int32 Main(const FString& Params) override;
 
 	TArray<FString> GetAllMapNames();
+	bool LoadLevel(const FString& LevelToLoad);
 };
