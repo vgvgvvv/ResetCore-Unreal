@@ -18,5 +18,5 @@ class RESOURCESCHECKTOOL_API FBaseAssetInfoCreator
 {
 	public:
 	virtual ~FBaseAssetInfoCreator() = default;
-	virtual TSharedPtr<FJsonObject> GetAssetInfo(UObject* AssetObject) = 0;
+	virtual TSharedPtr<FJsonObject> GetAssetInfo(UObject* AssetObject);
 };

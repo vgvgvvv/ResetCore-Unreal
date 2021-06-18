@@ -38,3 +38,9 @@ struct RESOURCESCHECKTOOL_API FStaticMeshInfo : public FBaseAssetInfo
 
 	virtual void Init(const UObject* AssetObj) override;
 };
+
+class RESOURCESCHECKTOOL_API FStaticMeshInfoCreator : public FBaseAssetInfoCreator
+{
+	public:
+	virtual TSharedPtr<FJsonObject> GetAssetInfo(UObject* AssetObject) override;
+};

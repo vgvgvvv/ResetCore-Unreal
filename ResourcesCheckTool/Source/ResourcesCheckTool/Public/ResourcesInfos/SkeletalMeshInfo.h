@@ -31,4 +31,12 @@ struct RESOURCESCHECKTOOL_API FSkeletalMeshInfo : public FBaseAssetInfo
 
 	UPROPERTY(EditAnywhere, Category = CheckerParam)
 	FString UVChannelNum;
+	
+	virtual void Init(const UObject* AssetObj) override;
+};
+
+class RESOURCESCHECKTOOL_API FSkeletalMeshInfoCreator : public FBaseAssetInfoCreator
+{
+	public:
+	virtual TSharedPtr<FJsonObject> GetAssetInfo(UObject* AssetObject) override;
 };

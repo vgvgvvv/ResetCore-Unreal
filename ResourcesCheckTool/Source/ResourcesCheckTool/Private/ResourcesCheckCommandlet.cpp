@@ -61,6 +61,7 @@ TSharedPtr<FJsonObject> UResourcesCheckCommandlet::GetAssetInfo(const FAssetData
 	auto Creator = AssetInfoCreators.Find(ClassName);
 	if(Creator != nullptr)
 	{
+		UE_LOG(LogTemp, Display, TEXT("Loading Asset : %s"), *AssetData.GetFullName());
 		auto AssetObj = AssetData.GetAsset();
 		return Creator->GetAssetInfo(AssetObj);
 	}

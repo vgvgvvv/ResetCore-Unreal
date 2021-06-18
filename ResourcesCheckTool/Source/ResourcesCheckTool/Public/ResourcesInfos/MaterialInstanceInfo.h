@@ -48,4 +48,14 @@ struct RESOURCESCHECKTOOL_API FMaterialInstanceInfo : public FBaseAssetInfo
 
 	UPROPERTY(EditAnywhere, Category = CheckerParam)
 	TArray<FMaterialInstanceBoolValue> LimitBoolPropertyArray;
+	
+	virtual void Init(const UObject* AssetObj) override;
 };
+
+class RESOURCESCHECKTOOL_API FMaterialInstanceInfoCreator : public FBaseAssetInfoCreator
+{
+public:
+	virtual TSharedPtr<FJsonObject> GetAssetInfo(UObject* AssetObject) override;
+};
+
+
