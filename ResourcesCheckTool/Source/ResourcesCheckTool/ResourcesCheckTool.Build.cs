@@ -31,6 +31,7 @@ public class ResourcesCheckTool : ModuleRules
 				"CommonLib",
 				"Json",
 				"JsonUtilities",
+				"UnrealEd",
 				// ... add other public dependencies that you statically link with here ...
 			}
 			);
