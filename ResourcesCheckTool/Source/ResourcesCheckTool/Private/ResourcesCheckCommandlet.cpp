@@ -11,6 +11,8 @@
 UResourcesCheckCommandlet::UResourcesCheckCommandlet()
 {
 	LogToConsole = true;
+
+	AssetInfoCreators.Add("Texture2D", FTextureInfoCreator());
 }
 
 int32 UResourcesCheckCommandlet::Main(const FString& Params)
@@ -32,7 +34,7 @@ void UResourcesCheckCommandlet::DumpAllResourcesInfo()
 	ObjectLibrary->GetAssetDataList(AssetDatas);
 	for(auto& assetData : AssetDatas)
 	{
-		UE_LOG(LogTemp, Display, TEXT("%s"), *assetData.ObjectPath.ToString());
+		UE_LOG(LogTemp, Display, TEXT("%s ClassName:%s"), *assetData.ObjectPath.ToString(), *assetData.AssetClass.ToString());
 		DumpSingleAssetData(assetData);
 	}
 }
@@ -44,9 +46,23 @@ void UResourcesCheckCommandlet::DumpSingleAssetData(const FAssetData& AssetData)
 	DataInfoJson->SetStringField("Name", AssetData.AssetName.ToString());
 	DataInfoJson->SetStringField("FullName", AssetData.GetFullName());
 
+	DataInfoJson->SetObjectField("ObjectInfo", GetAssetInfo(AssetData));
+
 	auto DataInfoString = FJsonUtil::JsonObjectToString(DataInfoJson);
 	
 	auto SavedAssetInfo = FPaths::Combine(FPaths::ProjectSavedDir(),
             TEXT("AssetInfo"), AssetData.ObjectPath.ToString() + TEXT(".json"));
 	FFileHelper::SaveStringToFile(DataInfoString, *SavedAssetInfo, FFileHelper::EEncodingOptions::ForceUTF8);
+}
+
+TSharedPtr<FJsonObject> UResourcesCheckCommandlet::GetAssetInfo(const FAssetData& AssetData)
+{
+	auto ClassName = AssetData.AssetClass.ToString();
+	auto Creator = AssetInfoCreators.Find(ClassName);
+	if(Creator != nullptr)
+	{
+		auto AssetObj = AssetData.GetAsset();
+		return Creator->GetAssetInfo(AssetObj);
+	}
+	return MakeShared<FJsonObject>();
 }

@@ -1,9 +1,10 @@
 ﻿#pragma once
+#include "BaseAssetInfo.h"
 #include "Engine/Texture2D.h"
 #include "TextureInfo.generated.h"
 
 USTRUCT()
-struct RESOURCESCHECKTOOL_API FTextureInfo
+struct RESOURCESCHECKTOOL_API FTextureInfo : public FBaseAssetInfo
 {
 	GENERATED_BODY()
 
@@ -21,7 +22,13 @@ struct RESOURCESCHECKTOOL_API FTextureInfo
 
 
 public:
-	void Init(UTexture2D* Texture);
-	
+
+	virtual void Init(const UObject* AssetObj) override;
+};
+
+class RESOURCESCHECKTOOL_API FTextureInfoCreator : public FBaseAssetInfoCreator
+{
+public:
+	virtual TSharedPtr<FJsonObject> GetAssetInfo(UObject* AssetObject) override;
 };
 

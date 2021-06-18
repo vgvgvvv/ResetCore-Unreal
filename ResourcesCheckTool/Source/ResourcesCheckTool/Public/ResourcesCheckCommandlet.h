@@ -1,6 +1,8 @@
 #pragma once
 
 #include "AssetData.h"
+#include "JsonObject.h"
+#include "TextureInfo.h"
 #include "Commandlets/Commandlet.h"
 
 #include "ResourcesCheckCommandlet.generated.h"
@@ -17,4 +19,7 @@ public:
 private:
 	void DumpAllResourcesInfo();
 	void DumpSingleAssetData(const FAssetData& AssetData);
+	TSharedPtr<FJsonObject> GetAssetInfo(const FAssetData& AssetData);
+
+	TMap<FString, FTextureInfoCreator> AssetInfoCreators;
 };

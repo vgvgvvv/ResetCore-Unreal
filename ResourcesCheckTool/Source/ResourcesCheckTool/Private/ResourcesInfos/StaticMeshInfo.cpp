@@ -1,7 +1,9 @@
 #pragma once
 #include "ResourcesInfos/StaticMeshInfo.h"
 
-void FStaticMeshInfo::Init(UStaticMesh* StaticMesh)
+void FStaticMeshInfo::Init(const UObject* AssetObj)
 {
-	this->LODNumber = StaticMesh->GetNumLODs();
+	auto StaticMesh = Cast<UStaticMesh>(AssetObj);
+	LODNumber = StaticMesh->GetNumLODs();
+
 }

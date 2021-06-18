@@ -1,4 +1,5 @@
 #pragma once
+#include "BaseAssetInfo.h"
 #include "MaterialInstanceInfo.generated.h"
 
 
@@ -32,7 +33,7 @@ struct RESOURCESCHECKTOOL_API FMaterialInstanceNumberValue
 };
 
 USTRUCT()
-struct RESOURCESCHECKTOOL_API FMaterialInstanceInfo
+struct RESOURCESCHECKTOOL_API FMaterialInstanceInfo : public FBaseAssetInfo
 {
 	GENERATED_BODY()
 	

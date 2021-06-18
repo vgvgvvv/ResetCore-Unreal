@@ -1,4 +1,5 @@
 #pragma once
+#include "BaseAssetInfo.h"
 #include "SkeletalMeshInfo.generated.h"
 
 USTRUCT()
@@ -15,7 +16,7 @@ struct RESOURCESCHECKTOOL_API FSkeletalMeshLODRuleItem
 };
 
 USTRUCT()
-struct RESOURCESCHECKTOOL_API FSkeletalMeshInfo
+struct RESOURCESCHECKTOOL_API FSkeletalMeshInfo : public FBaseAssetInfo
 {
 	GENERATED_BODY()
 	

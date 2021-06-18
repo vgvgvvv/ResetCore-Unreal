@@ -1,4 +1,5 @@
 #pragma once
+#include "BaseAssetInfo.h"
 #include "Engine/StaticMesh.h"
 #include "StaticMeshInfo.generated.h"
 
@@ -22,7 +23,7 @@ struct RESOURCESCHECKTOOL_API FStaticMeshLODRuleItem
 };
 
 USTRUCT()
-struct RESOURCESCHECKTOOL_API FStaticMeshInfo
+struct RESOURCESCHECKTOOL_API FStaticMeshInfo : public FBaseAssetInfo
 {
 	GENERATED_BODY()
 
@@ -35,6 +36,5 @@ struct RESOURCESCHECKTOOL_API FStaticMeshInfo
 	UPROPERTY(EditAnywhere, Category = CheckerParam)
 	TArray<FStaticMeshLODRuleItem> LODRules;
 
-	void Init(UStaticMesh* StaticMesh);
-	
+	virtual void Init(const UObject* AssetObj) override;
 };
