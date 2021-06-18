@@ -9,7 +9,13 @@ UServiceManager* UServiceManager::Get(UGameInstance* GameInstance)
 {
 	if(Instance == nullptr)
 	{
-		Instance = NewObject<UServiceManager>(GameInstance);
+		if(GameInstance == nullptr)
+		{
+			Instance = NewObject<UServiceManager>();
+		}else
+		{
+			Instance = NewObject<UServiceManager>(GameInstance);
+		}
 	}
 	return Instance;
 }
