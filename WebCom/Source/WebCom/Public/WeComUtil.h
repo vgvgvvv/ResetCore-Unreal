@@ -37,10 +37,16 @@ class WECOM_API UWeComUtil : public UBlueprintFunctionLibrary
 public:
 	static FString WebHook;
 
+	UFUNCTION()
+	static FString GetWebHook();
+
+	UFUNCTION()
 	static void SetKey(const FString& Key);
 	
+	UFUNCTION()
 	static void SendTextMessage(const FTextContent& TextContent);
 
+	UFUNCTION()
 	static void SendMarkdownMessage(const FMarkdownContent MarkdownContent);
 
 private:

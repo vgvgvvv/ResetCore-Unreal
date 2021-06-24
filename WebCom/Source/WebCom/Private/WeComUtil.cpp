@@ -13,6 +13,12 @@ FString UWeComUtil::WebHook = "https://qyapi.weixin.qq.com/cgi-bin/webhook/send?
 FString UWeComUtil::WeComKey;
 
 
+FString UWeComUtil::GetWebHook()
+{
+	auto Url = FString::Printf(*WebHook, *WeComKey);
+	return Url;
+}
+
 TArray<uint8> UWeComUtil::ToUTF8(const FString& msg)
 {
 	TArray<uint8> data;
