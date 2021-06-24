@@ -32,6 +32,7 @@ public class ResourcesCheckTool : ModuleRules
 				"Json",
 				"JsonUtilities",
 				"UnrealEd",
+				"AssetRegistry",
 				// ... add other public dependencies that you statically link with here ...
 			}
 			);

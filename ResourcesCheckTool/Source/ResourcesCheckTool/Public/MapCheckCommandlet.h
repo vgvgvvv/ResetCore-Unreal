@@ -11,6 +11,12 @@ public:
 	UMapCheckCommandlet();
 	virtual int32 Main(const FString& Params) override;
 
-	TArray<FString> GetAllMapNames();
-	bool LoadLevel(const FString& LevelToLoad);
+	UFUNCTION()
+	static TArray<struct FAssetData> GetAllMapAssets(const FString& MapRoot);
+
+	UFUNCTION()
+	static bool LoadLevel(const FString& LevelToLoad);
+
+	UFUNCTION()
+	static FVector GetLevelBoundsExtend();
 };
