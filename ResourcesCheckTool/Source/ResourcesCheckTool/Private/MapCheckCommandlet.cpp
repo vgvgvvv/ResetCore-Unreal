@@ -3,7 +3,11 @@
 
 
 #include "Editor.h"
+#include "FileHelper.h"
 #include "FileHelpers.h"
+#include "Engine/LevelBounds.h"
+#include "LuaService.h"
+#include "ServiceManager.h"
 #include "Engine/Engine.h"
 #include "Engine/ObjectLibrary.h"
 #include "Kismet/GameplayStatics.h"
@@ -16,44 +20,29 @@ UMapCheckCommandlet::UMapCheckCommandlet()
 int32 UMapCheckCommandlet::Main(const FString& Params)
 {
 
-	auto result = LoadLevel("/Game/Maps/TestUnrealResetCore.umap");
+	auto luaService = Cast<ILuaService>(
+		UServiceManager::Get(nullptr)->GetService(
+			ULuaService::StaticClass(),
+			"EditorLua"));
 
-	if(!result)
-	{
-		UE_LOG(LogTemp, Error, TEXT("Cannot load map"));
-		return 0;
-	}
+	FString LuaRoot = FPaths::Combine(FPaths::ProjectPluginsDir(), TEXT("resetcore-unreal/ResourcesCheckTool/Source/LuaSource"));
+	luaService->InitLuaStateWithLuaRoot(LuaRoot);
 	
-	TArray<AActor*> Result;
-	UGameplayStatics::GetAllActorsOfClass(GWorld, AActor::StaticClass(), Result);
-
+	UE_LOG(LogTemp, Display, TEXT("Begin RunLua : MapCheck.entry"));
+	luaService->RunLua(TEXT("MapCheck.entry"), TEXT("main"));
+	UE_LOG(LogTemp, Display, TEXT("End RunLua : MapCheck.entry"));
 	
-	for(auto actor : Result)
-	{
-		auto Name = actor->GetFullName();
-		UE_LOG(LogTemp, Display, TEXT("Name:%s"), *Name);
-	}
+	luaService->UnInitLuaState();
 	
 	return 0;
 }
 
-TArray<FString> UMapCheckCommandlet::GetAllMapNames(){
+TArray<FAssetData> UMapCheckCommandlet::GetAllMapAssets(const FString& MapRoot){
 	auto ObjectLibrary = UObjectLibrary::CreateLibrary(UWorld::StaticClass(), false, true);
-	ObjectLibrary->LoadAssetDataFromPath(TEXT("/Game/Maps"));
+	ObjectLibrary->LoadAssetDataFromPath(MapRoot);
 	TArray<FAssetData> AssetDatas;
 	ObjectLibrary->GetAssetDataList(AssetDatas);
-	UE_LOG(LogTemp, Warning, TEXT("Found maps: %d"), AssetDatas.Num());
- 
-	TArray<FString> Names = TArray<FString>();
- 
-	for (int32 i = 0; i < AssetDatas.Num(); ++i)
-	{
-		FAssetData& AssetData = AssetDatas[i];
- 
-		auto name = AssetData.AssetName.ToString();
-		Names.Add(name);
-	}
-	return Names;
+	return AssetDatas;
 }
 
 
@@ -63,7 +52,7 @@ bool UMapCheckCommandlet::LoadLevel(const FString& LevelToLoad)
     
     	if (!LevelToLoad.IsEmpty())
     	{
-    		UE_LOG(LogTemp, Log, TEXT("Loading Map %s"), *LevelToLoad);
+    		UE_LOG(LogTemp, Display, TEXT("Loading Map %s"), *LevelToLoad);
     
     		FString Filename;
     		if (FPackageName::TryConvertLongPackageNameToFilename(LevelToLoad, Filename))
@@ -90,7 +79,11 @@ bool UMapCheckCommandlet::LoadLevel(const FString& LevelToLoad)
     				World->AddToRoot();
     
     				// initialize the levels in the world
-    				World->InitWorld(UWorld::InitializationValues().AllowAudioPlayback(false));
+    				World->InitWorld(UWorld::InitializationValues()
+    					.AllowAudioPlayback(false)
+    					.CreatePhysicsScene(false)
+    					.CreateAISystem(false)
+    					.ShouldSimulatePhysics(false));
     				World->GetWorldSettings()->PostEditChange();
     				World->UpdateWorldComponents(true, false);
     
@@ -110,4 +103,11 @@ bool UMapCheckCommandlet::LoadLevel(const FString& LevelToLoad)
     	}
     
     	return bResult;
+}
+
+
+FVector UMapCheckCommandlet::GetLevelBoundsExtend()
+{
+	auto bounds = ALevelBounds::CalculateLevelBounds(GWorld->GetCurrentLevel());
+	return bounds.GetExtent();
 }
