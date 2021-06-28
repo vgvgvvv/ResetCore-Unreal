@@ -5,6 +5,7 @@
 #include "JsonObjectConverter.h"
 #include "JsonSerializer.h"
 #include "JsonUtil.h"
+#include "Utility/JsonUtil.h"
 
 class IHttpRequest;
 
@@ -12,6 +13,12 @@ FString UWeComUtil::WebHook = "https://qyapi.weixin.qq.com/cgi-bin/webhook/send?
 
 FString UWeComUtil::WeComKey;
 
+
+FString UWeComUtil::GetWebHook()
+{
+	auto Url = FString::Printf(*WebHook, *WeComKey);
+	return Url;
+}
 
 TArray<uint8> UWeComUtil::ToUTF8(const FString& msg)
 {

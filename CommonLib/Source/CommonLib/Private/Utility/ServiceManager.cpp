@@ -3,7 +3,7 @@
 #include "CommonLib.h"
 #include "UObject/Class.h"
 
-UServiceManager* UServiceManager::Instance;
+UServiceManager* UServiceManager::Instance = nullptr;
 
 UServiceManager* UServiceManager::Get(UGameInstance* GameInstance)
 {
