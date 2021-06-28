@@ -1,5 +1,5 @@
 #pragma once
-#include "Interface.h"
+#include "UObject/Interface.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
 
 #include "LuaService.generated.h"

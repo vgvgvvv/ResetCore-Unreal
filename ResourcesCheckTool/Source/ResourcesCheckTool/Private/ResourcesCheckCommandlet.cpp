@@ -2,11 +2,12 @@
 
 
 
-#include "FileHelper.h"
-#include "JsonObject.h"
+#include "Misc/FileHelper.h"
+#include "Dom/JsonObject.h"
 #include "Utility/JsonUtil.h"
-#include "Paths.h"
+#include "Misc/Paths.h"
 #include "Engine/ObjectLibrary.h"
+#include "ResourcesInfos/TextureInfo.h"
 
 UResourcesCheckCommandlet::UResourcesCheckCommandlet()
 {

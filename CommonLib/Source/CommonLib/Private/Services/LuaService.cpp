@@ -1,9 +1,9 @@
 #include "Services/LuaService.h"
 
 
-#include "FileHelper.h"
-#include "Paths.h"
-#include "Regex.h"
+#include "Misc/FileHelper.h"
+#include "Misc/Paths.h"
+#include "Internationalization/Regex.h"
 #include "Engine/World.h"
 
 TArray<FString> ILuaService::SearchPaths;

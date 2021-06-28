@@ -1,22 +1,22 @@
 ﻿#include "WeComUtil.h"
 
 #include "HttpModule.h"
-#include "JsonObject.h"
+#include "Dom/JsonObject.h"
 #include "JsonObjectConverter.h"
-#include "JsonSerializer.h"
-#include "JsonUtil.h"
+#include "Serialization/JsonSerializer.h"
+#include "Utility/JsonUtil.h"
 #include "Utility/JsonUtil.h"
 
 class IHttpRequest;
 
-FString UWeComUtil::WebHook = "https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=%s";
+FString UWeComUtil::WebHook = "https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=";
 
 FString UWeComUtil::WeComKey;
 
 
 FString UWeComUtil::GetWebHook()
 {
-	auto Url = FString::Printf(*WebHook, *WeComKey);
+	auto Url = WebHook + WeComKey;
 	return Url;
 }
 
@@ -41,11 +41,15 @@ void UWeComUtil::SetKey(const FString&  Key)
 void UWeComUtil::SendTextMessage(const FTextContent& TextContent)
 {
 	auto Http = &FHttpModule::Get();
+#if ENGINE_MINOR_VERSION > 20
+	TSharedRef<IHttpRequest, ESPMode::ThreadSafe> Request = Http->CreateRequest();
+#else
 	TSharedRef<IHttpRequest> Request = Http->CreateRequest();
+#endif
 	// Request->OnProcessRequestComplete().BindUObject(this, &AHttpActor::OnResponseReceived);
 	//This is the url on which to process the request
 
-	auto Url = FString::Printf(*WebHook, *WeComKey);
+	auto Url =  WebHook + WeComKey;
 
 	UE_LOG(LogTemp, Log, TEXT("Current Url Is %s"), *Url)
 	
@@ -76,11 +80,15 @@ void UWeComUtil::SendMarkdownMessage(const FMarkdownContent MarkdownContent)
 {
 
 	auto Http = &FHttpModule::Get();
+#if ENGINE_MINOR_VERSION > 20
+	TSharedRef<IHttpRequest, ESPMode::ThreadSafe> Request = Http->CreateRequest();
+#else
 	TSharedRef<IHttpRequest> Request = Http->CreateRequest();
+#endif
 	// Request->OnProcessRequestComplete().BindUObject(this, &AHttpActor::OnResponseReceived);
 	//This is the url on which to process the request
 
-	auto Url = FString::Printf(*WebHook, *WeComKey);
+	auto Url =  WebHook + WeComKey;
 
 	UE_LOG(LogTemp, Log, TEXT("Current Url Is %s"), *Url)
 	
