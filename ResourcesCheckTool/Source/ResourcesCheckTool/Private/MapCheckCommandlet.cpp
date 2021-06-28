@@ -3,13 +3,14 @@
 
 
 #include "Editor.h"
-#include "FileHelper.h"
+#include "Misc/FileHelper.h"
 #include "FileHelpers.h"
 #include "Engine/LevelBounds.h"
-#include "LuaService.h"
-#include "ServiceManager.h"
+#include "Services/LuaService.h"
+#include "Utility/ServiceManager.h"
 #include "Engine/Engine.h"
 #include "Engine/ObjectLibrary.h"
+#include "GameFramework/WorldSettings.h"
 #include "Kismet/GameplayStatics.h"
 
 UMapCheckCommandlet::UMapCheckCommandlet()

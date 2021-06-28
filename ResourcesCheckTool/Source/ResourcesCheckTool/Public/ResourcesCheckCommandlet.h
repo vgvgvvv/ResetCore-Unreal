@@ -1,6 +1,8 @@
 #pragma once
 
 #include "Commandlets/Commandlet.h"
+#include "ResourcesInfos/TextureInfo.h"
+
 
 #include "ResourcesCheckCommandlet.generated.h"
 
