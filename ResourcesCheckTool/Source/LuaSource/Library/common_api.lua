@@ -36,3 +36,14 @@ function _G.dump(object)
 
     return tostring(object)
 end
+
+---@param array LuaArray
+function _G.ArrayToTable(array)
+    local table = {}
+    local num = array:Num()
+    for i=0,num-1 do
+        table[i+1] = array:Get(i)
+    end
+    return table
+end
+

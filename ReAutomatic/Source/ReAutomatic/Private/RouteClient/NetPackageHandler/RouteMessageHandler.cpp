@@ -86,6 +86,28 @@ void FRouteMessageHandler::HandleJsonInfo(FSocketClient& from, TSharedPtr<FJsonO
                                              			FUE4ControlCenter::Get().Trigger(Name, Temp);
                                              		});
 	}
+	else if(CmdId == FCmdTypes::Shell)
+	{
+		FString Id = TEXT("ReceiveRemoteCommand");
+		FString shell = RawCommandContent->AsString();
+
+		FUE4CmdArg Arg;
+		Arg.CmdId = Id;
+		Arg.Index = 0;
+
+		TSharedPtr<FJsonObject> contentInfo = MakeShared<FJsonObject>();
+		contentInfo->SetStringField("shell", shell);
+		
+		Arg.Content = MakeShared<FJsonValueObject>(contentInfo);
+		Arg.ControllerInfo = controllerInfo;
+
+		AsyncTask(ENamedThreads::GameThread, [Id, Arg]()
+                                                     {
+                                                         FUE4CmdArg Temp = Arg;
+                                                         FName Name = FName(*Id);
+                                                         FUE4ControlCenter::Get().Trigger(Name, Temp);
+                                                     });
+	}
 	else if (CmdId == FCmdTypes::RunLua)
 	{
 		auto RunLuaMessageObject = RawCommandContent->AsObject();

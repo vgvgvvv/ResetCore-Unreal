@@ -1,14 +1,13 @@
 #pragma once
 
-#include "AssetData.h"
-#include "JsonObject.h"
-#include "TextureInfo.h"
 #include "Commandlets/Commandlet.h"
+#include "ResourcesInfos/TextureInfo.h"
+
 
 #include "ResourcesCheckCommandlet.generated.h"
 
 UCLASS()
-class RESOURCESCHECKTOOL_API UResourcesCheckCommandlet : public UCommandlet
+class UResourcesCheckCommandlet : public UCommandlet
 {
 	GENERATED_BODY()
 public:
