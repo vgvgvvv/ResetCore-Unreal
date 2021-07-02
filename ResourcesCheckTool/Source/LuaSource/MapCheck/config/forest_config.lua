@@ -8,6 +8,7 @@ require("define")
 
 local CheckFunctions = require("MapCheck.check_functions")
 
+local allMods = ArrayToTable(LuaCommon.GetModNames())
 
 ---@type MapConfig[]
 local MapCheckConfig = {}
@@ -21,9 +22,7 @@ MapCheckConfig["forest"] = {
         "Maps/PUBG_Baltic/Baltic_Trees",
         "Maps/PUBG_Baltic/Baltic_Landscape"
     },
-    Mods = {
-
-    },
+    Mods = allMods,
     Rules = {
         {
             Desc = "检查建筑物以及物体地块",

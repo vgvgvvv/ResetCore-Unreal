@@ -66,9 +66,10 @@ FString UCommonLuaLibrary::GetFullName(UObject* obj)
 TArray<FString> UCommonLuaLibrary::GetModNames()
 {
 	TArray<FString> Result;
-	const FString ModPath = FPaths::Combine(FPaths::ProjectContentDir(), "Mod");
+	const FString ModPath = FPaths::ProjectContentDir() + TEXT("Mod/*");
 	IFileManager& FileManager = IFileManager::Get();
-	FileManager.FindFiles(Result, *ModPath, false, true);
+	auto FullPath = FileManager.ConvertToAbsolutePathForExternalAppForRead(*ModPath);
+	FileManager.FindFiles(Result, *FullPath, false, true);
 	return Result;
 }
 
