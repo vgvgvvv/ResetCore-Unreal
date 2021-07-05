@@ -32,6 +32,35 @@
 
 #include "CoreMinimal.h"
 
+
+#if defined(PLATFORM_WINDOWS)
+void* LoadModuleLibrary(const TCHAR* path)
+{
+    HMODULE h = LoadLibraryW(path);
+    check(h != nullptr);
+    return (void*)h;
+}
+void* GetModuleExport(void* h, const char* name)
+{
+    void* f = GetProcAddress((HMODULE)h, name);
+    check(f != nullptr);
+    return f;
+}
+#else
+void* LoadModuleLibrary(const T_CHAR* path)
+{
+    void* h = dlopen(path, RTLD_LAZY | RTLD_LOCAL);
+    assert(h != nullptr);
+    return h;
+}
+void* GetModuleExport(void* h, const char* name)
+{
+    void* f = dlsym(h, name);
+    assert(f != nullptr);
+    return f;
+}
+#endif
+
 //------------------------------------------------
 // Public Methods
 //------------------------------------------------
@@ -46,10 +75,10 @@ void DotNetLibManager::Uninit()
 	
 }
 
-bool DotNetLibManager::LoadAssembly(const std::wstring& configPath, DotNetAssembly* Assembly)
+bool DotNetLibManager::LoadAssembly(const FString& configPath, DotNetAssembly* Assembly)
 {
     load_assembly_and_get_function_pointer_fn load_assembly_and_get_function_pointer = nullptr;
-    load_assembly_and_get_function_pointer = GetDotNetLoadAssemblyFunc(configPath.c_str());
+    load_assembly_and_get_function_pointer = GetDotNetLoadAssemblyFunc(*configPath);
 	if(!load_assembly_and_get_function_pointer)
 	{
         checkf(load_assembly_and_get_function_pointer != nullptr, TEXT("Failure: get_dotnet_load_assembly()"));
@@ -59,13 +88,13 @@ bool DotNetLibManager::LoadAssembly(const std::wstring& configPath, DotNetAssemb
     return true;
 }
 
-bool DotNetAssembly::GetFunctionPointer(const std::wstring& DotNetLibPath, const std::wstring& DotNetTypeName,
-    const std::wstring& DotNetMethodName, EntryPointFunc* Result) const
+bool DotNetAssembly::GetFunctionPointer(const FString& DotNetLibPath, const FString& DotNetTypeName,
+    const FString& DotNetMethodName, EntryPointFunc* Result) const
 {
     int rc = load_assembly_and_get_function_pointer(
-        DotNetLibPath.c_str(),
-        DotNetTypeName.c_str(),
-        DotNetMethodName.c_str(), /*method_name*/
+        *DotNetLibPath,
+        *DotNetTypeName,
+        *DotNetMethodName, /*method_name*/
         nullptr, /*delegate_type_name*/
         nullptr,
         (void**)(Result));
@@ -114,13 +143,13 @@ bool DotNetLibManager::LoadHostfxr()
         return false;
 
     // Load hostfxr and get desired exports
-    void* lib = CommonLib::LoadModuleLibrary(buffer);
+    void* lib = LoadModuleLibrary(buffer);
     init_fptr = (hostfxr_initialize_for_runtime_config_fn)
-		CommonLib::GetModuleExport(lib, "hostfxr_initialize_for_runtime_config");
+		GetModuleExport(lib, "hostfxr_initialize_for_runtime_config");
     get_delegate_fptr = (hostfxr_get_runtime_delegate_fn)
-		CommonLib::GetModuleExport(lib, "hostfxr_get_runtime_delegate");
+		GetModuleExport(lib, "hostfxr_get_runtime_delegate");
     close_fptr = (hostfxr_close_fn)
-		CommonLib::GetModuleExport(lib, "hostfxr_close");
+		GetModuleExport(lib, "hostfxr_close");
 
     return (init_fptr && get_delegate_fptr && close_fptr);
 }

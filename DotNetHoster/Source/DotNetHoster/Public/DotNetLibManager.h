@@ -16,9 +16,10 @@ public:
 
 private:
 	// <SnippetInitialize>
+	// 获取DotNet Assembly的加载方法
 	load_assembly_and_get_function_pointer_fn GetDotNetLoadAssemblyFunc(const char_t* config_path);
 
-	// ����Hostfxr��
+	// 加载Hostfxr库
 	bool LoadHostfxr();
 
 	// Globals to hold hostfxr exports
