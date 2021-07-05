@@ -16,10 +16,7 @@ local MapCheckConfig = {}
 MapCheckConfig["forest"] = {
     Desc = "雨林地图",
     MapFolders = {
-        "Maps/PUBG_Baltic/Baltic_Building",
-        "Maps/PUBG_Baltic/Baltic_Object",
-        "Maps/PUBG_Baltic/Baltic_Trees",
-        "Maps/PUBG_Baltic/Baltic_Landscape"
+        "Maps/Ascent/Levels",
     },
     Mods = {
 
@@ -27,18 +24,11 @@ MapCheckConfig["forest"] = {
     Rules = {
         {
             Desc = "检查建筑物以及物体地块",
-            Regex = {"Building", "Object"},
+            Regex = {"building"},
             CheckFuncs = {
                 {Desc = "CheckBounds", Func = CheckFunctions.CheckBounds, Args = {size = 110000}}
             }
-        },
-        {
-            Desc = "检查植被地块",
-            Regex = {"Trees"},
-            CheckFuncs ={
-                {Desc = "CheckBounds", Func = CheckFunctions.CheckBounds, Args = {size = 210000}}
-            }
-        },
+        }
     }
 }
 

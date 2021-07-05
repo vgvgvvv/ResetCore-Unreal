@@ -14,7 +14,7 @@ public:
 };
 
 UCLASS()
-class COMMONLIB_API UServiceManager : public UGameInstanceSubsystem
+class COMMONLIB_API UServiceManager : public UObject
 {
 	GENERATED_BODY()
 public:

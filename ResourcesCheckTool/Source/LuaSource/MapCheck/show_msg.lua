@@ -10,8 +10,8 @@ local ShowMsg = {}
 ---@param warnMsgs CheckSingleConfigResult[]
 function ShowMsg.Show(warnMsgs)
 
-    --https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=c2e98850-639c-4887-a0c4-6628b6b9d728
-    WeCom.SetKey("c2e98850-639c-4887-a0c4-6628b6b9d728")
+    --https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=0fe47b93-2a3a-45f9-b11c-eaff4efcd6db
+    WeCom.SetKey("0fe47b93-2a3a-45f9-b11c-eaff4efcd6db")
 
     local count = 0
     for configName, configMsg in pairs(warnMsgs) do

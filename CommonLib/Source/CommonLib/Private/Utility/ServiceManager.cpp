@@ -7,7 +7,17 @@ UServiceManager* UServiceManager::Instance = nullptr;
 
 UServiceManager* UServiceManager::Get(UGameInstance* GameInstance)
 {
-	return GameInstance->GetSubsystem<UServiceManager>();
+	if(Instance == nullptr)
+    {
+    	if(GameInstance == nullptr)
+    	{
+    		Instance = NewObject<UServiceManager>();
+    	}else
+    	{
+    		Instance = NewObject<UServiceManager>(GameInstance);
+    	}
+    }
+	return Instance;
 }
 
 void UServiceManager::RegisterService(UObject* Service, UClass* ServiceType, const FString& ServiceName)
