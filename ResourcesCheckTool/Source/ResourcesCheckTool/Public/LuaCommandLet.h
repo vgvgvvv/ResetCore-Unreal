@@ -3,7 +3,7 @@
 #include "LuaCommandLet.generated.h"
 
 UCLASS()
-class RESOURCESCHECKTOOL_API ULuaCommandLet : public UCommandlet
+class RESOURCESCHECKTOOL_API URunLuaCommandLet : public UCommandlet
 {
 	GENERATED_BODY()
 public:

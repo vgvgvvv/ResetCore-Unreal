@@ -8,6 +8,7 @@ require("define")
 
 local CheckFunctions = require("MapCheck.check_functions")
 
+local allMods = ArrayToTable(LuaCommon.GetModNames())
 
 ---@type MapConfig[]
 local MapCheckConfig = {}
@@ -18,9 +19,7 @@ MapCheckConfig["forest"] = {
     MapFolders = {
         "Maps/Ascent/Levels",
     },
-    Mods = {
-
-    },
+    Mods = allMods,
     Rules = {
         {
             Desc = "检查建筑物以及物体地块",
