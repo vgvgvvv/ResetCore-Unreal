@@ -14,7 +14,7 @@ public:
 };
 
 UCLASS()
-class COMMONLIB_API UServiceManager : public UObject
+class COMMONLIB_API UServiceManager : public UWorldSubsystem
 {
 	GENERATED_BODY()
 public:

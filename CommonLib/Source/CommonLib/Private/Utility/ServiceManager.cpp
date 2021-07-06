@@ -7,16 +7,16 @@ UServiceManager* UServiceManager::Instance = nullptr;
 
 UServiceManager* UServiceManager::Get(UGameInstance* GameInstance)
 {
-	if(Instance == nullptr)
-    {
-    	if(GameInstance == nullptr)
-    	{
-    		Instance = NewObject<UServiceManager>();
-    	}else
-    	{
-    		Instance = NewObject<UServiceManager>(GameInstance);
-    	}
-    }
+	if(GameInstance)
+	{
+		return GameInstance->GetWorld()->GetSubsystem<UServiceManager>();
+	}else
+	{
+		if(Instance == nullptr)
+		{
+			Instance = NewObject<UServiceManager>();
+		}
+	}
 	return Instance;
 }
 
