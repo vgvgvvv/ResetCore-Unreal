@@ -1,8 +1,8 @@
 ﻿#include "LuaCommandLet.h"
-#include "LinqCore.h"
-#include "LuaService.h"
-#include "Paths.h"
-#include "ServiceManager.h"
+#include "Utility/LinqCore.h"
+#include "Services/LuaService.h"
+#include "Misc/Paths.h"
+#include "Utility/ServiceManager.h"
 
 int32 URunLuaCommandLet::Main(const FString& Params)
 {
