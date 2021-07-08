@@ -16,7 +16,7 @@
 	"Modules": [
 		{
 			"Name": "WeCom",
-			"Type": "Developer",
+			"Type": "UncookedOnly",
 			"LoadingPhase": "Default"
 		}
 	],
