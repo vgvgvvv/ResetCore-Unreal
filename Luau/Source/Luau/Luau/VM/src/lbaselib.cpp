@@ -13,7 +13,9 @@
 
 static void writestring(const char* s, size_t l)
 {
-    fwrite(s, 1, l, stdout);
+    FString Text(s, l);
+    UE_LOG(LogTemp, Log, TEXT("luau: %s"), *Text)
+    // fwrite(s, 1, l, stdout);
 }
 
 static int luaB_print(lua_State* L)
