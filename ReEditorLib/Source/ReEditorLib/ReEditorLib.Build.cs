@@ -10,7 +10,6 @@ public class ReEditorLib : ModuleRules
 		
 		PublicIncludePaths.AddRange(
 			new string[] {
-				"ReEditorLib/Public"
 				// ... add public include paths required here ...
 			}
 			);
@@ -18,7 +17,6 @@ public class ReEditorLib : ModuleRules
 		
 		PrivateIncludePaths.AddRange(
 			new string[] {
-				"ReEditorLib/Private",
 				// ... add other private include paths required here ...
 			}
 			);

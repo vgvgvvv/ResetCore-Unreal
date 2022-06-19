@@ -10,7 +10,6 @@ public class ResourcesCheckTool : ModuleRules
 		
 		PublicIncludePaths.AddRange(
 			new string[] {
-				"ResourcesCheckTool/Public"
 				// ... add public include paths required here ...
 			}
 			);
@@ -18,7 +17,6 @@ public class ResourcesCheckTool : ModuleRules
 		
 		PrivateIncludePaths.AddRange(
 			new string[] {
-				"ResourcesCheckTool/Private",
 				// ... add other private include paths required here ...
 			}
 			);

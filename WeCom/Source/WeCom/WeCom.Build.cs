@@ -10,7 +10,6 @@ public class WeCom : ModuleRules
 		
 		PublicIncludePaths.AddRange(
 			new string[] {
-				"WeCom/Public"
 				// ... add public include paths required here ...
 			}
 			);
@@ -18,7 +17,6 @@ public class WeCom : ModuleRules
 		
 		PrivateIncludePaths.AddRange(
 			new string[] {
-				"WeCom/Private",
 				// ... add other private include paths required here ...
 			}
 			);
