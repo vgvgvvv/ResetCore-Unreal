@@ -16,7 +16,7 @@ struct RESOURCESCHECKTOOL_API FSkeletalMeshLODRuleItem
 };
 
 USTRUCT()
-struct RESOURCESCHECKTOOL_API FSkeletalMeshInfo : public FBaseAssetInfo
+struct RESOURCESCHECKTOOL_API FSkeletalMeshCheckInfo : public FBaseAssetInfo
 {
 	GENERATED_BODY()
 	

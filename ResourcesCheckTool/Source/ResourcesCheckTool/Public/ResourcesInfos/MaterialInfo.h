@@ -4,7 +4,7 @@
 #include "MaterialInfo.generated.h"
 
 USTRUCT()
-struct RESOURCESCHECKTOOL_API FMaterialInfo : public FBaseAssetInfo
+struct RESOURCESCHECKTOOL_API FMaterialCheckInfo : public FBaseAssetInfo
 {
 	GENERATED_BODY()
 

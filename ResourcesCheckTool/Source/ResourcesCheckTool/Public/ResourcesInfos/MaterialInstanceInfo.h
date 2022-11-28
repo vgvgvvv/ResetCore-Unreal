@@ -33,7 +33,7 @@ struct RESOURCESCHECKTOOL_API FMaterialInstanceNumberValue
 };
 
 USTRUCT()
-struct RESOURCESCHECKTOOL_API FMaterialInstanceInfo : public FBaseAssetInfo
+struct RESOURCESCHECKTOOL_API FMaterialInstanceAssetCheckInfo : public FBaseAssetInfo
 {
 	GENERATED_BODY()
 	

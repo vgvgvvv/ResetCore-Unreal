@@ -3,7 +3,7 @@
 
 #include "JsonObjectConverter.h"
 
-void FStaticMeshInfo::Init(const UObject* AssetObj)
+void FStaticMeshCheckInfo::Init(const UObject* AssetObj)
 {
 	auto StaticMesh = Cast<UStaticMesh>(AssetObj);
 	LODNumber = StaticMesh->GetNumLODs();
@@ -12,7 +12,7 @@ void FStaticMeshInfo::Init(const UObject* AssetObj)
 
 TSharedPtr<FJsonObject> FStaticMeshInfoCreator::GetAssetInfo(UObject* AssetObject)
 {
-	FStaticMeshInfo Result;
+	FStaticMeshCheckInfo Result;
 	Result.Init(AssetObject);
 	return FJsonObjectConverter::UStructToJsonObject(Result);
 }

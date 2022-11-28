@@ -3,7 +3,7 @@
 #include "JsonObjectConverter.h"
 
 
-void FTextureInfo::Init(const UObject* AssetObj)
+void FTextureCheckInfo::Init(const UObject* AssetObj)
 {
 	auto Texture = Cast<UTexture2D>(AssetObj);
 	TextureGroup = Texture->LODGroup;
@@ -15,7 +15,7 @@ void FTextureInfo::Init(const UObject* AssetObj)
 
 TSharedPtr<FJsonObject> FTextureInfoCreator::GetAssetInfo(UObject* AssetObject)
 {
-	FTextureInfo Result;
+	FTextureCheckInfo Result;
 	Result.Init(AssetObject);
 	return FJsonObjectConverter::UStructToJsonObject(Result);
 }

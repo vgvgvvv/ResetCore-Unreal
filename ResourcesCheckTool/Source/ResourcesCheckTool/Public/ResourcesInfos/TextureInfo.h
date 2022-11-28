@@ -4,7 +4,7 @@
 #include "TextureInfo.generated.h"
 
 USTRUCT()
-struct RESOURCESCHECKTOOL_API FTextureInfo : public FBaseAssetInfo
+struct RESOURCESCHECKTOOL_API FTextureCheckInfo : public FBaseAssetInfo
 {
 	GENERATED_BODY()
 

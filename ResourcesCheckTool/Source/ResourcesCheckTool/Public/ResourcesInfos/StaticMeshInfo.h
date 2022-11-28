@@ -23,7 +23,7 @@ struct RESOURCESCHECKTOOL_API FStaticMeshLODRuleItem
 };
 
 USTRUCT()
-struct RESOURCESCHECKTOOL_API FStaticMeshInfo : public FBaseAssetInfo
+struct RESOURCESCHECKTOOL_API FStaticMeshCheckInfo : public FBaseAssetInfo
 {
 	GENERATED_BODY()
 

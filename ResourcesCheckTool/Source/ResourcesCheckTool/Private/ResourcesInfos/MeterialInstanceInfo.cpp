@@ -1,7 +1,7 @@
 #include "JsonObjectConverter.h"
 #include "ResourcesInfos/MaterialInstanceInfo.h"
 
-void FMaterialInstanceInfo::Init(const UObject* AssetObj)
+void FMaterialInstanceAssetCheckInfo::Init(const UObject* AssetObj)
 {
 	
 }
@@ -9,7 +9,7 @@ void FMaterialInstanceInfo::Init(const UObject* AssetObj)
 
 TSharedPtr<FJsonObject> FMaterialInstanceInfoCreator::GetAssetInfo(UObject* AssetObject)
 {
-	FMaterialInstanceInfo Result;
+	FMaterialInstanceAssetCheckInfo Result;
 	Result.Init(AssetObject);
 	return FJsonObjectConverter::UStructToJsonObject(Result);
 }
