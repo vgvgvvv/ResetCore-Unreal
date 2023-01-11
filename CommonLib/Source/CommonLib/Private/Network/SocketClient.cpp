@@ -61,7 +61,8 @@ void FSocketClient::Run()
 		if(!Connect())
 		{
 			UE_LOG(LogTemp, Warning, TEXT("Connect To %s Error..."), *InternetAddress->ToString(true))
-		}else
+		}
+		else
 		{
 			if(OnRegist.IsBound())
 			{
